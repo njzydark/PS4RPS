@@ -1,0 +1,52 @@
+{
+  "name": "desktop",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=12"
+  },
+  "main": "dist/main/index.js",
+  "scripts": {
+    "start": "electron . --remote-debugging-port=9223 --inspect=9224",
+    "dev": "cross-env NODE_ENV=development webpack --watch --mode development --config build/webpack.config.dev.ts",
+    "build": "cross-env NODE_ENV=production webpack --mode production --config build/webpack.config.prod.ts",
+    "analyz": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "njzy",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "axios": "^0.25.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^14.3.2",
+    "electron": "16.0.8",
+    "electron-builder": "~22.10.5",
+    "electron-log": "^4.4.5",
+    "electron-reloader": "^1.2.1",
+    "electron-store": "^8.0.1",
+    "fs-extra": "^10.0.0"
+  },
+  "build": {
+    "appId": "com.njzydark.demo",
+    "productName": "ElectronReactTsBoilerplate",
+    "directories": {
+      "output": "output"
+    },
+    "files": [
+      "dist",
+      "node_modules"
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "identity": null
+    }
+  }
+}
