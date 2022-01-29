@@ -1,3 +1,4 @@
+import ArcoWebpackPlugin from '@arco-design/webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import { config as dotenvConfig } from 'dotenv';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
@@ -104,6 +105,7 @@ const config: Configuration = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new ArcoWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css'

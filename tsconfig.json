@@ -13,12 +13,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
+    "noEmit": true
   },
   "exclude": [
     "node_modules",
