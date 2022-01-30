@@ -1,4 +1,4 @@
-import { Message } from '@arco-design/web-react';
+import { Notification } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
 import { changeBaseUrl, getTaskProgress, installApi, InstallParams, InstallType } from '@/service/ps4';
@@ -18,10 +18,7 @@ export const usePS4Installer = (installBaseUrl?: string) => {
   const handleInstall = async (file: FileStat) => {
     try {
       if (!file.downloadUrl) {
-        throw new Error(`${file.basename} download url not found`);
-      }
-      if (!installBaseUrl) {
-        throw new Error(`Install url not found`);
+        throw new Error(`Download url not found`);
       }
       const packageUrl = file.downloadUrl;
       const params: InstallParams<InstallType.DIRECT> = {
@@ -30,7 +27,7 @@ export const usePS4Installer = (installBaseUrl?: string) => {
       };
       const { data } = await installApi(params);
       if (typeof data === 'string') {
-        throw new Error('Install failed');
+        throw new Error(data.trim());
       }
       if (data.task_id) {
         setInstallingData([
@@ -38,13 +35,20 @@ export const usePS4Installer = (installBaseUrl?: string) => {
             file,
             taskId: data.task_id,
             ps4BaseUrl: curSelectPS4BaseUrl,
+            // @ts-ignore
             installBaseUrl
           }
         ]);
-        Message.success(`Success: ${data.task_id}`);
+        Notification.success({
+          title: data.title || file.basename,
+          content: `Start install`
+        });
       }
     } catch (err) {
-      Message.error((err as Error).message);
+      Notification.error({
+        title: `${file.basename} Install failed`,
+        content: (err as Error).message
+      });
     }
   };
 
