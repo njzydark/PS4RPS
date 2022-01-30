@@ -3,11 +3,12 @@ import { Select, Space, Typography } from '@arco-design/web-react';
 import { useContainer } from '../container';
 
 export const PS4Host = () => {
-  const { ps4BaseUrls, curSelectPS4BaseUrl, setCurSelectPS4BaseUrl, setPs4BaseUrls } = useContainer();
+  const { ps4Installer } = useContainer();
+  const { ps4BaseUrls, curSelectPS4BaseUrl, setCurSelectPS4BaseUrl, setPs4BaseUrls } = ps4Installer;
 
   return (
     <div>
-      <h3>PS4 Host</h3>
+      <Typography.Title heading={6}>PS4 Host</Typography.Title>
       <Space>
         <Select
           allowCreate

@@ -2,18 +2,11 @@ import { Message } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
 import { changeBaseUrl, getTaskProgress, installApi, InstallParams, InstallType } from '@/service/ps4';
-import { FileStat } from '@/types';
+import { FileStat, InstallingData } from '@/types';
 
-type InstallingData = {
-  file: FileStat;
-  taskId: number;
-  ps4BaseUrl: string;
-  installBaseUrl: string;
-};
+const initialUrls = ['http://192.168.0.118:12800'];
 
-const initialUrls = ['http://192.168.0.118:12800/api'];
-
-export const usePS4 = (installBaseUrl?: string) => {
+export const usePS4Installer = (installBaseUrl?: string) => {
   const [ps4BaseUrls, setPs4BaseUrls] = useState(initialUrls);
   const [curSelectPS4BaseUrl, setCurSelectPS4BaseUrl] = useState(initialUrls[0]);
   const [installingData, setInstallingData] = useState<InstallingData[]>([]);

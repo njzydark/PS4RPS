@@ -10,3 +10,10 @@ export type ServerInfo = {
   url: string;
   options?: WebDAVClientOptions;
 };
+
+export type InstallingData = {
+  file: FileStat;
+  taskId: number;
+  ps4BaseUrl: string;
+  installBaseUrl: string;
+};
