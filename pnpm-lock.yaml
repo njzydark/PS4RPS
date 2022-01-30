@@ -139,9 +139,11 @@ importers:
       '@arco-design/web-react': ^2.28.2
       '@arco-design/webpack-plugin': ^1.7.0
       '@babel/runtime': ^7.16.3
+      '@pmmmwh/react-refresh-webpack-plugin': ^0.5.4
       axios: ^0.25.0
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-refresh: ^0.11.0
       react-router-dom: ^6.0.2
       webdav: ^4.8.0
     dependencies:
@@ -154,6 +156,8 @@ importers:
       webdav: 4.8.0
     devDependencies:
       '@arco-design/webpack-plugin': 1.7.0_webpack@5.67.0
+      '@pmmmwh/react-refresh-webpack-plugin': 0.5.4_e81c7e2a8b2222db575e448373c0524e
+      react-refresh: 0.11.0
 
 packages:
 
@@ -1788,6 +1792,46 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@pmmmwh/react-refresh-webpack-plugin/0.5.4_e81c7e2a8b2222db575e448373c0524e:
+    resolution: {integrity: sha512-zZbZeHQDnoTlt2AF+diQT0wsSXpvWiaIOZwBRdltNFhG1+I3ozyaw7U/nBiUwyJ0D+zwdXp0E3bWOl38Ag2BMw==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      '@types/webpack': 4.x || 5.x
+      react-refresh: '>=0.10.0 <1.0.0'
+      sockjs-client: ^1.4.0
+      type-fest: '>=0.17.0 <3.0.0'
+      webpack: '>=4.43.0 <6.0.0'
+      webpack-dev-server: 3.x || 4.x
+      webpack-hot-middleware: 2.x
+      webpack-plugin-serve: 0.x || 1.x
+    peerDependenciesMeta:
+      '@types/webpack':
+        optional: true
+      sockjs-client:
+        optional: true
+      type-fest:
+        optional: true
+      webpack-dev-server:
+        optional: true
+      webpack-hot-middleware:
+        optional: true
+      webpack-plugin-serve:
+        optional: true
+    dependencies:
+      ansi-html-community: 0.0.8
+      common-path-prefix: 3.0.0
+      core-js-pure: 3.20.3
+      error-stack-parser: 2.0.6
+      find-up: 5.0.0
+      html-entities: 2.3.2
+      loader-utils: 2.0.2
+      react-refresh: 0.11.0
+      schema-utils: 3.1.1
+      source-map: 0.7.3
+      webpack: 5.67.0_webpack-cli@4.9.2
+      webpack-dev-server: 4.7.3_e9a6b0c876bb47b7070003eedf8fe3a2
+    dev: true
+
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
@@ -3210,6 +3254,10 @@ packages:
     engines: {node: '>= 12'}
     dev: true
 
+  /common-path-prefix/3.0.0:
+    resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
+    dev: true
+
   /commondir/1.0.1:
     resolution: {integrity: sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=}
     dev: true
@@ -3349,6 +3397,11 @@ packages:
     dependencies:
       browserslist: 4.19.1
       semver: 7.0.0
+    dev: true
+
+  /core-js-pure/3.20.3:
+    resolution: {integrity: sha512-Q2H6tQ5MtPtcC7f3HxJ48i4Q7T9ybPKgvWyuH7JXIoNa2pm0KuBnycsET/qw1SLLZYfbsbrZQNMeIOClb+6WIA==}
+    requiresBuild: true
     dev: true
 
   /core-util-is/1.0.2:
@@ -4112,6 +4165,12 @@ packages:
     resolution: {integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==}
     dependencies:
       is-arrayish: 0.2.1
+    dev: true
+
+  /error-stack-parser/2.0.6:
+    resolution: {integrity: sha512-d51brTeqC+BHlwF0BhPtcYgF5nlzf9ZZ0ZIUQNZpc9ZB9qw5IJ2diTrBY9jlCJkTLITYPjmiX6OWCwH+fuyNgQ==}
+    dependencies:
+      stackframe: 1.2.0
     dev: true
 
   /es-abstract/1.19.1:
@@ -7907,6 +7966,10 @@ packages:
 
   /stable/0.1.8:
     resolution: {integrity: sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==}
+    dev: true
+
+  /stackframe/1.2.0:
+    resolution: {integrity: sha512-GrdeshiRmS1YLMYgzF16olf2jJ/IzxXY9lhKOskuVziubpTYcYqyOwYeJKzQkwy7uN0fYSsbsC4RQaXf9LCrYA==}
     dev: true
 
   /stat-mode/1.0.0:

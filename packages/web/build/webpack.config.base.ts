@@ -14,6 +14,8 @@ interface Configuration extends WebpackConfiguration {
 
 dotenvConfig({ path: '../../.env' });
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const config: Configuration = {
   entry: path.resolve(__dirname, '../src/index.tsx'),
   output: {
@@ -67,12 +69,14 @@ const config: Configuration = {
       {
         test: /\.(le|c)ss$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../'
-            }
-          },
+          isDev
+            ? 'style-loader'
+            : {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  publicPath: '../'
+                }
+              },
           'css-loader',
           // 'postcss-loader',
           'less-loader'
@@ -107,9 +111,10 @@ const config: Configuration = {
     new CleanWebpackPlugin(),
     new ArcoWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].css'
-    }),
+    isDev &&
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css'
+      }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       title: 'Electron-React-TS-Boilerplate'

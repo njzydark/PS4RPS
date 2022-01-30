@@ -23,6 +23,8 @@
     "webdav": "^4.8.0"
   },
   "devDependencies": {
-    "@arco-design/webpack-plugin": "^1.7.0"
+    "@arco-design/webpack-plugin": "^1.7.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
+    "react-refresh": "^0.11.0"
   }
 }
