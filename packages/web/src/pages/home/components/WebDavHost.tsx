@@ -1,34 +1,20 @@
-import { Button, Select, Space } from '@arco-design/web-react';
+import { Button, Select, Space, Typography } from '@arco-design/web-react';
 import { IconPlus, IconRefresh } from '@arco-design/web-react/icon';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
-import { ServerInfo } from '@/pages/home';
-
+import { useContainer } from '../container';
 import { WebDavFormModal } from './WebDavFormModal';
-import styles from './WebDavHost.module.less';
 
-type Props = {
-  servers: ServerInfo[];
-  curSelectServerId: string;
-  changeServers: Dispatch<SetStateAction<ServerInfo[]>>;
-  changeCurSelectServerId: Dispatch<SetStateAction<string>>;
-  handleRefresh: () => void;
-};
-
-export const WebDavHost = ({
-  servers,
-  curSelectServerId,
-  changeServers,
-  changeCurSelectServerId,
-  handleRefresh
-}: Props) => {
+export const WebDavHost = () => {
   const [visible, setVisible] = useState(false);
+
+  const { servers, curSelectServerId, setServers, setCurSelectServerId, getData } = useContainer();
 
   return (
     <div>
-      <div className={styles.title}>WebDAV Host</div>
+      <Typography.Title heading={5}>WebDAV Host</Typography.Title>
       <Space>
-        <Select style={{ width: 220 }} value={curSelectServerId} onChange={changeCurSelectServerId}>
+        <Select style={{ width: 220 }} value={curSelectServerId} onChange={setCurSelectServerId}>
           {servers.map(server => (
             <Select.Option key={server.id} value={server.id}>
               {server.alias || server.url}
@@ -38,14 +24,14 @@ export const WebDavHost = ({
         <Button icon={<IconPlus />} onClick={() => setVisible(true)}>
           Add
         </Button>
-        <Button icon={<IconRefresh />} type="primary" onClick={handleRefresh}>
+        <Button icon={<IconRefresh />} type="primary" onClick={getData}>
           Refresh
         </Button>
       </Space>
       <WebDavFormModal
         visible={visible}
         onOk={value => {
-          changeServers(pre => {
+          setServers(pre => {
             pre.push({
               id: String(new Date().getTime()),
               url: value.url,

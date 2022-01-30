@@ -1,8 +1,8 @@
 import { Message } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
-import { FileStat } from '@/pages/home';
 import { changeBaseUrl, getTaskProgress, installApi, InstallParams, InstallType } from '@/service/ps4';
+import { FileStat } from '@/types';
 
 type InstallingData = {
   file: FileStat;

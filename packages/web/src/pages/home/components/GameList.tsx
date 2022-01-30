@@ -1,18 +1,15 @@
 import { Button, Table, TableColumnProps } from '@arco-design/web-react';
 
-import { FileStat } from '@/pages/home';
+import { FileStat } from '@/types';
 
+import { useContainer } from '../container';
 import styles from './GameList.module.less';
 
 const blackList = ['.DS_Store', '@eaDir'];
 
-type Props = {
-  loading: boolean;
-  data: FileStat[];
-  handleDownload: (file: FileStat) => void;
-};
+export const GameList = () => {
+  const { loading, data, handleDownload } = useContainer();
 
-export const GameList = ({ loading, data, handleDownload }: Props) => {
   const columns: TableColumnProps<FileStat>[] = [
     {
       title: 'FileName',
