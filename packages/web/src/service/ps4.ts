@@ -6,10 +6,13 @@ instance.interceptors.request.use(value => {
   if (!value.baseURL) {
     throw new Error('The PS4 Url is empty');
   }
-  return value + '/api';
+  return value;
 });
 
 export const changeBaseUrl = (url: string) => {
+  if (!url.includes('/api')) {
+    url += '/api';
+  }
   instance.defaults.baseURL = url;
 };
 
