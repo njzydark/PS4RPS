@@ -1,12 +1,16 @@
 import { Button, Drawer, Select, Space, Typography } from '@arco-design/web-react';
-import { IconUnorderedList } from '@arco-design/web-react/icon';
+import { IconPlus, IconUnorderedList } from '@arco-design/web-react/icon';
+import { useState } from 'react';
 
 import { useContainer } from '../container';
 import { InstallTaskList } from './InstallTaskList';
+import { PS4HostFormModal } from './PS4HostFormModal';
 
 export const PS4Host = () => {
+  const [visible, setVisible] = useState(false);
+
   const { ps4Installer, taskListVisible, setTaskListVisible } = useContainer();
-  const { ps4Hosts, curSelectPs4HostId, setCurSelectPs4HostId } = ps4Installer;
+  const { ps4Hosts, curSelectPs4HostId, setCurSelectPs4HostId, setPs4Hosts } = ps4Installer;
 
   return (
     <div>
@@ -26,6 +30,9 @@ export const PS4Host = () => {
             </Select.Option>
           ))}
         </Select>
+        <Button icon={<IconPlus />} onClick={() => setVisible(true)}>
+          Add
+        </Button>
         <Button
           icon={<IconUnorderedList />}
           onClick={() => {
@@ -46,6 +53,23 @@ export const PS4Host = () => {
       >
         <InstallTaskList />
       </Drawer>
+      <PS4HostFormModal
+        visible={visible}
+        onOk={value => {
+          setPs4Hosts(pre => {
+            pre.push({
+              id: value.id as string,
+              url: value.url,
+              alias: value.alias
+            });
+            return pre;
+          });
+          if (value.id) {
+            setCurSelectPs4HostId(value.id);
+          }
+        }}
+        onCancel={() => setVisible(false)}
+      />
     </div>
   );
 };
