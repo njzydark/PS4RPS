@@ -1,6 +1,18 @@
 import axios from 'axios';
+import JSON5 from 'json5';
 
-const instance = axios.create({ timeout: 5000 });
+import { ProgressInfo } from '@/types';
+
+const instance = axios.create({
+  timeout: 5000,
+  transformResponse: [
+    function transformResponse(data, headers) {
+      if (headers?.['content-type'] === 'application/json') {
+        return JSON5.parse(data);
+      }
+    }
+  ]
+});
 
 instance.interceptors.request.use(value => {
   if (!value.baseURL) {
@@ -54,6 +66,17 @@ export type InstallParseResponse = {
 };
 
 export const installApi = <T = InstallType>(data: InstallParams<T>) => {
+  // return new Promise<{ data: InstallParseResponse }>(resolve => {
+  //   setTimeout(() => {
+  //     resolve({
+  //       data: {
+  //         status: 'success',
+  //         task_id: Math.random() * 100,
+  //         title: 'test'
+  //       }
+  //     });
+  //   }, 800);
+  // });
   return instance.post<string | InstallParseResponse>('/install', data);
 };
 
@@ -80,22 +103,33 @@ export const getTaskIdApi = (content_id: string, sub_type: PkgType) => {
   });
 };
 
-export const getTaskProgress = (task_id: number) => {
-  return instance.post('/get_task_progress', { task_id });
+type StatusResponse = {
+  status: 'success' | 'fail';
+  error_code?: number;
+};
+
+export type TaskProgressResponse = ProgressInfo & StatusResponse;
+
+export const getTaskProgressApi = (task_id: number) => {
+  return instance.post<TaskProgressResponse>('/get_task_progress', { task_id });
+};
+
+export const startApi = (task_id: number) => {
+  return instance.post<StatusResponse>('/start_task', { task_id });
 };
 
 export const stopApi = (task_id: number) => {
-  return instance.post('/stop_task', { task_id });
+  return instance.post<StatusResponse>('/stop_task', { task_id });
 };
 
 export const pauseApi = (task_id: number) => {
-  return instance.post('/pause_task', { task_id });
+  return instance.post<StatusResponse>('/pause_task', { task_id });
 };
 
 export const resumeApi = (task_id: number) => {
-  return instance.post('/resume_task', { task_id });
+  return instance.post<StatusResponse>('/resume_task', { task_id });
 };
 
-export const removeApi = (task_id: number) => {
-  return instance.post('/unregister_task', { task_id });
+export const cancelApi = (task_id: number) => {
+  return instance.post<StatusResponse>('/unregister_task', { task_id });
 };

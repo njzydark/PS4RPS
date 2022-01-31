@@ -1,5 +1,5 @@
 import { Button, Select, Space, Typography } from '@arco-design/web-react';
-import { IconPlus, IconRefresh } from '@arco-design/web-react/icon';
+import { IconPlus, IconSync } from '@arco-design/web-react/icon';
 import { useState } from 'react';
 
 import { useContainer } from '../container';
@@ -25,7 +25,7 @@ export const WebDavHost = () => {
         <Button icon={<IconPlus />} onClick={() => setVisible(true)}>
           Add
         </Button>
-        <Button icon={<IconRefresh />} type="primary" onClick={getData}>
+        <Button icon={<IconSync />} type="primary" onClick={getData}>
           Refresh
         </Button>
       </Space>

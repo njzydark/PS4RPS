@@ -24,22 +24,31 @@ export const useWebDAV = () => {
   const [data, setData] = useState<FileStat[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const didCancel = useRef(false);
+
   const getData = async () => {
     try {
       if (!webDavClient.current) {
         return;
       }
+      didCancel.current = false;
       setLoading(true);
       const res = await webDavClient.current.getDirectoryContents('/');
-      setData(res as FileStat[]);
+      if (!didCancel.current) {
+        setData(res as FileStat[]);
+        setLoading(false);
+        didCancel.current = true;
+      }
     } catch (err) {
+      if (didCancel.current) {
+        return;
+      }
       setData([]);
       setLoading(false);
       if (err instanceof Error) {
         console.log(err.message);
       }
-    } finally {
-      setLoading(false);
+      didCancel.current = true;
     }
   };
 

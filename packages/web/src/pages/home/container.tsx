@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { createContainer } from '@/context/container';
 import { FileStat } from '@/types';
 
@@ -5,6 +7,8 @@ import { usePS4Installer } from './hooks/usePS4Installer';
 import { useWebDAV } from './hooks/useWebDAV';
 
 const useHook = () => {
+  const [taskListVisible, setTaskListVisible] = useState(false);
+
   const webDAV = useWebDAV();
   const { servers, curSelectServerId, webDavClient } = webDAV;
 
@@ -19,6 +23,8 @@ const useHook = () => {
   };
 
   return {
+    taskListVisible,
+    setTaskListVisible,
     webDAV,
     ps4Installer,
     handleInstall
