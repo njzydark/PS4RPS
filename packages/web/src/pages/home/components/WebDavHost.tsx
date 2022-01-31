@@ -44,6 +44,9 @@ export const WebDavHost = () => {
             });
             return pre;
           });
+          if (value.id) {
+            setCurSelectWebDavHostId(value.id);
+          }
         }}
         onCancel={() => setVisible(false)}
       />
