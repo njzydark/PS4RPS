@@ -15,24 +15,22 @@ export const InstallTaskList = () => {
   const columns: TableColumnProps<InstallingData>[] = [
     {
       title: 'Title',
-      dataIndex: 'title'
+      dataIndex: 'title',
+      ellipsis: true,
+      width: 150
     },
     {
       title: 'Progress',
       render: (_, record) => {
         return (
-          <Progress
-            size="large"
-            percent={record.progressInfo?._percent || 0}
-            animation={record.status === TaskStatus.INSTALLING}
-          />
+          <Progress percent={record.progressInfo?._percent || 0} animation={record.status === TaskStatus.INSTALLING} />
         );
       }
     },
     {
       title: 'Action',
       align: 'left',
-      width: 200,
+      width: 220,
       render: (_, record) => {
         return (
           <Space size={8}>
