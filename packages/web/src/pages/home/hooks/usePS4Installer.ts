@@ -11,18 +11,27 @@ import {
   pauseApi,
   resumeApi
 } from '@/service/ps4';
-import { FileStat, InstallingData, TaskActionType, TaskStatus } from '@/types';
+import { FileStat, InstallingData, PS4Host, TaskActionType, TaskStatus } from '@/types';
 
-const initialUrls = ['http://192.168.123.43:12800'];
+const initialPs4Hosts: PS4Host[] = [
+  {
+    id: '1',
+    url: 'http://192.168.123.43:12800',
+    alias: 'PS4-1'
+  }
+];
 
 export const usePS4Installer = (installBaseUrl?: string) => {
-  const [ps4BaseUrls, setPs4BaseUrls] = useState(initialUrls);
-  const [curSelectPS4BaseUrl, setCurSelectPS4BaseUrl] = useState(initialUrls[0]);
+  const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(initialPs4Hosts);
+  const [curSelectPs4HostId, setCurSelectPs4HostId] = useState(initialPs4Hosts[0].id);
   const [installingData, setInstallingData] = useState<InstallingData[]>([]);
 
   useEffect(() => {
-    changeBaseUrl(curSelectPS4BaseUrl);
-  }, [curSelectPS4BaseUrl]);
+    const curPs4Host = ps4Hosts.find(item => item.id === curSelectPs4HostId);
+    if (curPs4Host) {
+      changeBaseUrl(curPs4Host.url);
+    }
+  }, [ps4Hosts, curSelectPs4HostId]);
 
   const handleInstall = async (file: FileStat) => {
     try {
@@ -43,7 +52,7 @@ export const usePS4Installer = (installBaseUrl?: string) => {
           file,
           taskId: data.task_id,
           title: data.title,
-          ps4BaseUrl: curSelectPS4BaseUrl,
+          ps4BaseUrl: curSelectPs4HostId,
           installBaseUrl: installBaseUrl as string,
           status: TaskStatus.INSTALLING
         });
@@ -167,10 +176,10 @@ export const usePS4Installer = (installBaseUrl?: string) => {
   return {
     installingData,
     handleInstall,
-    ps4BaseUrls,
-    curSelectPS4BaseUrl,
-    setPs4BaseUrls,
-    setCurSelectPS4BaseUrl,
+    ps4Hosts,
+    curSelectPs4HostId,
+    setPs4Hosts,
+    setCurSelectPs4HostId,
     handleChangeInstallingItemStatus
   };
 };

@@ -11,6 +11,12 @@ export type ServerInfo = {
   options?: WebDAVClientOptions;
 };
 
+export type PS4Host = {
+  id: string;
+  alias?: string;
+  url: string;
+};
+
 export type ProgressInfo = {
   preparing_percent: number;
   local_copy_percent: number;

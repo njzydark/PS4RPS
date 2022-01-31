@@ -6,7 +6,7 @@ import { InstallTaskList } from './InstallTaskList';
 
 export const PS4Host = () => {
   const { ps4Installer, taskListVisible, setTaskListVisible } = useContainer();
-  const { ps4BaseUrls, curSelectPS4BaseUrl, setCurSelectPS4BaseUrl, setPs4BaseUrls } = ps4Installer;
+  const { ps4Hosts, curSelectPs4HostId, setCurSelectPs4HostId } = ps4Installer;
 
   return (
     <div>
@@ -15,17 +15,14 @@ export const PS4Host = () => {
         <Select
           allowCreate
           style={{ width: 220 }}
-          value={curSelectPS4BaseUrl}
+          value={curSelectPs4HostId}
           onChange={value => {
-            if (!ps4BaseUrls.includes(value)) {
-              setPs4BaseUrls(pre => [...pre, value]);
-            }
-            setCurSelectPS4BaseUrl(value);
+            setCurSelectPs4HostId(value);
           }}
         >
-          {ps4BaseUrls.map(url => (
-            <Select.Option key={url} value={url}>
-              {url}
+          {ps4Hosts.map(host => (
+            <Select.Option key={host.id} value={host.id}>
+              {host.alias || host.url}
             </Select.Option>
           ))}
         </Select>
