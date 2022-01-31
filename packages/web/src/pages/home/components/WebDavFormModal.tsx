@@ -1,4 +1,6 @@
-import { Form, Input, Modal } from '@arco-design/web-react';
+import { Form, Input, Message, Modal } from '@arco-design/web-react';
+
+import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 
@@ -15,9 +17,17 @@ type Props = {
 export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk }: Props) => {
   const [form] = Form.useForm<FormData>();
 
+  const {
+    webDAV: { servers }
+  } = useContainer();
+
   const handleOk = async () => {
     const value = await form.validate();
     if (value) {
+      if (servers.find(item => item.url === value.url)) {
+        Message.error(`The ${value.url} already exists`);
+        return;
+      }
       onOk(value);
       onCancel();
     }
@@ -30,11 +40,11 @@ export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk
       onCancel={onCancel}
       onOk={handleOk}
     >
-      <Form form={form} layout="vertical" initialValues={data}>
+      <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        <FormItem label="URL" field="url" required>
+        <FormItem label="URL" field="url" rules={[{ required: true, message: 'Please input url' }]}>
           <Input />
         </FormItem>
         <FormItem label="Username" field="username">
