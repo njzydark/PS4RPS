@@ -46,12 +46,12 @@ export enum TaskActionType {
   DELETE = 'Delete'
 }
 
-export type InstallingData = {
+export type InstallTask = {
   file: FileStat;
   taskId: number;
   title: string;
-  ps4BaseUrl: string;
-  installBaseUrl: string;
+  ps4HostUrl: string;
+  webDavHostUrl: string;
   status: TaskStatus;
   progressInfo?: ProgressInfo;
   errorMessage?: string;

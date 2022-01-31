@@ -1,18 +1,18 @@
 import { Link, Progress, Radio, Space, Table, TableColumnProps } from '@arco-design/web-react';
 import { useState } from 'react';
 
-import { InstallingData, TaskActionType, TaskStatus } from '@/types';
+import { InstallTask, TaskActionType, TaskStatus } from '@/types';
 
 import { useContainer } from '../container';
 
 export const InstallTaskList = () => {
   const {
-    ps4Installer: { installingData, handleChangeInstallingItemStatus }
+    ps4Installer: { installTasks, handleChangeInstallTaskStatus }
   } = useContainer();
 
   const [type, setType] = useState<'all' | TaskStatus>('all');
 
-  const columns: TableColumnProps<InstallingData>[] = [
+  const columns: TableColumnProps<InstallTask>[] = [
     {
       title: 'Title',
       dataIndex: 'title',
@@ -35,22 +35,22 @@ export const InstallTaskList = () => {
         return (
           <Space size={8}>
             {record.status === TaskStatus.INSTALLING && (
-              <Link onClick={() => handleChangeInstallingItemStatus(record, TaskActionType.PAUSE)}>Pause</Link>
+              <Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.PAUSE)}>Pause</Link>
             )}
             {record.status === TaskStatus.PAUSED && (
-              <Link onClick={() => handleChangeInstallingItemStatus(record, TaskActionType.RESUME)}>Resume</Link>
+              <Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.RESUME)}>Resume</Link>
             )}
             {record.status !== TaskStatus.FINISHED && (
-              <Link onClick={() => handleChangeInstallingItemStatus(record, TaskActionType.CANCEL)}>Cancel</Link>
+              <Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.CANCEL)}>Cancel</Link>
             )}
-            {<Link onClick={() => handleChangeInstallingItemStatus(record, TaskActionType.CANCEL)}>Delete</Link>}
+            {<Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.CANCEL)}>Delete</Link>}
           </Space>
         );
       }
     }
   ];
 
-  const data = installingData.filter(item => {
+  const data = installTasks.filter(item => {
     if (type === 'all') {
       return item;
     } else {

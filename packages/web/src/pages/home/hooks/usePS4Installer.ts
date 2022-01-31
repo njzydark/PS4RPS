@@ -11,7 +11,7 @@ import {
   pauseApi,
   resumeApi
 } from '@/service/ps4';
-import { FileStat, InstallingData, PS4Host, TaskActionType, TaskStatus } from '@/types';
+import { FileStat, InstallTask, PS4Host, TaskActionType, TaskStatus } from '@/types';
 
 const initialPs4Hosts: PS4Host[] = [
   {
@@ -21,20 +21,27 @@ const initialPs4Hosts: PS4Host[] = [
   }
 ];
 
-export const usePS4Installer = (installBaseUrl?: string) => {
+export const usePS4Installer = (webDavHostUrl?: string) => {
   const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(initialPs4Hosts);
   const [curSelectPs4HostId, setCurSelectPs4HostId] = useState(initialPs4Hosts[0].id);
-  const [installingData, setInstallingData] = useState<InstallingData[]>([]);
+  const [installTasks, setInstallTasks] = useState<InstallTask[]>([]);
+
+  const curPs4Host = ps4Hosts.find(item => item.id === curSelectPs4HostId);
 
   useEffect(() => {
-    const curPs4Host = ps4Hosts.find(item => item.id === curSelectPs4HostId);
-    if (curPs4Host) {
+    if (curPs4Host?.url) {
       changeBaseUrl(curPs4Host.url);
     }
-  }, [ps4Hosts, curSelectPs4HostId]);
+  }, [curPs4Host?.url]);
 
   const handleInstall = async (file: FileStat) => {
     try {
+      if (!curPs4Host?.url) {
+        throw new Error(`PS4 host url not found`);
+      }
+      if (!webDavHostUrl) {
+        throw new Error(`WebDAV host url not found`);
+      }
       if (!file.downloadUrl) {
         throw new Error(`Download url not found`);
       }
@@ -47,16 +54,16 @@ export const usePS4Installer = (installBaseUrl?: string) => {
         // @ts-ignore
         throw new Error(data.trim());
       }
-      if (data.task_id && !installingData.find(item => item.taskId === data.task_id)) {
-        installingData.unshift({
+      if (data.task_id && !installTasks.find(item => item.taskId === data.task_id)) {
+        installTasks.unshift({
           file,
           taskId: data.task_id,
           title: data.title,
-          ps4BaseUrl: curSelectPs4HostId,
-          installBaseUrl: installBaseUrl as string,
+          ps4HostUrl: curPs4Host.url,
+          webDavHostUrl,
           status: TaskStatus.INSTALLING
         });
-        setInstallingData([...installingData]);
+        setInstallTasks([...installTasks]);
         Notification.success({
           title: data.title || file.basename,
           content: `Start install`
@@ -71,30 +78,30 @@ export const usePS4Installer = (installBaseUrl?: string) => {
   };
 
   useEffect(() => {
-    console.log('installingData', installingData);
+    console.log('installTasks', installTasks);
 
-    const needCheckInstallingData = installingData.filter(item => item.status === TaskStatus.INSTALLING);
+    const needCheckInstallTasks = installTasks.filter(item => item.status === TaskStatus.INSTALLING);
 
-    if (!needCheckInstallingData.length) {
+    if (!needCheckInstallTasks.length) {
       return;
     }
 
     let didCheckProgressCacncel = false;
 
     const checkProgress = async () => {
-      const promises = needCheckInstallingData.map(async item => {
+      const promises = needCheckInstallTasks.map(async item => {
         try {
           const { data } = await getTaskProgressApi(item.taskId);
           const percent = data.length_total ? (data.transferred_total / data.length_total) * 100 : 0;
           data._percent = percent >= 100 ? 100 : Number(percent.toFixed(0) || 0);
           return {
-            id: item.taskId,
+            taskId: item.taskId,
             status: data._percent === 100 ? TaskStatus.FINISHED : TaskStatus.INSTALLING,
             progressInfo: data
           };
         } catch (err) {
           return {
-            id: item.taskId,
+            taskId: item.taskId,
             status: TaskStatus.PAUSED,
             errorMessage: (err as Error).message
           };
@@ -102,9 +109,9 @@ export const usePS4Installer = (installBaseUrl?: string) => {
       });
       const res = await Promise.all(promises);
       if (!didCheckProgressCacncel) {
-        setInstallingData(pre => {
-          const newInstallingData = pre.reduce<InstallingData[]>((acc, cur) => {
-            const curProgressInfo = res.find(item => item.id === cur.taskId);
+        setInstallTasks(pre => {
+          const newInstallTasks = pre.reduce<InstallTask[]>((acc, cur) => {
+            const curProgressInfo = res.find(item => item.taskId === cur.taskId);
             if (curProgressInfo) {
               acc.push({ ...cur, ...curProgressInfo });
             } else {
@@ -112,7 +119,7 @@ export const usePS4Installer = (installBaseUrl?: string) => {
             }
             return acc;
           }, []);
-          return newInstallingData;
+          return newInstallTasks;
         });
       }
     };
@@ -126,22 +133,22 @@ export const usePS4Installer = (installBaseUrl?: string) => {
       didCheckProgressCacncel = true;
       clearInterval(timer);
     };
-  }, [installingData]);
+  }, [installTasks]);
 
-  const handleChangeInstallingItemStatus = async (installingItem: InstallingData, actionType: TaskActionType) => {
+  const handleChangeInstallTaskStatus = async (installTask: InstallTask, actionType: TaskActionType) => {
     try {
       if (actionType === TaskActionType.DELETE) {
-        setInstallingData(pre => pre.filter(item => item.taskId !== installingItem.taskId));
+        setInstallTasks(pre => pre.filter(item => item.taskId !== installTask.taskId));
         return;
       }
       const { data } = await (actionType === TaskActionType.PAUSE
-        ? pauseApi(installingItem.taskId)
+        ? pauseApi(installTask.taskId)
         : actionType === TaskActionType.RESUME
-        ? resumeApi(installingItem.taskId)
-        : cancelApi(installingItem.taskId));
+        ? resumeApi(installTask.taskId)
+        : cancelApi(installTask.taskId));
       if (data.status === 'success') {
-        setInstallingData(pre => {
-          const cur = installingData.find(item => item.taskId === installingItem.taskId);
+        setInstallTasks(pre => {
+          const cur = installTasks.find(item => item.taskId === installTask.taskId);
           if (cur) {
             cur.status =
               actionType === TaskActionType.PAUSE
@@ -151,13 +158,13 @@ export const usePS4Installer = (installBaseUrl?: string) => {
                 : cur.status;
           }
           if (actionType === TaskActionType.CANCEL) {
-            return pre.filter(item => item.taskId !== installingItem.taskId);
+            return pre.filter(item => item.taskId !== installTask.taskId);
           } else {
             return [...pre];
           }
         });
         Notification.success({
-          title: installingItem.title,
+          title: installTask.title,
           content: `${actionType} success`
         });
       } else {
@@ -167,19 +174,19 @@ export const usePS4Installer = (installBaseUrl?: string) => {
       }
     } catch (err) {
       Notification.error({
-        title: installingItem.title,
+        title: installTask.title,
         content: `${actionType} failed: ${(err as Error).message}`
       });
     }
   };
 
   return {
-    installingData,
+    installTasks,
     handleInstall,
     ps4Hosts,
     curSelectPs4HostId,
     setPs4Hosts,
     setCurSelectPs4HostId,
-    handleChangeInstallingItemStatus
+    handleChangeInstallTaskStatus
   };
 };
