@@ -21,6 +21,11 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
     webDAV: { webDavHosts }
   } = useContainer();
 
+  const handleCancel = () => {
+    onCancel();
+    form.resetFields(undefined);
+  };
+
   const handleOk = async () => {
     const value = await form.validate();
     if (value) {
@@ -32,7 +37,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         value.id = nanoid();
       }
       onOk(value);
-      onCancel();
+      handleCancel();
     }
   };
 
@@ -40,7 +45,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
     <Modal
       visible={visible}
       title={!data?.id ? 'Create WebDAV Host Config' : 'Edit WebDAV Host Config'}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       onOk={handleOk}
     >
       <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
