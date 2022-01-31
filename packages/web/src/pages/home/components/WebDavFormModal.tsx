@@ -18,13 +18,13 @@ export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk
   const [form] = Form.useForm<FormData>();
 
   const {
-    webDAV: { servers }
+    webDAV: { webDavHosts }
   } = useContainer();
 
   const handleOk = async () => {
     const value = await form.validate();
     if (value) {
-      if (servers.find(item => item.url === value.url)) {
+      if (webDavHosts.find(item => item.url === value.url)) {
         Message.error(`The ${value.url} already exists`);
         return;
       }

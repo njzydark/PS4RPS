@@ -9,30 +9,30 @@ export const WebDavHost = () => {
   const [visible, setVisible] = useState(false);
 
   const { webDAV } = useContainer();
-  const { servers, curSelectServerId, setServers, setCurSelectServerId, getData } = webDAV;
+  const { webDavHosts, curSelectWebDavHostId, setWebDavHosts, setCurSelectWebDavHostId, getWebDavHostFiles } = webDAV;
 
   return (
     <div>
       <Typography.Title heading={6}>WebDAV Host</Typography.Title>
       <Space>
-        <Select style={{ width: 220 }} value={curSelectServerId} onChange={setCurSelectServerId}>
-          {servers.map(server => (
-            <Select.Option key={server.id} value={server.id}>
-              {server.alias || server.url}
+        <Select style={{ width: 220 }} value={curSelectWebDavHostId} onChange={setCurSelectWebDavHostId}>
+          {webDavHosts.map(host => (
+            <Select.Option key={host.id} value={host.id}>
+              {host.alias || host.url}
             </Select.Option>
           ))}
         </Select>
         <Button icon={<IconPlus />} onClick={() => setVisible(true)}>
           Add
         </Button>
-        <Button icon={<IconSync />} type="primary" onClick={getData}>
+        <Button icon={<IconSync />} type="primary" onClick={getWebDavHostFiles}>
           Refresh
         </Button>
       </Space>
       <WebDavFormModal
         visible={visible}
         onOk={value => {
-          setServers(pre => {
+          setWebDavHosts(pre => {
             pre.push({
               id: String(new Date().getTime()),
               url: value.url,

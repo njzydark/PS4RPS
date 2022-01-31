@@ -10,10 +10,10 @@ const useHook = () => {
   const [taskListVisible, setTaskListVisible] = useState(false);
 
   const webDAV = useWebDAV();
-  const { servers, curSelectServerId, webDavClient } = webDAV;
+  const { webDavHosts, curSelectWebDavHostId, webDavClient } = webDAV;
 
-  const curServer = servers.find(server => server.id === curSelectServerId);
-  const ps4Installer = usePS4Installer(curServer?.url);
+  const curWebDavHost = webDavHosts.find(host => host.id === curSelectWebDavHostId);
+  const ps4Installer = usePS4Installer(curWebDavHost?.url);
 
   const handleInstall = async (file: FileStat) => {
     if (webDavClient.current) {

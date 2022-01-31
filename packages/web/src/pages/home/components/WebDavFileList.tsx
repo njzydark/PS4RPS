@@ -8,7 +8,7 @@ const blackList = ['.DS_Store', '@eaDir'];
 
 export const WebDavFileList = () => {
   const {
-    webDAV: { data, loading },
+    webDAV: { webDavHostFiles, loading },
     handleInstall
   } = useContainer();
 
@@ -43,7 +43,7 @@ export const WebDavFileList = () => {
       border={false}
       size="small"
       pagination={false}
-      data={data.filter(file => !blackList.includes(file.basename))}
+      data={webDavHostFiles.filter(file => !blackList.includes(file.basename))}
       columns={columns}
       loading={loading}
       rowKey="filename"

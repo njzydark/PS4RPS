@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { AuthType, createClient, WebDAVClient } from 'webdav/web';
 
-import { FileStat, ServerInfo } from '@/types';
+import { FileStat, WebDAVHost } from '@/types';
 
-const initialServers: ServerInfo[] = [
+const initialWebDavHosts: WebDAVHost[] = [
   {
     id: '0',
     url: 'http://192.168.0.106:5070',
@@ -18,15 +18,15 @@ const initialServers: ServerInfo[] = [
 export const useWebDAV = () => {
   const webDavClient = useRef<WebDAVClient>();
 
-  const [servers, setServers] = useState<ServerInfo[]>(initialServers);
-  const [curSelectServerId, setCurSelectServerId] = useState(initialServers[0].id);
+  const [webDavHosts, setWebDavHosts] = useState<WebDAVHost[]>(initialWebDavHosts);
+  const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState(initialWebDavHosts[0].id);
 
-  const [data, setData] = useState<FileStat[]>([]);
+  const [webDavHostFiles, setWebDavHostFiles] = useState<FileStat[]>([]);
   const [loading, setLoading] = useState(false);
 
   const didCancel = useRef(false);
 
-  const getData = async () => {
+  const getWebDavHostFiles = async () => {
     try {
       if (!webDavClient.current) {
         return;
@@ -35,7 +35,7 @@ export const useWebDAV = () => {
       setLoading(true);
       const res = await webDavClient.current.getDirectoryContents('/');
       if (!didCancel.current) {
-        setData(res as FileStat[]);
+        setWebDavHostFiles(res as FileStat[]);
         setLoading(false);
         didCancel.current = true;
       }
@@ -43,7 +43,7 @@ export const useWebDAV = () => {
       if (didCancel.current) {
         return;
       }
-      setData([]);
+      setWebDavHostFiles([]);
       setLoading(false);
       if (err instanceof Error) {
         console.log(err.message);
@@ -53,25 +53,25 @@ export const useWebDAV = () => {
   };
 
   useEffect(() => {
-    const curServer = servers.find(server => server.id === curSelectServerId);
-    if (curServer) {
-      webDavClient.current = createClient(curServer.url, curServer.options);
+    const curHost = webDavHosts.find(host => host.id === curSelectWebDavHostId);
+    if (curHost) {
+      webDavClient.current = createClient(curHost.url, curHost.options);
     }
-    getData();
-  }, [curSelectServerId, servers]);
+    getWebDavHostFiles();
+  }, [curSelectWebDavHostId, webDavHosts]);
 
   useEffect(() => {
-    getData();
+    getWebDavHostFiles();
   }, []);
 
   return {
-    servers,
-    setServers,
-    curSelectServerId,
-    setCurSelectServerId,
-    data,
+    webDavHosts,
+    setWebDavHosts,
+    curSelectWebDavHostId,
+    setCurSelectWebDavHostId,
+    webDavHostFiles,
     loading,
-    getData,
+    getWebDavHostFiles,
     webDavClient
   };
 };

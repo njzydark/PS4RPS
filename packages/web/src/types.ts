@@ -4,7 +4,7 @@ export type FileStat = RawFileStat & {
   downloadUrl?: string;
 };
 
-export type ServerInfo = {
+export type WebDAVHost = {
   id: string;
   alias?: string;
   url: string;
