@@ -34,7 +34,7 @@ export const WebDavHost = () => {
         onOk={value => {
           setWebDavHosts(pre => {
             pre.push({
-              id: String(new Date().getTime()),
+              id: value.id as string,
               url: value.url,
               alias: value.alias,
               options: {

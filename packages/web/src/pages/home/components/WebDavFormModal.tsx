@@ -1,20 +1,20 @@
 import { Form, Input, Message, Modal } from '@arco-design/web-react';
+import { nanoid } from 'nanoid';
 
 import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 
-type FormData = { alias?: string; url: string; username?: string; password?: string };
+type FormData = { id?: string; alias?: string; url: string; username?: string; password?: string };
 
 type Props = {
   data?: FormData;
-  type?: 'create' | 'edit';
   visible: boolean;
   onOk: (data: FormData) => void;
   onCancel: () => void;
 };
 
-export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk }: Props) => {
+export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   const [form] = Form.useForm<FormData>();
 
   const {
@@ -28,6 +28,9 @@ export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk
         Message.error(`The ${value.url} already exists`);
         return;
       }
+      if (!value.id) {
+        value.id = nanoid();
+      }
       onOk(value);
       onCancel();
     }
@@ -36,11 +39,14 @@ export const WebDavFormModal = ({ data, visible, type = 'create', onCancel, onOk
   return (
     <Modal
       visible={visible}
-      title={type === 'create' ? 'Create WebDAV Config' : 'Edit WebDAV Config'}
+      title={!data?.id ? 'Create WebDAV Host Config' : 'Edit WebDAV Host Config'}
       onCancel={onCancel}
       onOk={handleOk}
     >
       <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
+        <FormItem label="Id" field="id" style={{ display: 'none' }}>
+          <Input />
+        </FormItem>
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
