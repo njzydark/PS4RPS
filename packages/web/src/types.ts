@@ -7,6 +7,8 @@ export type FileStat = RawFileStat & {
 export type WebDAVHost = {
   id: string;
   alias?: string;
+  directoryPath?: string;
+  port?: number;
   url: string;
   options?: WebDAVClientOptions;
 };

@@ -37,6 +37,8 @@ export const WebDavHost = () => {
               id: value.id as string,
               url: value.url,
               alias: value.alias,
+              directoryPath: value.directoryPath,
+              port: value.port,
               options: {
                 username: value.username,
                 password: value.password

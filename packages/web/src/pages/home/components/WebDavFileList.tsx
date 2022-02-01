@@ -4,7 +4,7 @@ import { FileStat } from '@/types';
 
 import { useContainer } from '../container';
 
-const blackList = ['.DS_Store', '@eaDir'];
+const blackList = ['.DS_Store', '@eaDir', '._.DS_Store'];
 
 export const WebDavFileList = () => {
   const {

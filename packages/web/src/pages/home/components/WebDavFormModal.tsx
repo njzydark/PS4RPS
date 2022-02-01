@@ -1,11 +1,20 @@
-import { Form, Input, Message, Modal } from '@arco-design/web-react';
+import { Button, Form, Input, InputNumber, Message, Modal, Radio } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 
 import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 
-type FormData = { id?: string; alias?: string; url: string; username?: string; password?: string };
+type FormData = {
+  id?: string;
+  alias?: string;
+  url: string;
+  username?: string;
+  password?: string;
+  directoryPath?: string;
+  port?: number;
+};
 
 type Props = {
   data?: FormData;
@@ -15,6 +24,8 @@ type Props = {
 };
 
 export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
+  const [createType, setCreateType] = useState<'auto' | 'manual'>('auto');
+
   const [form] = Form.useForm<FormData>();
 
   const {
@@ -28,16 +39,42 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
 
   const handleOk = async () => {
     const value = await form.validate();
-    if (value) {
+    if (!value) {
+      return;
+    }
+    try {
+      if (!value.id) {
+        value.id = nanoid();
+      }
       if (webDavHosts.find(item => item.url === value.url)) {
         Message.error(`The ${value.url} already exists`);
         return;
       }
-      if (!value.id) {
-        value.id = nanoid();
+      if (createType === 'auto') {
+        const res = await window.electron.createWebDavServer({
+          directoryPath: value.directoryPath as string,
+          port: value.port as number
+        });
+        if (res.success && res.url) {
+          Message.success(`Create webdav server success: ${res.url}`);
+          value.url = res.url;
+        } else {
+          Message.error(res?.errorMessage || 'Create webdav server failed');
+          return;
+        }
       }
       onOk(value);
       handleCancel();
+    } catch (err) {
+      Message.error((err as Error).message);
+    }
+  };
+
+  const handleSelectDirectory = async () => {
+    const res = await window.electron.openDirectoryDialog();
+    console.log(res);
+    if (res) {
+      form.setFieldValue('directoryPath', res);
     }
   };
 
@@ -48,6 +85,12 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       onCancel={handleCancel}
       onOk={handleOk}
     >
+      {window.electron && !data?.id && (
+        <Radio.Group type="button" defaultValue={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
+          <Radio value="auto">Auto</Radio>
+          <Radio value="manual">Manual</Radio>
+        </Radio.Group>
+      )}
       <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
           <Input />
@@ -55,15 +98,45 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        <FormItem label="URL" field="url" rules={[{ required: true, message: 'Please input url' }]}>
-          <Input />
-        </FormItem>
-        <FormItem label="Username" field="username">
-          <Input />
-        </FormItem>
-        <FormItem label="Password" field="password">
-          <Input />
-        </FormItem>
+        {createType === 'auto' ? (
+          <>
+            <FormItem
+              label="Directory Path"
+              field="directoryPath"
+              rules={[{ required: true, message: 'Please select directory path' }]}
+              shouldUpdate
+            >
+              {(values: FormData) => (
+                <>
+                  <Button type="primary" onClick={handleSelectDirectory}>
+                    Select directory
+                  </Button>
+                  {values.directoryPath && <div style={{ marginTop: 8 }}>{values.directoryPath}</div>}
+                </>
+              )}
+            </FormItem>
+            <FormItem
+              label="Port"
+              field="port"
+              rules={[{ required: true, message: 'Please set port' }]}
+              initialValue={1024}
+            >
+              <InputNumber min={1024} />
+            </FormItem>
+          </>
+        ) : (
+          <>
+            <FormItem label="URL" field="url" rules={[{ required: true, message: 'Please input url' }]}>
+              <Input />
+            </FormItem>
+            <FormItem label="Username" field="username">
+              <Input />
+            </FormItem>
+            <FormItem label="Password" field="password">
+              <Input />
+            </FormItem>
+          </>
+        )}
       </Form>
     </Modal>
   );
