@@ -1,3 +1,5 @@
+import './preload';
+
 import { config as dotenvConfig } from 'dotenv';
 import { app } from 'electron';
 import reloader from 'electron-reloader';

@@ -1,4 +1,5 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { ipcMainHandle } from 'common/typedIpc';
+import { app, BrowserWindow } from 'electron';
 
 import { Logger } from './logger';
 
@@ -28,5 +29,9 @@ export class Ipc {
     this.init();
   }
 
-  protected init() {}
+  protected init() {
+    ipcMainHandle('getAppVersion', async () => {
+      return app.getVersion();
+    });
+  }
 }

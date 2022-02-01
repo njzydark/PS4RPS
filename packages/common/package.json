@@ -1,0 +1,13 @@
+{
+  "name": "common",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=12"
+  },
+  "author": "njzy",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "16.0.8"
+  }
+}
