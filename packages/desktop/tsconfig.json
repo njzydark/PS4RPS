@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -7,5 +7,9 @@
         "src/*"
       ]
     }
-  }
+  },
+  "include": [
+    "**/*",
+    "node_modules/common/**/*",
+  ]
 }

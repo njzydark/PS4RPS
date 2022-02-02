@@ -5,6 +5,12 @@
   "engines": {
     "node": ">=12"
   },
+  "scripts": {
+    "tsc": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx",
+    "lint:fix": "eslint --fix --ext .ts,.tsx",
+    "prettier": "prettier --write"
+  },
   "author": "njzy",
   "license": "MIT",
   "devDependencies": {

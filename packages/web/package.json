@@ -9,7 +9,11 @@
     "dev": "cross-env NODE_ENV=development webpack serve --config build/webpack.config.dev.ts",
     "dev-debug": "cross-env OPEN_DEBUG_PAGES=true NODE_ENV=development webpack serve --config build/webpack.config.dev.ts",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.config.prod.ts",
-    "analy": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts"
+    "analy": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --fix --ext .ts,.tsx",
+    "prettier": "prettier --write src"
   },
   "author": "njzy",
   "license": "MIT",

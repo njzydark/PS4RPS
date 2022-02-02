@@ -12,7 +12,11 @@
     "build": "cross-env NODE_ENV=production webpack --mode production --config build/webpack.config.prod.ts",
     "analyz": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --fix --ext .ts,.tsx",
+    "prettier": "prettier --write src"
   },
   "author": "njzy",
   "license": "MIT",
