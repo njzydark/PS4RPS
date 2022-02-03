@@ -38,7 +38,7 @@
     "@babel/preset-typescript": "^7.16.0",
     "@babel/runtime": "^7.16.3",
     "@changesets/cli": "^2.20.0",
-    "@njzy/mini-react-refresh-webpack-plugin": "^0.1.1",
+    "@njzy/mini-react-refresh-webpack-plugin": "^0.2.1",
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.12",
     "@types/react": "^17.0.37",

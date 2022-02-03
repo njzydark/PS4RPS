@@ -14,7 +14,7 @@ importers:
       '@babel/preset-typescript': ^7.16.0
       '@babel/runtime': ^7.16.3
       '@changesets/cli': ^2.20.0
-      '@njzy/mini-react-refresh-webpack-plugin': ^0.1.1
+      '@njzy/mini-react-refresh-webpack-plugin': ^0.2.1
       '@types/express': ^4.17.13
       '@types/node': ^16.11.12
       '@types/react': ^17.0.37
@@ -68,7 +68,7 @@ importers:
       '@babel/preset-typescript': 7.16.7_@babel+core@7.16.12
       '@babel/runtime': 7.16.7
       '@changesets/cli': 2.20.0
-      '@njzy/mini-react-refresh-webpack-plugin': 0.1.1
+      '@njzy/mini-react-refresh-webpack-plugin': 0.2.1_react-refresh@0.11.0
       '@types/express': 4.17.13
       '@types/node': 16.11.21
       '@types/react': 17.0.38
@@ -1783,9 +1783,13 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
-  /@njzy/mini-react-refresh-webpack-plugin/0.1.1:
-    resolution: {integrity: sha512-LW9fBt/aAkVPqhNF1AbN67Hkp+1Zz9rXqjAOsmKS8SSrW1Fniru9wJ1y3tBFdblllTSPU4lqnytotz8d0aEZrQ==}
+  /@njzy/mini-react-refresh-webpack-plugin/0.2.1_react-refresh@0.11.0:
+    resolution: {integrity: sha512-KbwGCvPlMn333rzlowEWkcfzf6Rp11FHwlPEO+YvPNgqm9+DN60GgJQoSgyXpLtsvqwjmk+T1enJ+sknWZur0Q==}
     engines: {node: '>=12'}
+    peerDependencies:
+      react-refresh: ^0.10.0
+    dependencies:
+      react-refresh: 0.11.0
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:

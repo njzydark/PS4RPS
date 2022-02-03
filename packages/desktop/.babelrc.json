@@ -1,15 +1,5 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": "last 2 versions"
-      }
-    ],
-    "@babel/preset-typescript"
-  ],
   "plugins": [
-    "@babel/plugin-transform-runtime",
     [
       "@babel/plugin-proposal-decorators",
       {

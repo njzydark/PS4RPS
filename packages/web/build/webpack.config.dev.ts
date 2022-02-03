@@ -28,7 +28,13 @@ const config = merge(baseConfig, {
     compress: true,
     historyApiFallback: true
   },
-  plugins: [new MiniReactRefreshWebpackPlugin()]
+  plugins: [
+    new MiniReactRefreshWebpackPlugin({
+      babelLoaderOptions: {
+        rootMode: 'upward'
+      }
+    })
+  ]
 });
 
 export default config;
