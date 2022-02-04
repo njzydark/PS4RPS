@@ -115,8 +115,10 @@ importers:
   packages/common:
     specifiers:
       electron: 16.0.8
+      electron-store: ^8.0.1
     devDependencies:
       electron: 16.0.8
+      electron-store: 8.0.1
 
   packages/desktop:
     specifiers:

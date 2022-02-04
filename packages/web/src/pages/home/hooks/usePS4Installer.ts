@@ -12,18 +12,13 @@ import {
   resumeApi
 } from '@/service/ps4';
 import { FileStat, InstallTask, PS4Host, TaskActionType, TaskStatus } from '@/types';
-
-const initialPs4Hosts: PS4Host[] = [
-  {
-    id: '1',
-    url: 'http://192.168.123.43:12800',
-    alias: 'PS4-1'
-  }
-];
+import { getInitConfigFromStore, updateConfigStore } from '@/utils';
 
 export const usePS4Installer = (webDavHostUrl?: string) => {
-  const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(initialPs4Hosts);
-  const [curSelectPs4HostId, setCurSelectPs4HostId] = useState(initialPs4Hosts[0].id);
+  const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(getInitConfigFromStore('ps4Hosts', []));
+  const [curSelectPs4HostId, setCurSelectPs4HostId] = useState<string | undefined>(
+    getInitConfigFromStore('curSelectPs4HostId', undefined)
+  );
   const [installTasks, setInstallTasks] = useState<InstallTask[]>([]);
 
   const curPs4Host = ps4Hosts.find(item => item.id === curSelectPs4HostId);
@@ -33,6 +28,11 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
       changeBaseUrl(curPs4Host.url);
     }
   }, [curPs4Host?.url]);
+
+  useEffect(() => {
+    updateConfigStore('ps4Hosts', ps4Hosts);
+    updateConfigStore('curSelectPs4HostId', curSelectPs4HostId);
+  }, [curSelectPs4HostId, ps4Hosts]);
 
   const handleInstall = async (file: FileStat) => {
     try {

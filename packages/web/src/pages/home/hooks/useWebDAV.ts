@@ -1,28 +1,19 @@
 import { Notification } from '@arco-design/web-react';
 import { useEffect, useRef, useState } from 'react';
-import { AuthType, createClient, WebDAVClient } from 'webdav/web';
+import { createClient, WebDAVClient } from 'webdav/web';
 
 import { FileStat, WebDAVHost } from '@/types';
+import { getInitConfigFromStore, updateConfigStore } from '@/utils';
 
 const blackList = ['.DS_Store', '@eaDir', '._.DS_Store'];
-
-const initialWebDavHosts: WebDAVHost[] = [
-  {
-    id: '0',
-    url: 'http://192.168.0.106:5070',
-    options: {
-      authType: AuthType.Password,
-      username: 'admin',
-      password: '123456'
-    }
-  }
-];
 
 export const useWebDAV = () => {
   const webDavClient = useRef<WebDAVClient>();
 
-  const [webDavHosts, setWebDavHosts] = useState<WebDAVHost[]>(initialWebDavHosts);
-  const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState(initialWebDavHosts[0].id);
+  const [webDavHosts, setWebDavHosts] = useState<WebDAVHost[]>(() => getInitConfigFromStore('webDavHosts', []));
+  const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState<string | undefined>(
+    getInitConfigFromStore('curSelectWebDavHostId', undefined)
+  );
 
   const [webDavHostFiles, setWebDavHostFiles] = useState<FileStat[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,6 +68,11 @@ export const useWebDAV = () => {
     }
     getWebDavHostFiles(paths.join('/'));
   }, [curSelectWebDavHostId, webDavHosts, paths]);
+
+  useEffect(() => {
+    updateConfigStore('webDavHosts', webDavHosts);
+    updateConfigStore('curSelectWebDavHostId', curSelectWebDavHostId);
+  }, [curSelectWebDavHostId, webDavHosts]);
 
   const [searchKeyWord, setSearchKeyWord] = useState('');
 
