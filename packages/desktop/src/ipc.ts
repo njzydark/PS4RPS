@@ -1,7 +1,9 @@
 import { ipcMainHandle, ipcMainOn } from 'common/typedIpc';
 import { app, BrowserWindow, dialog } from 'electron';
+import fs from 'fs';
 
 import { Logger } from './logger';
+import { configStore } from './store';
 import { getIp } from './utils';
 import { webDavServerManager } from './webDavServer';
 
@@ -32,6 +34,8 @@ export class Ipc {
   }
 
   protected init() {
+    this.initWebDavServer();
+
     ipcMainHandle('getAppVersion', async () => {
       return app.getVersion();
     });
@@ -59,5 +63,18 @@ export class Ipc {
         };
       }
     });
+  }
+
+  protected async initWebDavServer() {
+    try {
+      const { webDavHosts, curSelectWebDavHostId } = configStore.store;
+      const curWebDavServer = webDavHosts.find(item => item.id === curSelectWebDavHostId);
+      if (curWebDavServer?.port && curWebDavServer?.directoryPath && fs.existsSync(curWebDavServer?.directoryPath)) {
+        await webDavServerManager.create({ directoryPath: curWebDavServer.directoryPath, port: curWebDavServer.port });
+        console.log(`Init WebDAV server success: ${curWebDavServer.directoryPath}`);
+      }
+    } catch (err) {
+      console.error(`Init WebDAV server failed: ${(err as Error).message}`);
+    }
   }
 }
