@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
-  const [createType, setCreateType] = useState<'auto' | 'manual'>('auto');
+  const [createType, setCreateType] = useState<'directory' | 'url'>(window.electron ? 'directory' : 'url');
 
   const [form] = Form.useForm<FormData>();
 
@@ -50,7 +50,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         Message.error(`The ${value.url} already exists`);
         return;
       }
-      if (createType === 'auto') {
+      if (createType === 'directory') {
         const res = await window.electron.createWebDavServer({
           directoryPath: value.directoryPath as string,
           port: value.port as number
@@ -90,8 +90,8 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
     >
       {window.electron && !data?.id && (
         <Radio.Group type="button" defaultValue={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
-          <Radio value="auto">Auto</Radio>
-          <Radio value="manual">Manual</Radio>
+          <Radio value="directory">Directory</Radio>
+          <Radio value="url">URL</Radio>
         </Radio.Group>
       )}
       <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
@@ -101,7 +101,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        {createType === 'auto' ? (
+        {createType === 'directory' ? (
           <>
             <FormItem
               label="Directory Path"
@@ -122,7 +122,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
               label="Port"
               field="port"
               rules={[{ required: true, message: 'Please set port' }]}
-              initialValue={1024}
+              initialValue={1090}
             >
               <InputNumber min={1024} />
             </FormItem>
