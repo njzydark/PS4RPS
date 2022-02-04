@@ -55,10 +55,10 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           directoryPath: value.directoryPath as string,
           port: value.port as number
         });
-        if (res.success && res.url) {
+        if (res?.url) {
           Notification.success({
             title: 'Create WebDav Server Success',
-            content: `The WebDav Server is created successfully, the url is ${res.url}`
+            content: `The server url is ${res.url}`
           });
           value.url = res.url;
         } else {

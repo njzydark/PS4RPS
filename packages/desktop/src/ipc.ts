@@ -44,26 +44,18 @@ export class Ipc {
       event.returnValue = filePaths[0];
     });
 
-    ipcMainHandle('createWebDavServer', async (event, { directoryPath, port }) => {
+    ipcMainHandle('createWebDavServer', async (_, { directoryPath, port }) => {
       try {
         const res = await webDavServerManager.create({ directoryPath, port });
-        if (res) {
-          const ip = getIp();
-          if (ip) {
-            return {
-              success: true,
-              url: `http://${getIp()}:${port}`
-            };
-          }
+        const ip = getIp();
+        if (res && ip) {
+          return {
+            url: `http://${getIp()}:${port}`
+          };
         }
-        return {
-          success: false
-        };
       } catch (err) {
-        console.log((err as Error).message);
         return {
-          success: false,
-          errorMessage: (err as Error).message
+          errorMessage: `Create WebDAV server failed: ${(err as Error).message}`
         };
       }
     });

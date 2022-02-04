@@ -14,29 +14,25 @@ class WebDavServerManager {
 
   async create({ directoryPath, port }: { directoryPath: string; port: number }) {
     const server = new webdav.WebDAVServer({
-      requireAuthentification: false,
-      port
+      requireAuthentification: false
     });
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        server.setFileSystem('/', new webdav.PhysicalFileSystem(directoryPath), successed => {
-          if (!successed) {
-            reject(new Error('Failed to set file system'));
-          }
-          server.start(httpServer => {
-            if (httpServer) {
-              console.log(`WebDAV server ready on port: ${port}`);
-              this.server = server;
-              resolve(true);
-            } else {
-              reject(new Error('Failed to start WebDAV server'));
-            }
-          });
-        });
-      } catch (err) {
-        reject(err);
-      }
+    if (this.server) {
+      await this.server.stopAsync();
+    }
+    const isSetFileSystemSuccess = await server.setFileSystemAsync('/', new webdav.PhysicalFileSystem(directoryPath));
+    if (!isSetFileSystemSuccess) {
+      throw new Error('Failed to set file system');
+    }
+    process.on('uncaughtException', err => {
+      throw new Error(`Failed to start: ${err.message}`);
     });
+    const httpServer = await server.startAsync(port);
+    if (httpServer) {
+      this.server = server;
+      return true;
+    } else {
+      throw new Error('Failed to start');
+    }
   }
 }
 
