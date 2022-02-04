@@ -30,17 +30,14 @@ export const PS4Host = () => {
             </Select.Option>
           ))}
         </Select>
-        <Button icon={<IconPlus />} onClick={() => setVisible(true)}>
-          Add
-        </Button>
+        <Button icon={<IconPlus />} onClick={() => setVisible(true)} />
         <Button
+          type="primary"
           icon={<IconUnorderedList />}
           onClick={() => {
             setTaskListVisible(true);
           }}
-        >
-          Install Task List
-        </Button>
+        />
       </Space>
       <Drawer
         width={600}

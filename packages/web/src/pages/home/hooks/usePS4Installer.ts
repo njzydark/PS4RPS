@@ -45,6 +45,11 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
       if (!file.downloadUrl) {
         throw new Error(`Download url not found`);
       }
+      Notification.info({
+        id: file.basename,
+        title: file.basename,
+        content: `Start send to PS4 to install`
+      });
       const params: InstallParams<InstallType.DIRECT> = {
         type: InstallType.DIRECT,
         packages: [file.downloadUrl]
@@ -65,12 +70,14 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
         });
         setInstallTasks([...installTasks]);
         Notification.success({
+          id: file.basename,
           title: data.title || file.basename,
           content: `Start install`
         });
       }
     } catch (err) {
       Notification.error({
+        id: file.basename,
         title: `${file.basename} Install failed`,
         content: (err as Error).message
       });
