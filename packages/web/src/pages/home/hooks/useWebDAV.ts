@@ -1,7 +1,10 @@
+import { Notification } from '@arco-design/web-react';
 import { useEffect, useRef, useState } from 'react';
 import { AuthType, createClient, WebDAVClient } from 'webdav/web';
 
 import { FileStat, WebDAVHost } from '@/types';
+
+const blackList = ['.DS_Store', '@eaDir', '._.DS_Store'];
 
 const initialWebDavHosts: WebDAVHost[] = [
   {
@@ -24,18 +27,30 @@ export const useWebDAV = () => {
   const [webDavHostFiles, setWebDavHostFiles] = useState<FileStat[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [paths, setPaths] = useState<string[]>([]);
+
   const didCancel = useRef(false);
 
-  const getWebDavHostFiles = async () => {
+  const getWebDavHostFiles = async (path = '/') => {
     try {
       if (!webDavClient.current) {
         return;
       }
       didCancel.current = false;
       setLoading(true);
-      const res = await webDavClient.current.getDirectoryContents('/');
+      const res = await webDavClient.current.getDirectoryContents(path);
       if (!didCancel.current) {
-        setWebDavHostFiles(res as FileStat[]);
+        const newData =
+          (res as FileStat[])?.filter(item => {
+            if (item.type === 'directory' && !blackList.includes(item.basename)) {
+              return true;
+            } else if (item.type === 'file' && item.basename.endsWith('.pkg')) {
+              return true;
+            } else {
+              return false;
+            }
+          }) || [];
+        setWebDavHostFiles(newData);
         setLoading(false);
         didCancel.current = true;
       }
@@ -46,7 +61,10 @@ export const useWebDAV = () => {
       setWebDavHostFiles([]);
       setLoading(false);
       if (err instanceof Error) {
-        console.log(err.message);
+        Notification.error({
+          title: 'Get WebDav Host Files Error',
+          content: err.message
+        });
       }
       didCancel.current = true;
     }
@@ -57,12 +75,10 @@ export const useWebDAV = () => {
     if (curHost) {
       webDavClient.current = createClient(curHost.url, curHost.options);
     }
-    getWebDavHostFiles();
-  }, [curSelectWebDavHostId, webDavHosts]);
+    getWebDavHostFiles(paths.join('/'));
+  }, [curSelectWebDavHostId, webDavHosts, paths]);
 
-  useEffect(() => {
-    getWebDavHostFiles();
-  }, []);
+  const [searchKeyWord, setSearchKeyWord] = useState('');
 
   return {
     webDavHosts,
@@ -72,6 +88,10 @@ export const useWebDAV = () => {
     webDavHostFiles,
     loading,
     getWebDavHostFiles,
-    webDavClient
+    webDavClient,
+    paths,
+    setPaths,
+    searchKeyWord,
+    setSearchKeyWord
   };
 };

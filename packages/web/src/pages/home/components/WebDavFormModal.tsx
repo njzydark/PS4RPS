@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Message, Modal, Radio } from '@arco-design/web-react';
+import { Button, Form, Input, InputNumber, Message, Modal, Notification, Radio } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
@@ -56,7 +56,10 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           port: value.port as number
         });
         if (res.success && res.url) {
-          Message.success(`Create webdav server success: ${res.url}`);
+          Notification.success({
+            title: 'Create WebDav Server Success',
+            content: `The WebDav Server is created successfully, the url is ${res.url}`
+          });
           value.url = res.url;
         } else {
           Message.error(res?.errorMessage || 'Create webdav server failed');
