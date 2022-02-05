@@ -1,7 +1,7 @@
 {
   "name": "desktop",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "productName": "PS4RPS",
   "description": "Remote pkg sender for PS4",
   "author": "njzy",
