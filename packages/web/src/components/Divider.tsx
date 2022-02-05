@@ -13,7 +13,7 @@ export const Divider = ({ className, style }: Props) => {
         height: '1px',
         margin: '10px 0',
         width: '100%',
-        background: '#f9f9f9',
+        background: 'var(--color-neutral-3)',
         ...style
       }}
     ></div>

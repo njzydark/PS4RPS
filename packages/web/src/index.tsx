@@ -11,14 +11,17 @@ const rootEl = document.createElement('div');
 rootEl.id = 'root';
 document.body.appendChild(rootEl);
 
-render(
-  <HashRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </HashRouter>,
-  rootEl
-);
+const RouterWrapper = () => {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Home />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </HashRouter>
+  );
+};
+
+render(<RouterWrapper />, rootEl);

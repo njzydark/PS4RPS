@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Icon from '@/assets/icon.png';
 
 import styles from './Header.module.less';
+import { ToggleDarkMode } from './ToggleDarkMode';
 
 const LinkUrl = 'https://github.com/njzydark/PS4RPI';
 
@@ -51,6 +52,7 @@ export const Header = () => {
         <Space>
           <Button type="default" icon={<IconInfoCircle />} onClick={() => setInfoVisible(true)} />
           {/* <Button type="default" icon={<IconSettings />} /> */}
+          <ToggleDarkMode />
         </Space>
       </div>
       <Modal title="Info" footer={null} visible={infoVisible} onCancel={() => setInfoVisible(false)}>
