@@ -132,11 +132,11 @@ importers:
       electron-reloader: ^1.2.1
       electron-store: ^8.0.1
       fs-extra: ^10.0.0
+      semver: ^7.3.5
       webdav-server: ^2.6.2
-    dependencies:
-      common: link:../common
     devDependencies:
       axios: 0.25.0
+      common: link:../common
       cross-env: 7.0.3
       dotenv: 14.3.2
       electron: 16.0.8
@@ -145,6 +145,7 @@ importers:
       electron-reloader: 1.2.1
       electron-store: 8.0.1
       fs-extra: 10.0.0
+      semver: 7.3.5
       webdav-server: 2.6.2
 
   packages/web:

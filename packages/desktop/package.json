@@ -2,8 +2,20 @@
   "name": "desktop",
   "private": true,
   "version": "1.0.0",
+  "productName": "PS4RPI",
+  "description": "PS4 remote pkg installer",
+  "author": "njzy",
+  "license": "MIT",
+  "homepage": "https://github.com/njzydark/PS4RPI#readme",
   "engines": {
     "node": ">=12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/njzydark/PS4RPI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/njzydark/PS4RPI/issues"
   },
   "main": "dist/main/index.js",
   "scripts": {
@@ -11,20 +23,17 @@
     "dev": "cross-env NODE_ENV=development webpack --watch --mode development --config build/webpack.config.dev.ts",
     "build": "cross-env NODE_ENV=production webpack --mode production --config build/webpack.config.prod.ts",
     "analyz": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "pack": "pnpm exec ts-node ./scripts/copyRenderer.ts && electron-builder --dir",
+    "dist": "pnpm exec ts-node ./scripts/copyRenderer.ts && electron-builder",
     "tsc": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --fix --ext .ts,.tsx",
     "prettier": "prettier --write src"
   },
-  "author": "njzy",
-  "license": "MIT",
-  "dependencies": {
-    "common": "workspace:^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "axios": "^0.25.0",
+    "common": "workspace:^1.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^14.3.2",
     "electron": "16.0.8",
@@ -33,11 +42,12 @@
     "electron-reloader": "^1.2.1",
     "electron-store": "^8.0.1",
     "fs-extra": "^10.0.0",
+    "semver": "^7.3.5",
     "webdav-server": "^2.6.2"
   },
   "build": {
-    "appId": "com.njzydark.demo",
-    "productName": "ElectronReactTsBoilerplate",
+    "appId": "com.njzydark.ps4rpi",
+    "productName": "PS4RPI",
     "directories": {
       "output": "output"
     },
@@ -45,14 +55,19 @@
       "dist",
       "node_modules"
     ],
+    "publish": [
+      "github"
+    ],
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
     "win": {
+      "icon": "assets/icon.png",
       "target": "nsis"
     },
     "mac": {
+      "icon": "assets/icon.icns",
       "identity": null
     }
   }

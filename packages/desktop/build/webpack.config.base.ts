@@ -66,10 +66,10 @@ const config: Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
-    new ContextReplacementPlugin(/any-promise/)
-    // new CopyPlugin({
-    //   patterns: [{ from: path.resolve(__dirname, './assets'), to: path.resolve(__dirname, './dist/assets') }]
-    // })
+    new ContextReplacementPlugin(/any-promise/),
+    new CopyPlugin({
+      patterns: [{ from: path.resolve(__dirname, '../assets'), to: path.resolve(__dirname, '../dist/assets') }]
+    })
   ].filter(Boolean)
 };
 

@@ -33,7 +33,9 @@ if (gotTheLock) {
   });
   app.on('window-all-closed', function () {
     console.log('app all window closed');
-    app?.dock?.hide();
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   });
   app.on('activate', () => {
     console.log('app activate');
