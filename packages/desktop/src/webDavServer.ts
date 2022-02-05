@@ -23,11 +23,19 @@ class WebDavServerManager {
     if (!isSetFileSystemSuccess) {
       throw new Error('Failed to set file system');
     }
-    process.on('uncaughtException', err => {
+    const handleError = (err: Error) => {
+      // @ts-ignore
+      if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is in use`);
+        return;
+      }
+      console.error(`Failed to start: ${err.message}`);
       throw new Error(`Failed to start: ${err.message}`);
-    });
+    };
+    process.on('uncaughtException', handleError);
     const httpServer = await server.startAsync(port);
     if (httpServer) {
+      process.removeAllListeners('uncaughtException');
       this.server = server;
       return true;
     } else {
