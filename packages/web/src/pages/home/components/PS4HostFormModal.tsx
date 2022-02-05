@@ -1,11 +1,12 @@
 import { Form, Input, Message, Modal } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
 
 import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 
-type FormData = { id?: string; alias?: string; url: string };
+export type FormData = { id?: string; alias?: string; url: string };
 
 type Props = {
   data?: FormData;
@@ -26,15 +27,22 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
     form.resetFields(undefined);
   };
 
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    form.setFieldsValue(data);
+  }, [data]);
+
   const handleOk = async () => {
     const value = await form.validate();
     if (value) {
-      if (ps4Hosts.find(item => item.url === value.url)) {
-        Message.error(`The ${value.url} already exists`);
-        return;
-      }
       if (!value.id) {
         value.id = nanoid();
+        if (ps4Hosts.find(item => item.url === value.url)) {
+          Message.error(`The ${value.url} already exists`);
+          return;
+        }
       }
       onOk(value);
       handleCancel();
@@ -48,7 +56,7 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       onCancel={handleCancel}
       onOk={handleOk}
     >
-      <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
+      <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
           <Input />
         </FormItem>
