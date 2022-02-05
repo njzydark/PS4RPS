@@ -33,6 +33,6 @@ export const updateConfigStore = <T extends keyof ConfigStore>(key: T, value: Co
       return localStorage.setItem(key, JSON.stringify(value));
     }
   } catch (err) {
-    console.log('update config error');
+    console.log(`update config error: ${(err as Error).message}`);
   }
 };

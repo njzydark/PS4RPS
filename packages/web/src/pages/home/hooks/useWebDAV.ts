@@ -11,7 +11,7 @@ export const useWebDAV = () => {
   const webDavClient = useRef<WebDAVClient>();
 
   const [webDavHosts, setWebDavHosts] = useState<WebDAVHost[]>(() => getInitConfigFromStore('webDavHosts', []));
-  const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState<string | undefined>(
+  const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState<string | undefined>(() =>
     getInitConfigFromStore('curSelectWebDavHostId', undefined)
   );
 

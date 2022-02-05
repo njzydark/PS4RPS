@@ -77,7 +77,7 @@ export const installApi = <T = InstallType>(data: InstallParams<T>) => {
   //     });
   //   }, 800);
   // });
-  return instance.post<string | InstallParseResponse>('/install', data);
+  return instance.post<InstallParseResponse>('/install', data);
 };
 
 export const unstallGameApi = (title_id: string) => {

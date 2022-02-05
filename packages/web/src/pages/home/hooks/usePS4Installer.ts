@@ -15,8 +15,8 @@ import { FileStat, InstallTask, PS4Host, TaskActionType, TaskStatus } from '@/ty
 import { getInitConfigFromStore, updateConfigStore } from '@/utils';
 
 export const usePS4Installer = (webDavHostUrl?: string) => {
-  const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(getInitConfigFromStore('ps4Hosts', []));
-  const [curSelectPs4HostId, setCurSelectPs4HostId] = useState<string | undefined>(
+  const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(() => getInitConfigFromStore('ps4Hosts', []));
+  const [curSelectPs4HostId, setCurSelectPs4HostId] = useState<string | undefined>(() =>
     getInitConfigFromStore('curSelectPs4HostId', undefined)
   );
   const [installTasks, setInstallTasks] = useState<InstallTask[]>([]);
@@ -55,10 +55,6 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
         packages: [file.downloadUrl]
       };
       const { data } = await installApi(params);
-      if (typeof data === 'string') {
-        // @ts-ignore
-        throw new Error(data.trim());
-      }
       if (data.task_id && !installTasks.find(item => item.taskId === data.task_id)) {
         installTasks.unshift({
           file,
