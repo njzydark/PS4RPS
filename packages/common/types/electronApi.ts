@@ -8,6 +8,7 @@ export interface IElectronIpcMainHandles {
     delete: ElectronConfigStore['delete'];
     clear: ElectronConfigStore['clear'];
   };
+  getPath: (path: Parameters<Electron.App['getPath']>[0]) => Promise<string>;
   getAppVersion: () => Promise<string>;
   openDirectoryDialog: () => Promise<string | undefined>;
   createWebDavServer: (params: { directoryPath: string; port: number }) => Promise<

@@ -3,7 +3,7 @@ import { app, BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 
 import { Logger } from './logger';
-import { configStore } from './store';
+import { storeManager } from './store';
 import { getIp } from './utils';
 import { webDavServerManager } from './webDavServer';
 
@@ -63,11 +63,15 @@ export class Ipc {
         };
       }
     });
+
+    ipcMainHandle('getPath', async (_, path) => {
+      return app.getPath(path);
+    });
   }
 
   protected async initWebDavServer() {
     try {
-      const { webDavHosts, curSelectWebDavHostId } = configStore.store;
+      const { webDavHosts, curSelectWebDavHostId } = storeManager.configStore.store;
       const curWebDavServer = webDavHosts.find(item => item.id === curSelectWebDavHostId);
       if (curWebDavServer?.port && curWebDavServer?.directoryPath && fs.existsSync(curWebDavServer?.directoryPath)) {
         await webDavServerManager.create({ directoryPath: curWebDavServer.directoryPath, port: curWebDavServer.port });
