@@ -1,12 +1,12 @@
 import { Button, Form, Input, InputNumber, Message, Modal, Notification, Radio } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 
-type FormData = {
+export type FormData = {
   id?: string;
   alias?: string;
   url: string;
@@ -34,8 +34,21 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
 
   const handleCancel = () => {
     onCancel();
+    setCreateType(window.electron ? 'directory' : 'url');
     form.resetFields(undefined);
   };
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    if (data?.directoryPath) {
+      setCreateType('directory');
+    } else {
+      setCreateType('url');
+    }
+    form.setFieldsValue(data);
+  }, [data]);
 
   const handleOk = async () => {
     const value = await form.validate();
@@ -45,24 +58,29 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
     try {
       if (!value.id) {
         value.id = nanoid();
+        if (webDavHosts.find(item => item.url === value.url)) {
+          Message.error(`The ${value.url} already exists`);
+          return;
+        }
+        if (webDavHosts.find(item => item.directoryPath === value.directoryPath)) {
+          Message.error(`The ${value.directoryPath} already exists`);
+          return;
+        }
       }
-      if (webDavHosts.find(item => item.url === value.url)) {
-        Message.error(`The ${value.url} already exists`);
-        return;
-      }
-      if (createType === 'directory') {
+      const actionName = value.id ? 'Update' : 'Create';
+      if (value.directoryPath) {
         const res = await window.electron.createWebDavServer({
           directoryPath: value.directoryPath as string,
           port: value.port as number
         });
         if (res?.url) {
           Notification.success({
-            title: 'Create WebDav Server Success',
+            title: `${actionName} WebDav Server Success`,
             content: `The server url is ${res.url}`
           });
           value.url = res.url;
         } else {
-          Message.error(res?.errorMessage || 'Create webdav server failed');
+          Message.error(res?.errorMessage || `${actionName} webdav server failed`);
           return;
         }
       }
@@ -94,7 +112,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           <Radio value="url">URL</Radio>
         </Radio.Group>
       )}
-      <Form form={form} layout="vertical" initialValues={data} requiredSymbol={{ position: 'end' }}>
+      <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
           <Input />
         </FormItem>

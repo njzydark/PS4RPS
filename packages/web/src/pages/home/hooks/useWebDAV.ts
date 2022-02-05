@@ -20,33 +20,33 @@ export const useWebDAV = () => {
 
   const [paths, setPaths] = useState<string[]>([]);
 
-  const didCancel = useRef(false);
+  let didCancel = false;
 
   const getWebDavHostFiles = async (path = '/') => {
     try {
       if (!webDavClient.current) {
         return;
       }
-      didCancel.current = false;
+      didCancel = false;
       setLoading(true);
       const res = await webDavClient.current.getDirectoryContents(path);
-      if (!didCancel.current) {
-        const newData =
-          (res as FileStat[])?.filter(item => {
-            if (item.type === 'directory' && !blackList.includes(item.basename)) {
-              return true;
-            } else if (item.type === 'file' && item.basename.endsWith('.pkg')) {
-              return true;
-            } else {
-              return false;
-            }
-          }) || [];
-        setWebDavHostFiles(newData);
-        setLoading(false);
-        didCancel.current = true;
+      if (didCancel) {
+        return;
       }
+      const newData =
+        (res as FileStat[])?.filter(item => {
+          if (item.type === 'directory' && !blackList.includes(item.basename)) {
+            return true;
+          } else if (item.type === 'file' && item.basename.endsWith('.pkg')) {
+            return true;
+          } else {
+            return false;
+          }
+        }) || [];
+      setWebDavHostFiles(newData);
+      setLoading(false);
     } catch (err) {
-      if (didCancel.current) {
+      if (didCancel) {
         return;
       }
       setWebDavHostFiles([]);
@@ -57,7 +57,6 @@ export const useWebDAV = () => {
           content: err.message
         });
       }
-      didCancel.current = true;
     }
   };
 
@@ -67,6 +66,10 @@ export const useWebDAV = () => {
       webDavClient.current = createClient(curHost.url, curHost.options);
     }
     getWebDavHostFiles(paths.join('/'));
+
+    return () => {
+      didCancel = true;
+    };
   }, [curSelectWebDavHostId, webDavHosts, paths]);
 
   useEffect(() => {
