@@ -36,8 +36,15 @@ export class Ipc {
   protected init() {
     this.initWebDavServer();
 
-    ipcMainHandle('getAppVersion', async () => {
-      return app.getVersion();
+    ipcMainHandle('getAppInfo', async () => {
+      const version = app.getVersion();
+      const path = app.getAppPath();
+      const name = app.getName();
+      return {
+        version,
+        path,
+        name
+      };
     });
 
     ipcMainOn('openDirectoryDialog', async event => {

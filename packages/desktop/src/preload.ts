@@ -1,6 +1,6 @@
 import { ipcRendererInvoke, ipcRendererSendSync } from 'common/typedIpc';
 import { IElectronAPI } from 'common/types';
-import { contextBridge } from 'electron';
+import { contextBridge, shell } from 'electron';
 
 import { storeManager } from './store';
 
@@ -18,8 +18,9 @@ export const preload = () => {
       clear: () => storeManager.configStore.clear()
     },
     platform: process.platform,
+    openExternal: url => shell.openExternal(url),
     getPath: path => ipcRendererInvoke('getPath', path),
-    getAppVersion: () => ipcRendererInvoke('getAppVersion'),
+    getAppInfo: () => ipcRendererInvoke('getAppInfo'),
     openDirectoryDialog: () => ipcRendererSendSync('openDirectoryDialog'),
     createWebDavServer: ({ directoryPath, port }) => ipcRendererInvoke('createWebDavServer', { directoryPath, port })
   };

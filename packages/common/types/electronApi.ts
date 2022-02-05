@@ -9,7 +9,11 @@ export interface IElectronIpcMainHandles {
     clear: ElectronConfigStore['clear'];
   };
   getPath: (path: Parameters<Electron.App['getPath']>[0]) => Promise<string>;
-  getAppVersion: () => Promise<string>;
+  getAppInfo: () => Promise<{
+    version: string;
+    name: string;
+    path: string;
+  }>;
   openDirectoryDialog: () => Promise<string | undefined>;
   createWebDavServer: (params: { directoryPath: string; port: number }) => Promise<
     | {
@@ -22,4 +26,5 @@ export interface IElectronIpcMainHandles {
 
 export interface IElectronAPI extends IElectronIpcMainHandles {
   platform: NodeJS.Platform;
+  openExternal: (url: string) => void;
 }

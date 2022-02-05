@@ -1,4 +1,5 @@
 import { Divider } from '@/components/Divider';
+import { Header } from '@/components/Header';
 
 import { PS4Host } from './components/PS4Host';
 import { WebDavFileList } from './components/WebDavFileList';
@@ -10,14 +11,14 @@ export const Home = () => {
   return (
     <Provider>
       <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <h2>PS4 Remote PKG Installer</h2>
+        <div className={styles.hostConfigWrapper}>
+          <Header />
           <Divider />
           <PS4Host />
           <Divider />
           <WebDavHost />
         </div>
-        <div className={styles.content}>
+        <div className={styles.fileListWrapper}>
           <WebDavFileList />
         </div>
       </div>
