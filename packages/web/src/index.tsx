@@ -1,5 +1,7 @@
 import './index.less';
 
+import { ConfigProvider } from '@arco-design/web-react';
+import enUS from '@arco-design/web-react/es/locale/en-US';
 import { render } from 'react-dom';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
@@ -13,14 +15,16 @@ document.body.appendChild(rootEl);
 
 const RouterWrapper = () => {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Home />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </HashRouter>
+    <ConfigProvider locale={enUS}>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Home />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </HashRouter>
+    </ConfigProvider>
   );
 };
 
