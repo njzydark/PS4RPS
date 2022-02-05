@@ -1,7 +1,7 @@
 import './index.less';
 
 import { render } from 'react-dom';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import { App } from './app';
 import { NotFound } from './pages/404';
@@ -12,13 +12,13 @@ rootEl.id = 'root';
 document.body.appendChild(rootEl);
 
 render(
-  <BrowserRouter>
+  <HashRouter>
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
-  </BrowserRouter>,
+  </HashRouter>,
   rootEl
 );

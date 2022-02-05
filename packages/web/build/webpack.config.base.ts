@@ -20,7 +20,7 @@ const config: Configuration = {
   entry: path.resolve(__dirname, '../src/index.tsx'),
   output: {
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/',
+    publicPath: 'auto',
     filename: () => {
       return 'js/[name].js';
     },
@@ -111,13 +111,13 @@ const config: Configuration = {
     new CleanWebpackPlugin(),
     new ArcoWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
-    isDev &&
+    !isDev &&
       new MiniCssExtractPlugin({
         filename: 'css/[name].css'
       }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      title: 'Electron-React-TS-Boilerplate'
+      title: 'PS4RPI'
     })
   ].filter(Boolean)
 };
