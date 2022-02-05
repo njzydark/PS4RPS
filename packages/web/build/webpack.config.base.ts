@@ -117,7 +117,7 @@ const config: Configuration = {
       }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      title: 'PS4RPI'
+      title: 'PS4RPS'
     })
   ].filter(Boolean)
 };

@@ -8,7 +8,7 @@ import Icon from '@/assets/icon.png';
 import styles from './Header.module.less';
 import { ToggleDarkMode } from './ToggleDarkMode';
 
-const LinkUrl = 'https://github.com/njzydark/PS4RPI';
+const LinkUrl = 'https://github.com/njzydark/PS4RPS';
 
 export const Header = () => {
   const [infoVisible, setInfoVisible] = useState(false);
@@ -30,7 +30,7 @@ export const Header = () => {
       getAppInfo();
     } else {
       setAppInfo({
-        name: 'PS4RPI',
+        name: 'PS4RPS',
         version: '1.0.0',
         path: ''
       });
@@ -48,7 +48,7 @@ export const Header = () => {
   return (
     <>
       <div className={styles['header-wrapper']}>
-        <h2>PS4 Remote PKG Installer</h2>
+        <h2>PS4 Remote PKG Sender</h2>
         <Space>
           <Button type="default" icon={<IconInfoCircle />} onClick={() => setInfoVisible(true)} />
           {/* <Button type="default" icon={<IconSettings />} /> */}

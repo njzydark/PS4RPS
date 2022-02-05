@@ -2,20 +2,20 @@
   "name": "desktop",
   "private": true,
   "version": "1.0.0",
-  "productName": "PS4RPI",
-  "description": "PS4 remote pkg installer",
+  "productName": "PS4RPS",
+  "description": "Remote pkg sender for PS4",
   "author": "njzy",
   "license": "MIT",
-  "homepage": "https://github.com/njzydark/PS4RPI#readme",
+  "homepage": "https://github.com/njzydark/PS4RPS#readme",
   "engines": {
     "node": ">=12"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/njzydark/PS4RPI.git"
+    "url": "git+https://github.com/njzydark/PS4RPS.git"
   },
   "bugs": {
-    "url": "https://github.com/njzydark/PS4RPI/issues"
+    "url": "https://github.com/njzydark/PS4RPS/issues"
   },
   "main": "dist/main/index.js",
   "scripts": {
@@ -46,8 +46,8 @@
     "webdav-server": "^2.6.2"
   },
   "build": {
-    "appId": "com.njzydark.ps4rpi",
-    "productName": "PS4RPI",
+    "appId": "com.njzydark.ps4RPS",
+    "productName": "PS4RPS",
     "directories": {
       "output": "output"
     },
