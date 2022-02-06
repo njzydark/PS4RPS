@@ -1,5 +1,7 @@
 # PS4RPS
 
+[![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
+
 Use WebDAV as a remote pkg sender for PS4
 
 ![PS4RPS.png](assets/PS4RPS.png)
@@ -15,7 +17,7 @@ Use WebDAV as a remote pkg sender for PS4
 
 ## Usage
 
-1. Download this app from release page
+1. Download this app from [release page](https://github.com/njzydark/PS4RPS/releases)
 2. Open the app
 3. Add PS4 host (Your PS4 ip and port, The port is usually 12800), for example: http://192.168.0.11:12800
 4. Add WebDAV host
