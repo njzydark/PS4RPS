@@ -50,7 +50,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: PS4RPS-mac
-          path: packages/desktop/output/*universal*.dmg
+          path: packages/desktop/output/*.dmg
           if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v2
@@ -61,6 +61,12 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: PS4RPS-linux
+          name: PS4RPS-linux-appImage
           path: packages/desktop/output/*.AppImage
+          if-no-files-found: ignore
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: PS4RPS-linux-deb
+          path: packages/desktop/output/*.deb
           if-no-files-found: ignore
