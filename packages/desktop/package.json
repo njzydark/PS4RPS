@@ -1,10 +1,10 @@
 {
   "name": "desktop",
   "private": true,
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "productName": "PS4RPS",
   "description": "Remote pkg sender for PS4",
-  "author": "njzy",
+  "author": "njzy <njzydark@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/njzydark/PS4RPS#readme",
   "engines": {

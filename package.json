@@ -17,7 +17,7 @@
     "web:build": "pnpm run build --filter web",
     "preinstall": "npx only-allow pnpm"
   },
-  "author": "njzy",
+  "author": "njzy <njzydark@gmail.com>",
   "license": "MIT",
   "husky": {
     "hooks": {

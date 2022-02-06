@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx",
     "prettier": "prettier --write"
   },
-  "author": "njzy",
+  "author": "njzy <njzydark@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "electron": "16.0.8",

@@ -15,7 +15,7 @@
     "lint:fix": "eslint src --fix --ext .ts,.tsx",
     "prettier": "prettier --write src"
   },
-  "author": "njzy",
+  "author": "njzy <njzydark@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@arco-design/web-react": "^2.28.2",
