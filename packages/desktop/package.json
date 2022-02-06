@@ -23,6 +23,7 @@
     "dev": "cross-env NODE_ENV=development webpack --watch --mode development --config build/webpack.config.dev.ts",
     "build": "cross-env NODE_ENV=production webpack --mode production --config build/webpack.config.prod.ts",
     "analyz": "cross-env NODE_ENV=production webpack --config build/webpack.config.analy.ts",
+    "copyRenderer": "pnpm exec ts-node ./scripts/copyRenderer.ts",
     "pack": "pnpm exec ts-node ./scripts/copyRenderer.ts && electron-builder --dir",
     "dist": "pnpm exec ts-node ./scripts/copyRenderer.ts && electron-builder",
     "tsc": "tsc --noEmit",
@@ -64,11 +65,61 @@
     },
     "win": {
       "icon": "assets/icon.png",
-      "target": "nsis"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "mac": {
       "icon": "assets/icon.icns",
-      "identity": null
+      "identity": null,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64",
+            "universal"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "armv7l",
+            "arm64"
+          ]
+        },
+        {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     }
   }
 }

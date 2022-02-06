@@ -5,8 +5,9 @@
     "node": ">=12"
   },
   "scripts": {
+    "ci:build": "pnpm install && pnpm run all:build && pnpm run copyRenderer --filter desktop",
     "all:dev": "pnpm run dev --parallel",
-    "all:build": "pnpm run build --parallel",
+    "all:build": "pnpm run build --parallel --filter ./packages",
     "desktop:dev": "pnpm run dev --filter desktop",
     "desktop:build": "pnpm run build --filter desktop",
     "desktop:start": "pnpm run start --filter desktop",
