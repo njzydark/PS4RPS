@@ -1,7 +1,4 @@
 # Change Log
 
-## [1.0.0] - 2022-01-29
-
-### Added
-
-- Initial Commit
+- [Desktop](packages/desktop/CHANGELOG.md)
+- [Web](packages/web/CHANGELOG.md)
