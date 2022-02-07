@@ -9,6 +9,7 @@ const blackList = ['.DS_Store', '@eaDir', '._.DS_Store'];
 
 export const useWebDAV = () => {
   const webDavClient = useRef<WebDAVClient>();
+  const [isWebDavServerReady, setIsWebDavServerReady] = useState(true);
 
   const [webDavHosts, setWebDavHosts] = useState<WebDAVHost[]>(() => getInitConfigFromStore('webDavHosts', []));
   const [curSelectWebDavHostId, setCurSelectWebDavHostId] = useState<string | undefined>(() =>
@@ -65,12 +66,16 @@ export const useWebDAV = () => {
     if (curHost) {
       webDavClient.current = createClient(curHost.url, curHost.options);
     }
-    getWebDavHostFiles(paths.join('/'));
+  }, [curSelectWebDavHostId, webDavHosts, paths]);
 
+  useEffect(() => {
+    if (isWebDavServerReady) {
+      getWebDavHostFiles(paths.join('/'));
+    }
     return () => {
       didCancel = true;
     };
-  }, [curSelectWebDavHostId, webDavHosts, paths]);
+  }, [paths, isWebDavServerReady]);
 
   useEffect(() => {
     updateConfigStore('webDavHosts', webDavHosts);
@@ -80,17 +85,21 @@ export const useWebDAV = () => {
   const [searchKeyWord, setSearchKeyWord] = useState('');
 
   return {
+    webDavClient,
     webDavHosts,
     setWebDavHosts,
     curSelectWebDavHostId,
     setCurSelectWebDavHostId,
     webDavHostFiles,
-    loading,
+    setWebDavHostFiles,
     getWebDavHostFiles,
-    webDavClient,
+    loading,
+    setLoading,
     paths,
     setPaths,
     searchKeyWord,
-    setSearchKeyWord
+    setSearchKeyWord,
+    isWebDavServerReady,
+    setIsWebDavServerReady
   };
 };

@@ -16,14 +16,18 @@ export const WebDavHost = () => {
   const { webDAV } = useContainer();
   const {
     webDavHosts,
-    curSelectWebDavHostId,
-    paths,
     setWebDavHosts,
+    curSelectWebDavHostId,
     setCurSelectWebDavHostId,
+    setWebDavHostFiles,
     getWebDavHostFiles,
+    paths,
     setPaths,
     searchKeyWord,
-    setSearchKeyWord
+    setSearchKeyWord,
+    setIsWebDavServerReady,
+    loading,
+    setLoading
   } = webDAV;
 
   const handleAdd = () => {
@@ -49,16 +53,30 @@ export const WebDavHost = () => {
     setWebDavHosts(newHosts);
     if (curSelectWebDavHostId === host.id) {
       setCurSelectWebDavHostId(undefined);
+      setPaths([]);
+      setWebDavHostFiles([]);
+      setIsWebDavServerReady(false);
     }
   };
 
-  const handleChangeHost = (host: WebDAVHost) => {
+  const handleChangeHost = async (host: WebDAVHost) => {
+    if (loading) {
+      return;
+    }
     try {
-      if (host.directoryPath && host.port && window.electron) {
-        window.electron.createWebDavServer({ directoryPath: host.directoryPath, port: host.port });
-      }
       setCurSelectWebDavHostId(host.id);
       setPaths([]);
+      setWebDavHostFiles([]);
+      setIsWebDavServerReady(false);
+      if (host.directoryPath && host.port && window.electron) {
+        setLoading(true);
+        await window.electron.createWebDavServer({ directoryPath: host.directoryPath, port: host.port });
+        setIsWebDavServerReady(true);
+      } else {
+        setTimeout(() => {
+          setIsWebDavServerReady(true);
+        }, 0);
+      }
     } catch (err) {
       Notification.error({
         title: 'Change host error',
@@ -68,29 +86,26 @@ export const WebDavHost = () => {
   };
 
   const handleFormOk = (value: FormData) => {
-    setWebDavHosts(pre => {
-      const cur = pre.find(item => item.id === value.id);
-      const newData: WebDAVHost = {
-        id: value.id as string,
-        url: value.url,
-        alias: value.alias,
-        directoryPath: value.directoryPath,
-        port: value.port,
-        options: {
-          username: value.username,
-          password: value.password
-        }
-      };
-      if (!cur) {
-        pre.push(newData);
-      } else {
-        Object.assign(cur, newData);
+    const newData: WebDAVHost = {
+      id: value.id as string,
+      url: value.url,
+      alias: value.alias,
+      directoryPath: value.directoryPath,
+      port: value.port,
+      options: {
+        username: value.username,
+        password: value.password
       }
-      return [...pre];
-    });
-    if (value.id) {
-      setCurSelectWebDavHostId(value.id);
-      setPaths([]);
+    };
+    const cur = webDavHosts.find(item => item.id === value.id);
+    if (!cur) {
+      webDavHosts.push(newData);
+    } else {
+      Object.assign(cur, newData);
+    }
+    setWebDavHosts([...webDavHosts]);
+    if (curSelectWebDavHostId === value.id || !cur) {
+      handleChangeHost(newData);
     }
   };
 
