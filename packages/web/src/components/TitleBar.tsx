@@ -7,7 +7,7 @@ import icon from '@/assets/icon.png';
 import styles from './TitleBar.module.less';
 
 export const TitleBar = () => {
-  const isMacOS = window.electron && window.electron.platform !== 'darwin';
+  const isMacOS = window.electron && window.electron.platform === 'darwin';
 
   return (
     <div className={styles.wrapper} style={{ justifyContent: isMacOS ? 'center' : 'flex-start' }}>

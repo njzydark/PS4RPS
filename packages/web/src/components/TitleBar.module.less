@@ -1,7 +1,6 @@
 @title-height: 28px;
 
 .wrapper {
-  -webkit-app-region: drag;
   position: relative;
   width: 100%;
   height: @title-height;
@@ -10,6 +9,15 @@
   display: flex;
   align-items: center;
   user-select: none;
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: @title-height;
+    -webkit-app-region: drag;
+  }
   .title-wrapper {
     flex-shrink: 0;
     display: flex;
@@ -23,6 +31,8 @@
     }
   }
   .btn-wrapper {
+    -webkit-app-region: no-drag;
+    z-index: 9999;
     position: absolute;
     right: 0;
     top: 0;
