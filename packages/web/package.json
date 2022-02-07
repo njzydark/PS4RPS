@@ -28,6 +28,7 @@
     "nanoid": "^3.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-feather": "^2.0.9",
     "react-router-dom": "^6.0.2",
     "webdav": "^4.8.0"
   },

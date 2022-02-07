@@ -74,6 +74,22 @@ export class Ipc {
     ipcMainHandle('getPath', async (_, path) => {
       return app.getPath(path);
     });
+
+    ipcMainHandle('chnageWindowStatus', async (_, status) => {
+      if (status === 'minimize') {
+        Ipc.win.minimize();
+      }
+      if (status === 'maximize') {
+        if (Ipc.win.isMaximized()) {
+          Ipc.win.unmaximize();
+        } else {
+          Ipc.win.maximize();
+        }
+      }
+      if (status === 'close') {
+        Ipc.win.close();
+      }
+    });
   }
 
   protected async initWebDavServer() {

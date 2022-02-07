@@ -18,6 +18,7 @@ export const preload = () => {
       clear: () => storeManager.configStore.clear()
     },
     platform: process.platform,
+    chnageWindowStatus: status => ipcRendererInvoke('chnageWindowStatus', status),
     openExternal: url => shell.openExternal(url),
     getPath: path => ipcRendererInvoke('getPath', path),
     getAppInfo: () => ipcRendererInvoke('getAppInfo'),

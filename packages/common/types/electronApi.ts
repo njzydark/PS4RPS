@@ -9,6 +9,7 @@ export interface IElectronIpcMainHandles {
     clear: ElectronConfigStore['clear'];
   };
   getPath: (path: Parameters<Electron.App['getPath']>[0]) => Promise<string>;
+  chnageWindowStatus: (status: 'minimize' | 'maximize' | 'close') => void;
   getAppInfo: () => Promise<{
     version: string;
     name: string;

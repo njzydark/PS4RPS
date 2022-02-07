@@ -162,6 +162,7 @@ importers:
       nanoid: ^3.2.0
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-feather: ^2.0.9
       react-refresh: ^0.11.0
       react-router-dom: ^6.0.2
       webdav: ^4.8.0
@@ -176,6 +177,7 @@ importers:
       nanoid: 3.2.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-feather: 2.0.9_react@17.0.2
       react-router-dom: 6.2.1_react-dom@17.0.2+react@17.0.2
       webdav: 4.8.0
     devDependencies:
@@ -7234,6 +7236,15 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
+    dev: false
+
+  /react-feather/2.0.9_react@17.0.2:
+    resolution: {integrity: sha512-yMfCGRkZdXwIs23Zw/zIWCJO3m3tlaUvtHiXlW+3FH7cIT6fiK1iJ7RJWugXq7Fso8ZaQyUm92/GOOHXvkiVUw==}
+    peerDependencies:
+      react: ^16.8.6 || ^17
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
     dev: false
 
   /react-focus-lock/2.7.1_b08e3c15324cbe90a6ff8fcd416c932c:
