@@ -56,6 +56,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       return;
     }
     try {
+      const actionName = value.id ? 'Update' : 'Create';
       if (!value.id) {
         value.id = nanoid();
         if (webDavHosts.find(item => item.url === value.url)) {
@@ -67,7 +68,6 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           return;
         }
       }
-      const actionName = value.id ? 'Update' : 'Create';
       if (value.directoryPath && window.electron) {
         const res = await window.electron.createWebDavServer({
           directoryPath: value.directoryPath as string,
