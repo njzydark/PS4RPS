@@ -59,7 +59,6 @@
     "publish": [
       "github"
     ],
-    "artifactName": "${productName}-${os}-${version}-${arch}.${ext}",
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
@@ -95,6 +94,7 @@
       ]
     },
     "linux": {
+      "artifactName": "${productName}-${os}-${version}-${arch}.${ext}",
       "target": [
         {
           "target": "AppImage",
