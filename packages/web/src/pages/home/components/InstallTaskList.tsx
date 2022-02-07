@@ -43,7 +43,7 @@ export const InstallTaskList = () => {
             {record.status !== TaskStatus.FINISHED && (
               <Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.CANCEL)}>Cancel</Link>
             )}
-            {<Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.CANCEL)}>Delete</Link>}
+            {<Link onClick={() => handleChangeInstallTaskStatus(record, TaskActionType.DELETE)}>Delete</Link>}
           </Space>
         );
       }
