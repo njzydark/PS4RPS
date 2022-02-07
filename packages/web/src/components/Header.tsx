@@ -20,6 +20,9 @@ export const Header = () => {
 
   useEffect(() => {
     const getAppInfo = async () => {
+      if (!window.electron) {
+        return;
+      }
       const appInfo = await window.electron.getAppInfo();
       if (appInfo) {
         setAppInfo(appInfo);

@@ -54,7 +54,7 @@ export const WebDavHost = () => {
 
   const handleChangeHost = (host: WebDAVHost) => {
     try {
-      if (host.directoryPath && host.port) {
+      if (host.directoryPath && host.port && window.electron) {
         window.electron.createWebDavServer({ directoryPath: host.directoryPath, port: host.port });
       }
       setCurSelectWebDavHostId(host.id);

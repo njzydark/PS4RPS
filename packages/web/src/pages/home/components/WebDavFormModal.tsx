@@ -68,7 +68,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         }
       }
       const actionName = value.id ? 'Update' : 'Create';
-      if (value.directoryPath) {
+      if (value.directoryPath && window.electron) {
         const res = await window.electron.createWebDavServer({
           directoryPath: value.directoryPath as string,
           port: value.port as number
@@ -92,6 +92,9 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   };
 
   const handleSelectDirectory = async () => {
+    if (!window.electron) {
+      return;
+    }
     const res = await window.electron.openDirectoryDialog();
     console.log(res);
     if (res) {

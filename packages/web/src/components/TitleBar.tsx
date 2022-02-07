@@ -7,7 +7,7 @@ import icon from '@/assets/icon.png';
 import styles from './TitleBar.module.less';
 
 export const TitleBar = () => {
-  const isMacOS = window.electron.platform !== 'darwin';
+  const isMacOS = window.electron && window.electron.platform !== 'darwin';
 
   return (
     <div className={styles.wrapper} style={{ justifyContent: isMacOS ? 'center' : 'flex-start' }}>
@@ -16,13 +16,16 @@ export const TitleBar = () => {
         <span>PS4RPS</span>
       </div>
       <div className={styles['btn-wrapper']}>
-        <div className={styles.btn} onClick={() => window.electron.chnageWindowStatus('minimize')}>
+        <div className={styles.btn} onClick={() => window.electron && window.electron.chnageWindowStatus('minimize')}>
           <Minus />
         </div>
-        <div className={styles.btn} onClick={() => window.electron.chnageWindowStatus('maximize')}>
+        <div className={styles.btn} onClick={() => window.electron && window.electron.chnageWindowStatus('maximize')}>
           <Square />
         </div>
-        <div className={cs(styles.btn, styles.danger)} onClick={() => window.electron.chnageWindowStatus('close')}>
+        <div
+          className={cs(styles.btn, styles.danger)}
+          onClick={() => window.electron && window.electron.chnageWindowStatus('close')}
+        >
           <X />
         </div>
       </div>
