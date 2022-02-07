@@ -6,5 +6,7 @@
     "desktop": "1.0.0",
     "web": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "angry-days-smell"
+  ]
 }

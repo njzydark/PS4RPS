@@ -1,7 +1,7 @@
 {
   "name": "desktop",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "productName": "PS4RPS",
   "description": "Remote pkg sender for PS4",
   "author": "njzy <njzydark@gmail.com>",
@@ -34,7 +34,7 @@
   "dependencies": {},
   "devDependencies": {
     "axios": "^0.25.0",
-    "common": "workspace:^1.0.0",
+    "common": "workspace:^1.0.0-beta.1",
     "cross-env": "^7.0.3",
     "dotenv": "^14.3.2",
     "electron": "16.0.8",
