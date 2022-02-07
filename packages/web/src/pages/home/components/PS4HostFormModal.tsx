@@ -63,7 +63,12 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        <FormItem label="URL" field="url" rules={[{ required: true, message: 'Please input url' }]}>
+        <FormItem
+          label="URL"
+          field="url"
+          rules={[{ required: true, message: 'Please input url' }]}
+          extra="For example: http://192.168.0.2:12800, port required, usually 12800"
+        >
           <Input />
         </FormItem>
       </Form>

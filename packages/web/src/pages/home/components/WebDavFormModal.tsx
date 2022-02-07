@@ -150,7 +150,12 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           </>
         ) : (
           <>
-            <FormItem label="URL" field="url" rules={[{ required: true, message: 'Please input url' }]}>
+            <FormItem
+              label="URL"
+              field="url"
+              rules={[{ required: true, message: 'Please input url' }]}
+              extra="For example: http://example.com"
+            >
               <Input />
             </FormItem>
             <FormItem label="Username" field="username">
