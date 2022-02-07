@@ -4,7 +4,7 @@ import JSON5 from 'json5';
 import { ProgressInfo } from '@/types';
 
 const instance = axios.create({
-  timeout: 5000,
+  timeout: 10000,
   transformResponse: [
     function transformResponse(data, headers) {
       if (headers?.['content-type'] === 'application/json') {

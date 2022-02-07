@@ -55,6 +55,9 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
         packages: [file.downloadUrl]
       };
       const { data } = await installApi(params);
+      if (data.status === 'fail') {
+        throw new Error(data.error_code || 'Install failed');
+      }
       if (data.task_id && !installTasks.find(item => item.taskId === data.task_id)) {
         installTasks.unshift({
           file,
