@@ -1,6 +1,8 @@
 # PS4RPS
 
+[![GitHub release (latest by date including pre-releases](https://img.shields.io/github/v/release/njzydark/PS4RPS?include_prereleases)](https://github.com/njzydark/PS4RPS/releases/latest)
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
+[![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
 Use WebDAV as a remote pkg sender for PS4
 
@@ -48,6 +50,14 @@ pnpm run desktop:dist
 1. Is there a web version of this tool?
 
    Of course, if you do not need to create a WebDAV server from local is possible to use the web version directly, but because of this [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10), the web version is currently not available
+
+2. Why mac arm64 app open failed?
+
+   Because the app is not signed, you need to execute this command in the terminal:
+
+   ```bash
+   sudo xattr -r -d com.apple.quarantine /Applications/PS4RPS.app
+   ```
 
 ## TODO
 
