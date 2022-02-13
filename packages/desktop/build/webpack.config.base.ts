@@ -4,11 +4,12 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 import { Configuration, ContextReplacementPlugin } from 'webpack';
 
-import { dependencies } from '../package.json';
+import pkg from '../package.json';
 
 const config: Configuration = {
   target: 'electron-main',
-  externals: [...Object.keys(dependencies || {}), { fsevents: "require('fsevents')" }],
+  // @ts-ignore
+  externals: [...Object.keys(pkg.dependencies || {}), { fsevents: "require('fsevents')" }],
   entry: {
     index: path.resolve(__dirname, '../src/index.ts'),
     preload: path.resolve(__dirname, '../src/preload.ts')
