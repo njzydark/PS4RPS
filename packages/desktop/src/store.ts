@@ -28,7 +28,8 @@ class StoreManager {
         cwd,
         defaults: {
           ps4Hosts: [],
-          webDavHosts: []
+          webDavHosts: [],
+          fileServerHosts: []
         }
       });
     })();

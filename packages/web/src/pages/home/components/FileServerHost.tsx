@@ -3,108 +3,129 @@ import { IconDelete, IconEdit, IconHome, IconPlus, IconSearch, IconSync } from '
 import { useState } from 'react';
 
 import { ConfigCard } from '@/components/ConfigCard';
-import { WebDAVHost } from '@/types';
+import { FileServerHost as IFileServerHost, FileServerType } from '@/types';
 
 import { useContainer } from '../container';
-import { FormData, WebDavFormModal } from './WebDavFormModal';
-import styles from './WebDavHost.module.less';
+import { FileServerFormModal, FormData } from './FileServerFormModal';
+import styles from './FileServerHost.module.less';
 
-export const WebDavHost = () => {
+export const FileServerHost = () => {
   const [visible, setVisible] = useState(false);
   const [formData, setFormData] = useState<FormData>();
 
-  const { webDAV } = useContainer();
+  const { fileServer } = useContainer();
   const {
-    webDavHosts,
-    setWebDavHosts,
-    curSelectWebDavHostId,
-    setCurSelectWebDavHostId,
-    setWebDavHostFiles,
-    getWebDavHostFiles,
+    fileServerHosts,
+    setFileServerHosts,
+    curFileServerHostId,
+    setCurFileServerHostId,
+    setFileServerFiles,
+    getFileServerFiles,
     paths,
     setPaths,
     searchKeyWord,
     setSearchKeyWord,
-    setIsWebDavServerReady,
+    setIsFileServerReady,
     loading,
     setLoading
-  } = webDAV;
+  } = fileServer;
 
   const handleAdd = () => {
     setVisible(true);
     setFormData(undefined);
   };
 
-  const handleEdit = (host: WebDAVHost) => {
+  const handleEdit = (host: IFileServerHost) => {
     setVisible(true);
-    setFormData({
-      id: host.id,
-      alias: host.alias,
-      url: host.url,
-      directoryPath: host.directoryPath,
-      password: host.options?.password,
-      port: host.port,
-      username: host.options?.username
-    });
-  };
-
-  const handleDelete = (host: WebDAVHost) => {
-    const newHosts = webDavHosts.filter(h => h.id !== host.id);
-    setWebDavHosts(newHosts);
-    if (curSelectWebDavHostId === host.id) {
-      setCurSelectWebDavHostId(undefined);
-      setPaths([]);
-      setWebDavHostFiles([]);
-      setIsWebDavServerReady(false);
+    if (host.type === FileServerType.WebDAV) {
+      setFormData({
+        id: host.id,
+        type: host.type,
+        alias: host.alias,
+        url: host.url,
+        password: host.options?.password,
+        username: host.options?.username
+      });
+    } else {
+      setFormData({
+        id: host.id,
+        type: host.type,
+        alias: host.alias,
+        url: host.url,
+        directoryPath: host?.directoryPath,
+        port: host.port
+      });
     }
   };
 
-  const handleChangeHost = async (host: WebDAVHost) => {
+  const handleDelete = (host: IFileServerHost) => {
+    const newHosts = fileServerHosts.filter(h => h.id !== host.id);
+    setFileServerHosts(newHosts);
+    if (curFileServerHostId === host.id) {
+      setCurFileServerHostId(undefined);
+      setPaths([]);
+      setFileServerFiles([]);
+      setIsFileServerReady(false);
+    }
+  };
+
+  const handleChangeHost = async (host: IFileServerHost) => {
     if (loading) {
       return;
     }
     try {
-      setCurSelectWebDavHostId(host.id);
+      setCurFileServerHostId(host.id);
       setPaths([]);
-      setWebDavHostFiles([]);
-      setIsWebDavServerReady(false);
-      if (host.directoryPath && host.port && window.electron) {
+      setFileServerFiles([]);
+      setIsFileServerReady(false);
+      if (host.type === FileServerType.StaticFileServer && window.electron) {
         setLoading(true);
-        await window.electron.createWebDavServer({ directoryPath: host.directoryPath, port: host.port });
-        setIsWebDavServerReady(true);
+        await window.electron.createStaticFileServer({ directoryPath: host.directoryPath, port: host.port });
+        setIsFileServerReady(true);
       } else {
         setTimeout(() => {
-          setIsWebDavServerReady(true);
+          setIsFileServerReady(true);
         }, 0);
       }
     } catch (err) {
       Notification.error({
-        title: 'Change host error',
+        title: 'Change file server host error',
         content: (err as Error).message
       });
     }
   };
 
   const handleFormOk = (value: FormData) => {
-    const newData: WebDAVHost = {
-      id: value.id as string,
-      url: value.url,
-      alias: value.alias,
-      directoryPath: value.directoryPath,
-      port: value.port,
-      options: {
-        username: value.username,
-        password: value.password
-      }
-    };
-    const cur = webDavHosts.find(item => item.id === value.id);
+    let newData: IFileServerHost;
+    if (value.type === FileServerType.WebDAV) {
+      newData = {
+        id: value.id as string,
+        type: value.type,
+        url: value.url,
+        alias: value.alias,
+        options: {
+          username: value.username,
+          password: value.password
+        }
+      };
+    } else {
+      newData = {
+        id: value.id as string,
+        type: value.type,
+        url: value.url,
+        alias: value.alias,
+        directoryPath: value.directoryPath as string,
+        port: value.port as number
+      };
+    }
+    const cur = fileServerHosts.find(item => item.id === value.id);
     if (!cur) {
-      webDavHosts.push(newData);
+      fileServerHosts.push(newData);
     } else {
       Object.assign(cur, newData);
     }
-    setWebDavHosts([...webDavHosts]);
-    if (curSelectWebDavHostId === value.id || !cur) {
+    setFileServerHosts([...fileServerHosts]);
+    if (curFileServerHostId === value.id || !cur) {
       handleChangeHost(newData);
     }
   };
@@ -113,16 +134,16 @@ export const WebDavHost = () => {
     <div>
       <Typography.Title heading={6}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span>WebDAV Host</span>
+          <span>File Server Host</span>
           <Button size="small" icon={<IconPlus />} onClick={handleAdd} />
         </div>
       </Typography.Title>
-      <Space wrap style={{ display: webDavHosts.length ? 'inline-flex' : 'none' }}>
-        {webDavHosts.map(host => (
+      <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
+        {fileServerHosts.map(host => (
           <ConfigCard
             key={host.id}
             title={host.alias || host.url}
-            isActive={host.id === curSelectWebDavHostId}
+            isActive={host.id === curFileServerHostId}
             onClick={() => handleChangeHost(host)}
             action={
               <Space size={3}>
@@ -187,10 +208,10 @@ export const WebDavHost = () => {
             value={searchKeyWord}
             onChange={setSearchKeyWord}
           />
-          <Button icon={<IconSync />} type="primary" onClick={() => getWebDavHostFiles(paths.join('/'))} />
+          <Button icon={<IconSync />} type="primary" onClick={() => getFileServerFiles(paths.join('/'))} />
         </Space>
       </div>
-      <WebDavFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
+      <FileServerFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>
   );
 };

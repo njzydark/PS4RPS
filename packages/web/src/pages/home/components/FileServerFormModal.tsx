@@ -2,6 +2,8 @@ import { Button, Form, Input, InputNumber, Message, Modal, Notification, Radio }
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 
+import { FileServerType } from '@/types';
+
 import { useContainer } from '../container';
 
 const FormItem = Form.Item;
@@ -9,6 +11,7 @@ const FormItem = Form.Item;
 export type FormData = {
   id?: string;
   alias?: string;
+  type: FileServerType;
   url: string;
   username?: string;
   password?: string;
@@ -23,18 +26,20 @@ type Props = {
   onCancel: () => void;
 };
 
-export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
-  const [createType, setCreateType] = useState<'directory' | 'url'>(window.electron ? 'directory' : 'url');
+export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) => {
+  const [createType, setCreateType] = useState<FileServerType>(
+    window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV
+  );
 
   const [form] = Form.useForm<FormData>();
 
   const {
-    webDAV: { webDavHosts }
+    fileServer: { fileServerHosts }
   } = useContainer();
 
   const handleCancel = () => {
     onCancel();
-    setCreateType(window.electron ? 'directory' : 'url');
+    setCreateType(window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV);
     form.resetFields(undefined);
   };
 
@@ -43,9 +48,9 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       return;
     }
     if (data?.directoryPath) {
-      setCreateType('directory');
+      setCreateType(FileServerType.StaticFileServer);
     } else {
-      setCreateType('url');
+      setCreateType(FileServerType.WebDAV);
     }
     form.setFieldsValue(data);
   }, [data]);
@@ -59,28 +64,35 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       const actionName = value.id ? 'Update' : 'Create';
       if (!value.id) {
         value.id = nanoid();
-        if (webDavHosts.find(item => item.url === value.url)) {
+        if (fileServerHosts.find(item => item.url === value.url)) {
           Message.error(`The ${value.url} already exists`);
           return;
         }
-        if (webDavHosts.find(item => item.directoryPath === value.directoryPath)) {
+        if (
+          fileServerHosts.find(
+            item => item.type === FileServerType.StaticFileServer && item.directoryPath === value.directoryPath
+          )
+        ) {
           Message.error(`The ${value.directoryPath} already exists`);
           return;
         }
       }
-      if (value.directoryPath && window.electron) {
-        const res = await window.electron.createWebDavServer({
+      if (!value.type) {
+        value.type = createType;
+      }
+      if (value.type === FileServerType.StaticFileServer && window.electron) {
+        const res = await window.electron.createStaticFileServer({
           directoryPath: value.directoryPath as string,
           port: value.port as number
         });
         if (res?.url) {
           Notification.success({
-            title: `${actionName} WebDav Server Success`,
+            title: `${actionName} File Server Success`,
             content: `The server url is ${res.url}`
           });
           value.url = res.url;
         } else {
-          Message.error(res?.errorMessage || `${actionName} webdav server failed`);
+          Message.error(res?.errorMessage || `${actionName} file server failed`);
           return;
         }
       }
@@ -105,14 +117,14 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   return (
     <Modal
       visible={visible}
-      title={!data?.id ? 'Create WebDAV Host Config' : 'Edit WebDAV Host Config'}
+      title={!data?.id ? 'Create File Server Host Config' : 'Edit File Server Host Config'}
       onCancel={handleCancel}
       onOk={handleOk}
     >
       {window.electron && !data?.id && (
-        <Radio.Group type="button" defaultValue={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
-          <Radio value="directory">Directory</Radio>
-          <Radio value="url">URL</Radio>
+        <Radio.Group type="button" value={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
+          <Radio value={FileServerType.StaticFileServer}>Static File Server</Radio>
+          <Radio value={FileServerType.WebDAV}>WebDAV</Radio>
         </Radio.Group>
       )}
       <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
@@ -122,7 +134,7 @@ export const WebDavFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        {createType === 'directory' ? (
+        {createType === FileServerType.StaticFileServer ? (
           <>
             <FormItem
               label="Directory Path"

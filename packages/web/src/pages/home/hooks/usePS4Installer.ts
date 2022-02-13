@@ -14,7 +14,7 @@ import {
 import { FileStat, InstallTask, PS4Host, TaskActionType, TaskStatus } from '@/types';
 import { getInitConfigFromStore, updateConfigStore } from '@/utils';
 
-export const usePS4Installer = (webDavHostUrl?: string) => {
+export const usePS4Installer = (fileServerHostId?: string) => {
   const [ps4Hosts, setPs4Hosts] = useState<PS4Host[]>(() => getInitConfigFromStore('ps4Hosts', []));
   const [curSelectPs4HostId, setCurSelectPs4HostId] = useState<string | undefined>(() =>
     getInitConfigFromStore('curSelectPs4HostId', undefined)
@@ -39,8 +39,8 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
       if (!curPs4Host?.url) {
         throw new Error(`PS4 host url not found`);
       }
-      if (!webDavHostUrl) {
-        throw new Error(`WebDAV host url not found`);
+      if (!fileServerHostId) {
+        throw new Error(`File server host not found`);
       }
       if (!file.downloadUrl) {
         throw new Error(`Download url not found`);
@@ -64,7 +64,7 @@ export const usePS4Installer = (webDavHostUrl?: string) => {
           taskId: data.task_id,
           title: data.title,
           ps4HostUrl: curPs4Host.url,
-          webDavHostUrl,
+          fileServerHostId,
           status: TaskStatus.INSTALLING
         });
         setInstallTasks([...installTasks]);

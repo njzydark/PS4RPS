@@ -4,14 +4,29 @@ export type FileStat = RawFileStat & {
   downloadUrl?: string;
 };
 
+export enum FileServerType {
+  StaticFileServer = 'StaticFileServer',
+  WebDAV = 'WebDAV'
+}
+
 export type WebDAVHost = {
   id: string;
+  type: FileServerType.WebDAV;
   alias?: string;
-  directoryPath?: string;
-  port?: number;
   url: string;
   options?: WebDAVClientOptions;
 };
+
+export type StaticFileServerHost = {
+  id: string;
+  type: FileServerType.StaticFileServer;
+  alias?: string;
+  directoryPath: string;
+  port: number;
+  url: string;
+};
+
+export type FileServerHost = WebDAVHost | StaticFileServerHost;
 
 export type PS4Host = {
   id: string;
@@ -53,7 +68,7 @@ export type InstallTask = {
   taskId: number;
   title: string;
   ps4HostUrl: string;
-  webDavHostUrl: string;
+  fileServerHostId: string;
   status: TaskStatus;
   progressInfo?: ProgressInfo;
   errorMessage?: string;

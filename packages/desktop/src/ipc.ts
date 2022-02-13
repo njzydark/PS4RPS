@@ -3,9 +3,9 @@ import { app, BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 
 import { Logger } from './logger';
+import { staticServerManager } from './staticServerManager';
 import { storeManager } from './store';
 import { getIp } from './utils';
-import { webDavServerManager } from './webDavServer';
 
 export class Ipc {
   static win: BrowserWindow;
@@ -55,9 +55,9 @@ export class Ipc {
       event.returnValue = filePaths[0];
     });
 
-    ipcMainHandle('createWebDavServer', async (_, { directoryPath, port }) => {
+    ipcMainHandle('createStaticFileServer', async (_, { directoryPath, port }) => {
       try {
-        const res = await webDavServerManager.create({ directoryPath, port });
+        const res = await staticServerManager.createServer({ directoryPath, port });
         const ip = getIp();
         if (res && ip) {
           return {
@@ -94,14 +94,14 @@ export class Ipc {
 
   protected async initWebDavServer() {
     try {
-      const { webDavHosts, curSelectWebDavHostId } = storeManager.configStore.store;
-      const curWebDavServer = webDavHosts.find(item => item.id === curSelectWebDavHostId);
-      if (curWebDavServer?.port && curWebDavServer?.directoryPath && fs.existsSync(curWebDavServer?.directoryPath)) {
-        await webDavServerManager.create({ directoryPath: curWebDavServer.directoryPath, port: curWebDavServer.port });
-        console.log(`Init WebDAV server success: ${curWebDavServer.directoryPath}`);
+      const { fileServerHosts, curFileServerHostId } = storeManager.configStore.store;
+      const curHost = fileServerHosts.find(item => item.id === curFileServerHostId);
+      if (curHost?.port && curHost?.directoryPath && fs.existsSync(curHost?.directoryPath)) {
+        await staticServerManager.createServer({ directoryPath: curHost.directoryPath, port: curHost.port });
+        console.log(`Init static file server success: ${curHost.directoryPath}`);
       }
     } catch (err) {
-      console.error(`Init WebDAV server failed: ${(err as Error).message}`);
+      console.error(`Init static file server failed: ${(err as Error).message}`);
     }
   }
 }

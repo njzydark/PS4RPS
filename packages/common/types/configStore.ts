@@ -17,7 +17,9 @@ export type PS4Host = {
 
 export type ConfigStore = {
   webDavHosts: WebDAVHost[];
+  fileServerHosts: WebDAVHost[];
   curSelectWebDavHostId?: string;
+  curFileServerHostId?: string;
   ps4Hosts: PS4Host[];
   curSelectPs4HostId?: string;
 };

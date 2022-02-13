@@ -6,11 +6,11 @@ import { FileStat } from '@/types';
 import { formatFileSize } from '@/utils';
 
 import { useContainer } from '../container';
-import styles from './WebDavFileList.module.less';
+import styles from './FileServerFilesList.module.less';
 
-export const WebDavFileList = () => {
+export const FileServerFilesList = () => {
   const {
-    webDAV: { webDavHostFiles, loading, setPaths, searchKeyWord },
+    fileServer: { fileServerFiles, loading, setPaths, searchKeyWord },
     handleInstall
   } = useContainer();
 
@@ -58,7 +58,7 @@ export const WebDavFileList = () => {
       border={false}
       size="small"
       pagination={false}
-      data={webDavHostFiles.filter(item => item.basename.toLowerCase().includes(searchKeyWord.toLowerCase()))}
+      data={fileServerFiles.filter(item => item.basename.toLowerCase().includes(searchKeyWord.toLowerCase()))}
       columns={columns}
       loading={loading}
       rowKey="filename"

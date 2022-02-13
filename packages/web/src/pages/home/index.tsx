@@ -1,9 +1,9 @@
 import { Divider } from '@/components/Divider';
 import { Header } from '@/components/Header';
 
+import { FileServerFilesList } from './components/FileServerFilesList';
+import { FileServerHost } from './components/FileServerHost';
 import { PS4Host } from './components/PS4Host';
-import { WebDavFileList } from './components/WebDavFileList';
-import { WebDavHost } from './components/WebDavHost';
 import { Provider } from './container';
 import styles from './index.module.less';
 
@@ -16,10 +16,10 @@ export const Home = () => {
           <Divider />
           <PS4Host />
           <Divider />
-          <WebDavHost />
+          <FileServerHost />
         </div>
         <div className={styles.fileListWrapper}>
-          <WebDavFileList />
+          <FileServerFilesList />
         </div>
       </div>
     </Provider>

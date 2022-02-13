@@ -1,31 +1,33 @@
 import { useState } from 'react';
 
 import { createContainer } from '@/context/container';
-import { FileStat } from '@/types';
+import { FileServerType, FileStat } from '@/types';
 
+import { useFileServer } from './hooks/useFileServer';
 import { usePS4Installer } from './hooks/usePS4Installer';
-import { useWebDAV } from './hooks/useWebDAV';
 
 const useHook = () => {
   const [taskListVisible, setTaskListVisible] = useState(false);
 
-  const webDAV = useWebDAV();
-  const { webDavHosts, curSelectWebDavHostId, webDavClient } = webDAV;
+  const fileServer = useFileServer();
+  const { fileServerHosts, curFileServerHostId, webDavClient } = fileServer;
 
-  const curWebDavHost = webDavHosts.find(host => host.id === curSelectWebDavHostId);
-  const ps4Installer = usePS4Installer(curWebDavHost?.url);
+  const curFileServerHost = fileServerHosts.find(host => host.id === curFileServerHostId);
+  const ps4Installer = usePS4Installer(curFileServerHost?.id);
 
   const handleInstall = async (file: FileStat) => {
-    if (webDavClient.current) {
+    if (curFileServerHost?.type === FileServerType.WebDAV && webDavClient.current) {
       file.downloadUrl = webDavClient.current.getFileDownloadLink(file.filename);
-      ps4Installer.handleInstall(file);
+    } else if (curFileServerHost?.type === FileServerType.StaticFileServer) {
+      file.downloadUrl = curFileServerHost.url + file.filename;
     }
+    ps4Installer.handleInstall(file);
   };
 
   return {
     taskListVisible,
     setTaskListVisible,
-    webDAV,
+    fileServer,
     ps4Installer,
     handleInstall
   };

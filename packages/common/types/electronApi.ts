@@ -16,7 +16,7 @@ export interface IElectronIpcMainHandles {
     path: string;
   }>;
   openDirectoryDialog: () => Promise<string | undefined>;
-  createWebDavServer: (params: { directoryPath: string; port: number }) => Promise<
+  createStaticFileServer: (params: { directoryPath: string; port: number }) => Promise<
     | {
         url?: string;
         errorMessage?: string;
