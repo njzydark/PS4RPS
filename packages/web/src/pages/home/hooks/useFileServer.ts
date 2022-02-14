@@ -51,15 +51,42 @@ export const useFileServer = () => {
         return;
       }
       const newData =
-        (res as FileStat[])?.filter(item => {
-          if (item.type === 'directory' && !blackList.includes(item.basename)) {
-            return true;
-          } else if (item.type === 'file' && item.basename.endsWith('.pkg')) {
-            return true;
-          } else {
-            return false;
-          }
-        }) || [];
+        (res as FileStat[])
+          ?.filter(item => {
+            if (item.type === 'directory' && !blackList.includes(item.basename)) {
+              return true;
+            } else if (item.type === 'file' && item.basename.endsWith('.pkg')) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          ?.sort((a, b) => {
+            const reg = /[\u4e00-\u9fa5]/;
+            const aName = a.basename;
+            const bName = b.basename;
+            if (reg.test(aName) && reg.test(bName)) {
+              return aName.localeCompare(bName);
+            } else {
+              if (reg.test(aName) && !reg.test(bName)) {
+                return 1;
+              } else if (reg.test(bName) && !reg.test(aName)) {
+                return -1;
+              } else {
+                return aName > bName ? 1 : -1;
+              }
+            }
+          })
+          ?.sort((a, b) => {
+            const aType = a.type;
+            const bType = b.type;
+            if (aType === 'directory' && bType !== 'directory') {
+              return -1;
+            } else if (aType !== 'directory' && bType === 'directory') {
+              return 1;
+            }
+            return 0;
+          }) || [];
       setFileServerFiles(newData);
       setLoading(false);
     } catch (err) {
