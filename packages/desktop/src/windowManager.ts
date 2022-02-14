@@ -31,6 +31,13 @@ export class WindowManager {
       }
     });
 
+    window.on('close', evnet => {
+      if (process.platform === 'darwin') {
+        evnet.preventDefault();
+        window.hide();
+      }
+    });
+
     if (isDev) {
       window.loadURL(`http://localhost:${process.env.RENDERER_DEV_PORT}`);
     } else {
