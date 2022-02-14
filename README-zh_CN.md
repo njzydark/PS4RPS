@@ -4,11 +4,11 @@
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
-使用WebDAV为PS4远程安装PKG
+为PS4远程安装PKG
 
 ![PS4RPS.png](assets/PS4RPS.png)
 
-简体中文 | [Englis](./README.md)
+简体中文 | [English](./README.md)
 
 ## 特性
 
@@ -16,17 +16,21 @@
 - 支持暗黑模式
 - 支持暂停和恢复安装任务
 - 支持利用远程的WebDAV服务器进行安装
-- 支持从本地文件夹创建WebDAV服务器
-- 支持多个PS4 Host和WebDAV Host配置
+- 支持从本地文件夹创建静态文件服务器
+- 支持多个PS4 Host和文件服务器配置
+
+## 动机
+
+此类工具其实挺多的，我试用了一款觉得UI比较粗糙且不能安装我NAS上的PKG文件，所以我就准备自己开发一款，也正好为这个社区贡献一份自己的力量，多一种选择也不算坏事。
 
 ## 使用
 
 1. 从此页面下载需要的安装程序 [release page](https://github.com/njzydark/PS4RPS/releases)
 2. 打开下载好的安装程序
 3. 添加PS4 Host配置，这里需要填写完整的url，例如: http://192.168.0.11:12800 端口一般为12800
-4. 添加WebDav Host配置，这里有两种方式
-   - URL: 使用远程的服务器地址，这里需要填写完整的url 如果有用户密码也需要填写上
-   - Directory: 通过本地文件夹创建WebDAV
+4. 添加文件服务器配置，这里有两种方式
+   - WebDAV: 使用远程的服务器地址，这里需要填写完整的url 如果有用户密码也需要填写上
+   - StaticFileServer: 通过本地文件夹创建静态文件服务器
 5. 在文件列表里点击需要的安装的pkg名称即可向PS4发送安装任务，如果发送成功会有相应提示
 
 **注意** 在发送安装任务之前PS4必须安装此PKG [remote pkg installer](https://gist.github.com/flatz/60956f2bf1351a563f625357a45cd9c8) 并打开运行
@@ -51,9 +55,17 @@ pnpm run desktop:dist
 
 1. 是否有Web版本?
 
-  当然有，如果你不需要从本地文件夹创建WebDAV Server而只使用远程的地址，例如NAS环境下，此时确实只需要Web版本即可 但是因为PS4的Remote Pkg Install程序存在CORS的bug [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10)，所以目前还不能使用
+   当然有，如果你不需要从本地文件夹创建WebDAV Server而只使用远程的地址，例如NAS环境下，此时确实只需要Web版本即可 但是因为PS4的Remote Pkg Install程序存在CORS的bug [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10)，所以目前还不能使用
 
-2. 为什么arm版本的mac安装程序打开失败?
+2. 传输速度如何?
+
+   WebDAV取决于你WebDAV服务器的速度，StaticFileServer我这里测试基本可以跑满我本地的局域网带宽
+
+3. 为什么支持WebDAV?
+
+   因为可以很方便的安装NAS上的PKG文件
+
+4. 为什么arm版本的mac安装程序打开失败?
 
    因为没有签名，你需要在终端执行一下此命令:
 
