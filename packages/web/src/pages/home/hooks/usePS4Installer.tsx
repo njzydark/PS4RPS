@@ -1,4 +1,4 @@
-import { Notification } from '@arco-design/web-react';
+import { Button, Notification } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -33,6 +33,8 @@ export const usePS4Installer = (fileServerHostId?: string) => {
     updateConfigStore('ps4Hosts', ps4Hosts);
     updateConfigStore('curSelectPs4HostId', curSelectPs4HostId);
   }, [curSelectPs4HostId, ps4Hosts]);
+
+  const [installTaskListVisible, setInstallTaskListVisible] = useState(false);
 
   const handleInstall = async (file: FileStat) => {
     try {
@@ -71,7 +73,19 @@ export const usePS4Installer = (fileServerHostId?: string) => {
         Notification.success({
           id: file.basename,
           title: data.title || file.basename,
-          content: `Start install`
+          content: `Start install`,
+          btn: (
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                Notification.remove(file.basename);
+                setInstallTaskListVisible(true);
+              }}
+            >
+              Progress
+            </Button>
+          )
         });
       }
     } catch (err) {
@@ -193,6 +207,8 @@ export const usePS4Installer = (fileServerHostId?: string) => {
     curSelectPs4HostId,
     setPs4Hosts,
     setCurSelectPs4HostId,
-    handleChangeInstallTaskStatus
+    handleChangeInstallTaskStatus,
+    installTaskListVisible,
+    setInstallTaskListVisible
   };
 };

@@ -13,8 +13,15 @@ export const PS4Host = () => {
   const [visible, setVisible] = useState(false);
   const [formData, setFormData] = useState<FormData>();
 
-  const { ps4Installer, taskListVisible, setTaskListVisible } = useContainer();
-  const { ps4Hosts, curSelectPs4HostId, setCurSelectPs4HostId, setPs4Hosts } = ps4Installer;
+  const { ps4Installer } = useContainer();
+  const {
+    ps4Hosts,
+    curSelectPs4HostId,
+    setCurSelectPs4HostId,
+    setPs4Hosts,
+    installTaskListVisible,
+    setInstallTaskListVisible
+  } = ps4Installer;
 
   const handleAdd = () => {
     setVisible(true);
@@ -74,7 +81,7 @@ export const PS4Host = () => {
               type="primary"
               icon={<IconUnorderedList />}
               onClick={() => {
-                setTaskListVisible(true);
+                setInstallTaskListVisible(true);
               }}
             />
           </Space>
@@ -119,10 +126,10 @@ export const PS4Host = () => {
       <Drawer
         width={600}
         title={<span>PS4 Install Task List</span>}
-        visible={taskListVisible}
+        visible={installTaskListVisible}
         footer={null}
         onCancel={() => {
-          setTaskListVisible(false);
+          setInstallTaskListVisible(false);
         }}
       >
         <InstallTaskList />
