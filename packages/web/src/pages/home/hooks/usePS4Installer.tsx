@@ -114,6 +114,17 @@ export const usePS4Installer = (fileServerHostId?: string) => {
           const { data } = await getTaskProgressApi(item.taskId);
           const percent = data.length_total ? (data.transferred_total / data.length_total) * 100 : 0;
           data._percent = percent >= 100 ? 100 : Number(percent.toFixed(0) || 0);
+          if (data._percent === 100) {
+            if (window.electron) {
+              new window.Notification(item.title, { body: 'Installed successfully' });
+            } else {
+              Notification.success({
+                id: item.title,
+                title: item.title,
+                content: `Installed successfully`
+              });
+            }
+          }
           return {
             taskId: item.taskId,
             status: data._percent === 100 ? TaskStatus.FINISHED : TaskStatus.INSTALLING,
