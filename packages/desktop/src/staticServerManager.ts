@@ -1,8 +1,20 @@
 import fs from 'fs-extra';
+import getFolderSize from 'get-folder-size';
 import http from 'http';
+import path from 'path';
 import serveStatic from 'serve-static';
 
 import { getIp } from './utils';
+
+type FileItem = {
+  filename: string;
+  basename: string;
+  path: string;
+  type?: 'directory' | 'file';
+  size?: number;
+  lastmod: Date;
+  isSymbolicLink: boolean;
+};
 
 class StaticServerManager {
   private static instance: StaticServerManager;
@@ -16,8 +28,9 @@ class StaticServerManager {
 
   server: http.Server;
   port?: number;
-  serve?: serveStatic.RequestHandler<http.ServerResponse>;
   directoryPath?: string;
+
+  serve?: serveStatic.RequestHandler<http.ServerResponse>;
 
   constructor() {
     this.server = http.createServer();
@@ -49,7 +62,8 @@ class StaticServerManager {
         url?: string;
         errorMessage?: string;
       }>((resolve, reject) => {
-        this.serve = serveStatic(directoryPath, { index: false });
+        const targetServeDirectoryPath = path.join('/', directoryPath);
+        this.serve = serveStatic(targetServeDirectoryPath, { index: false });
 
         this.server.on('request', (req, res) => {
           const { url } = req;
@@ -77,7 +91,7 @@ class StaticServerManager {
         });
 
         this.server.listen(port, '0.0.0.0', () => {
-          this.directoryPath = directoryPath;
+          this.directoryPath = targetServeDirectoryPath;
           this.port = port;
           const ip = getIp();
           console.log(`Static server is running at http://${ip}:${port}`);
@@ -99,13 +113,7 @@ class StaticServerManager {
       const { url, headers } = req;
       if (url?.startsWith('/api/files')) {
         const { searchParams } = new URL(url, `http://${headers.host}`);
-        let path = searchParams?.get('path') || '/';
-        if (!path.startsWith('/')) {
-          path = `/${path}`;
-        }
-        if (!path.endsWith('/')) {
-          path = `${path}/`;
-        }
+        const paramsPath = path.join('/', searchParams?.get('path') || '/', '/');
 
         if (!this.directoryPath) {
           res.statusCode = 200;
@@ -117,18 +125,25 @@ class StaticServerManager {
           );
         }
 
-        const files = await fs.readdir(this.directoryPath + path, { withFileTypes: true });
+        const fileBasePath = path.join(this.directoryPath, paramsPath);
+        const files = await fs.readdir(fileBasePath, { withFileTypes: true });
         const fileListPromises = files.map(async file => {
-          const fileInfo = await fs.statSync(`${this.directoryPath}/${file.name}`);
-          return {
-            filename: path + file.name,
+          const filePath = path.join(fileBasePath, file.name);
+          const fileInfo = await fs.statSync(fileBasePath + file.name);
+          const fileType = file.isDirectory() ? 'directory' : file.isFile() ? 'file' : undefined;
+          const fileSize = fileType === 'directory' ? (await getFolderSize(filePath, { fs }))?.size : fileInfo.size;
+          const fileItem: FileItem = {
+            filename: path.join(paramsPath, file.name),
             basename: file.name,
-            type: file.isDirectory() ? 'directory' : 'file',
-            size: fileInfo.size,
-            lastmod: fileInfo.mtime
+            path: filePath,
+            type: fileType,
+            size: fileSize,
+            lastmod: fileInfo.mtime,
+            isSymbolicLink: file.isSymbolicLink()
           };
+          return fileItem;
         });
-        const fileList = await Promise.all(fileListPromises);
+        const fileList = (await Promise.all(fileListPromises))?.filter(item => item.type) || [];
         console.log(fileList);
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
