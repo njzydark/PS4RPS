@@ -16,6 +16,7 @@ export class WindowManager {
   }
 
   mainWindow?: BrowserWindow;
+  isQuitting?: boolean;
 
   createWindow(): BrowserWindow {
     const window = new BrowserWindow({
@@ -32,7 +33,7 @@ export class WindowManager {
     });
 
     window.on('close', evnet => {
-      if (process.platform === 'darwin') {
+      if (!this.isQuitting && process.platform === 'darwin') {
         evnet.preventDefault();
         window.hide();
       }

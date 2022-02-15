@@ -31,6 +31,9 @@ if (gotTheLock) {
     Ipc.getInstance();
     windowManager.showWindow();
   });
+  app.on('before-quit', () => {
+    windowManager.isQuitting = true;
+  });
   app.on('window-all-closed', function () {
     console.log('app all window closed');
     if (process.platform !== 'darwin') {
