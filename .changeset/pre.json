@@ -7,6 +7,7 @@
     "web": "1.0.0"
   },
   "changesets": [
+    "afraid-comics-smell",
     "angry-days-smell",
     "pretty-coats-tie",
     "shy-timers-fly",

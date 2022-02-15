@@ -1,5 +1,13 @@
 # common
 
+## 1.0.0-beta.5
+
+### Patch Changes
+
+- Release new beta version
+
+  - fix: app can't be closed on MacOS
+
 ## 1.0.0-beta.4
 
 ### Patch Changes
