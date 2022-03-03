@@ -47,10 +47,8 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     if (!data) {
       return;
     }
-    if (data?.directoryPath) {
-      setCreateType(FileServerType.StaticFileServer);
-    } else {
-      setCreateType(FileServerType.WebDAV);
+    if (data?.id && data?.type) {
+      setCreateType(data.type);
     }
     form.setFieldsValue(data);
   }, [data]);
@@ -61,6 +59,16 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       return;
     }
     try {
+      if (createType === FileServerType.StaticFileServer) {
+        if (value.url) {
+          try {
+            const { port, protocol } = new URL(value.url);
+            value.port = port ? Number(port) : protocol === 'https:' ? 443 : 80;
+          } catch (err) {
+            return Message.error(`Please input valid url: ${(err as Error).message}`);
+          }
+        }
+      }
       const actionName = value.id ? 'Update' : 'Create';
       if (!value.id) {
         value.id = nanoid();
@@ -70,7 +78,10 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
         }
         if (
           fileServerHosts.find(
-            item => item.type === FileServerType.StaticFileServer && item.directoryPath === value.directoryPath
+            item =>
+              item.type === FileServerType.StaticFileServer &&
+              item.directoryPath &&
+              item.directoryPath === value.directoryPath
           )
         ) {
           Message.error(`The ${value.directoryPath} already exists`);
@@ -80,7 +91,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       if (!value.type) {
         value.type = createType;
       }
-      if (value.type === FileServerType.StaticFileServer && window.electron) {
+      if (value.type === FileServerType.StaticFileServer && value.directoryPath && window.electron) {
         const res = await window.electron.createStaticFileServer({
           directoryPath: value.directoryPath as string,
           port: value.port as number
@@ -121,7 +132,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       onCancel={handleCancel}
       onOk={handleOk}
     >
-      {window.electron && !data?.id && (
+      {!data?.id && (
         <Radio.Group type="button" value={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
           <Radio value={FileServerType.StaticFileServer}>Static File Server</Radio>
           <Radio value={FileServerType.WebDAV}>WebDAV</Radio>
@@ -134,42 +145,36 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
+        {(createType === FileServerType.WebDAV || !window.electron) && (
+          <FormItem
+            label="URL"
+            field="url"
+            rules={[{ required: true, message: 'Please input url' }]}
+            extra="For example: http://example.com"
+          >
+            <Input />
+          </FormItem>
+        )}
         {createType === FileServerType.StaticFileServer ? (
-          <>
-            <FormItem
-              label="Directory Path"
-              field="directoryPath"
-              rules={[{ required: true, message: 'Please select directory path' }]}
-              shouldUpdate
-            >
-              {(values: FormData) => (
-                <>
-                  <Button type="primary" onClick={handleSelectDirectory}>
-                    Select directory
-                  </Button>
-                  {values.directoryPath && <div style={{ marginTop: 8 }}>{values.directoryPath}</div>}
-                </>
-              )}
-            </FormItem>
-            <FormItem
-              label="Port"
-              field="port"
-              rules={[{ required: true, message: 'Please set port' }]}
-              initialValue={1090}
-            >
-              <InputNumber min={1024} />
-            </FormItem>
-          </>
+          window.electron ? (
+            <>
+              <FormItem label="Directory Path" field="directoryPath" shouldUpdate>
+                {(values: FormData) => (
+                  <>
+                    <Button type="primary" onClick={handleSelectDirectory}>
+                      Select directory
+                    </Button>
+                    {values.directoryPath && <div style={{ marginTop: 8 }}>{values.directoryPath}</div>}
+                  </>
+                )}
+              </FormItem>
+              <FormItem label="Port" field="port" initialValue={1090}>
+                <InputNumber min={1024} />
+              </FormItem>
+            </>
+          ) : null
         ) : (
           <>
-            <FormItem
-              label="URL"
-              field="url"
-              rules={[{ required: true, message: 'Please input url' }]}
-              extra="For example: http://example.com"
-            >
-              <Input />
-            </FormItem>
             <FormItem label="Username" field="username">
               <Input />
             </FormItem>

@@ -37,21 +37,21 @@ export const FileServerHost = () => {
 
   const handleEdit = (host: IFileServerHost) => {
     setVisible(true);
+    const commonData = {
+      id: host.id,
+      type: host.type,
+      alias: host.alias,
+      url: host.url
+    };
     if (host.type === FileServerType.WebDAV) {
       setFormData({
-        id: host.id,
-        type: host.type,
-        alias: host.alias,
-        url: host.url,
+        ...commonData,
         password: host.options?.password,
         username: host.options?.username
       });
     } else {
       setFormData({
-        id: host.id,
-        type: host.type,
-        alias: host.alias,
-        url: host.url,
+        ...commonData,
         directoryPath: host?.directoryPath,
         port: host.port
       });
@@ -97,12 +97,15 @@ export const FileServerHost = () => {
 
   const handleFormOk = (value: FormData) => {
     let newData: IFileServerHost;
+    const commonData = {
+      id: value.id as string,
+      url: value.url,
+      alias: value.alias
+    };
     if (value.type === FileServerType.WebDAV) {
       newData = {
-        id: value.id as string,
+        ...commonData,
         type: value.type,
-        url: value.url,
-        alias: value.alias,
         options: {
           username: value.username,
           password: value.password
@@ -110,10 +113,8 @@ export const FileServerHost = () => {
       };
     } else {
       newData = {
-        id: value.id as string,
+        ...commonData,
         type: value.type,
-        url: value.url,
-        alias: value.alias,
         directoryPath: value.directoryPath as string,
         port: value.port as number
       };
