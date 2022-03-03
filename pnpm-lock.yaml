@@ -123,7 +123,8 @@ importers:
   packages/desktop:
     specifiers:
       axios: ^0.25.0
-      common: workspace:^1.0.0-beta.4
+      common: workspace:^1.0.0-beta.5
+      content-disposition: ^0.5.4
       cross-env: ^7.0.3
       dotenv: ^14.3.2
       electron: 16.0.8
@@ -139,6 +140,7 @@ importers:
     devDependencies:
       axios: 0.25.0
       common: link:../common
+      content-disposition: 0.5.4
       cross-env: 7.0.3
       dotenv: 14.3.2
       electron: 16.0.8
@@ -160,7 +162,7 @@ importers:
       '@pmmmwh/react-refresh-webpack-plugin': ^0.5.4
       axios: ^0.25.0
       classnames: ^2.3.1
-      common: workspace:^1.0.0-beta.4
+      common: workspace:^1.0.0-beta.5
       dayjs: ^1.10.7
       json5: ^2.2.0
       nanoid: ^3.2.0
@@ -3912,6 +3914,7 @@ packages:
     resolution: {integrity: sha512-SVeeyiOeinV5JCPHXMdKOgK1YVbak/4+8WL2rBnfqRYpA5FaeFaQnQWb25x628am1w70CbipGDv9S51biph63A==}
     engines: {node: '>=8'}
     os: [darwin]
+    deprecated: 'Disk image license agreements are deprecated by Apple and will probably be removed in a future macOS release. Discussion at: https://github.com/argv-minus-one/dmg-license/issues/11'
     hasBin: true
     requiresBuild: true
     dependencies:

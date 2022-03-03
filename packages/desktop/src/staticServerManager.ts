@@ -1,3 +1,4 @@
+import contentDisposition from 'content-disposition';
 import fs from 'fs-extra';
 import getFolderSize from 'get-folder-size';
 import http from 'http';
@@ -63,7 +64,10 @@ class StaticServerManager {
         errorMessage?: string;
       }>((resolve, reject) => {
         const targetServeDirectoryPath = path.join('/', directoryPath);
-        this.serve = serveStatic(targetServeDirectoryPath, { index: false });
+        this.serve = serveStatic(targetServeDirectoryPath, {
+          index: false,
+          setHeaders: this.setDownloadHeaders
+        });
 
         this.server.on('request', (req, res) => {
           const { url } = req;
@@ -108,9 +112,20 @@ class StaticServerManager {
     }
   }
 
+  setDownloadHeaders(res: http.ServerResponse, path: string) {
+    res.setHeader('Content-Disposition', contentDisposition(path));
+  }
+
+  setCorsHeaders(res: http.ServerResponse) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+  }
+
   async handleApiRequest(req: http.IncomingMessage, res: http.ServerResponse) {
     try {
       const { url, headers } = req;
+      this.setCorsHeaders(res);
       if (url?.startsWith('/api/files')) {
         const { searchParams } = new URL(url, `http://${headers.host}`);
         const paramsPath = path.join('/', searchParams?.get('path') || '/', '/');
@@ -161,15 +176,3 @@ class StaticServerManager {
 }
 
 export const staticServerManager = StaticServerManager.getInstance();
-
-// staticServerManager.createServer({
-//   port: 8080,
-//   directoryPath: '/Users/njzy/Downloads/ps4'
-// });
-
-// setTimeout(() => {
-//   staticServerManager.createServer({
-//     port: 8081,
-//     directoryPath: '/Users/njzy/Downloads'
-//   });
-// }, 2000);
