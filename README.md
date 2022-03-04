@@ -2,6 +2,7 @@
 
 [![GitHub release (latest by date including pre-releases](https://img.shields.io/github/v/release/njzydark/PS4RPS?include_prereleases)](https://github.com/njzydark/PS4RPS/releases/latest)
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
+![GitHub deployments](https://img.shields.io/github/deployments/njzydark/PS4RPS/production?label=vercel&logo=vercel&logoColor=white)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
 Yet another remote pkg sender for PS4
