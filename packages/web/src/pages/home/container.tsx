@@ -15,7 +15,7 @@ const useHook = () => {
     if (curFileServerHost?.type === FileServerType.WebDAV && webDavClient.current) {
       file.downloadUrl = webDavClient.current.getFileDownloadLink(file.filename);
     } else if (curFileServerHost?.type === FileServerType.StaticFileServer) {
-      file.downloadUrl = curFileServerHost.url + file.filename;
+      file.downloadUrl = curFileServerHost.url + file.filename.replace(/\\/g, '/');
     }
     ps4Installer.handleInstall(file);
   };

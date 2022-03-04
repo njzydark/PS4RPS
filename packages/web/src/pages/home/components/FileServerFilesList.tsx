@@ -24,7 +24,7 @@ export const FileServerFilesList = () => {
           className={styles.link}
           onClick={() => {
             if (record.type === 'directory') {
-              setPaths(record.filename.split('/'));
+              setPaths(record.filename.replace(/\\/g, '/').split('/'));
             } else {
               handleInstall(record);
             }

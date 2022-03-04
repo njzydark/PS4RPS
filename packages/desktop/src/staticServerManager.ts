@@ -63,7 +63,7 @@ class StaticServerManager {
         url?: string;
         errorMessage?: string;
       }>((resolve, reject) => {
-        const targetServeDirectoryPath = path.join('/', directoryPath);
+        const targetServeDirectoryPath = path.join(directoryPath);
         this.serve = serveStatic(targetServeDirectoryPath, {
           index: false,
           setHeaders: this.setDownloadHeaders
