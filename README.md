@@ -26,6 +26,14 @@ There are actually quite a lot of such tools, I tried one and felt that the UI w
 
 ## Usage
 
+### Web
+
+[https://ps4rps.vercel.app](https://ps4rps.vercel.app)
+
+The Web version is mainly used to install files in WebDAV Server (NAS), and you must instal [this version of RPI](https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases) on your PS4
+
+### Desktop
+
 1. Download this app from [release page](https://github.com/njzydark/PS4RPS/releases)
 2. Open the app
 3. Add PS4 host (Your PS4 ip and port, The port is usually 12800), for example: http://192.168.0.11:12800

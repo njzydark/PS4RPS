@@ -1,5 +1,15 @@
 # common
 
+## 1.0.0-beta.6
+
+### Patch Changes
+
+- Release new beta version
+
+  - feat: support add static file server on web
+  - fix: files get error on Windows #3
+  - refactor: use default title bar on Windows
+
 ## 1.0.0-beta.5
 
 ### Patch Changes
