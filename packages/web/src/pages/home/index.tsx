@@ -1,5 +1,6 @@
 import { Divider } from '@/components/Divider';
 import { Header } from '@/components/Header';
+import { WebAlert } from '@/components/WebAlert';
 
 import { FileServerFilesList } from './components/FileServerFilesList';
 import { FileServerHost } from './components/FileServerHost';
@@ -12,6 +13,7 @@ export const Home = () => {
     <Provider>
       <div className={styles.wrapper}>
         <div className={styles.hostConfigWrapper}>
+          {!window.electron && <WebAlert />}
           <Header />
           <Divider />
           <PS4Host />
