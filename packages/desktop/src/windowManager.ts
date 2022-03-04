@@ -22,7 +22,8 @@ export class WindowManager {
     const window = new BrowserWindow({
       width: 950,
       height: 700,
-      titleBarStyle: process.platform !== 'darwin' ? 'hidden' : 'default',
+      titleBarStyle: 'default',
+      autoHideMenuBar: true,
       frame: true,
       webPreferences: {
         preload: path.join(__dirname, './preload.js'),

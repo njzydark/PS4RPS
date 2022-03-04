@@ -8,10 +8,17 @@ import { NotFound } from './pages/404';
 import { Home } from './pages/home';
 
 export const App = () => {
-  const showCustomTitleBar = window.electron && window.electron.platform !== 'darwin';
+  const showCuatomScrollBar = window.electron && window.electron.platform !== 'darwin';
+  const showCustomTitleBar = false;
 
   return (
-    <div className={cs('global-app-wrapper', showCustomTitleBar && 'custom-title-bar')}>
+    <div
+      className={cs(
+        'global-app-wrapper',
+        showCuatomScrollBar && 'custom-scroll-bar',
+        showCustomTitleBar && 'custom-title-bar'
+      )}
+    >
       <ConfigProvider locale={enUS}>
         {showCustomTitleBar && <TitleBar />}
         <div className="window-content-wrapper">
