@@ -2,7 +2,8 @@
 
 [![GitHub release (latest by date including pre-releases](https://img.shields.io/github/v/release/njzydark/PS4RPS?include_prereleases)](https://github.com/njzydark/PS4RPS/releases/latest)
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
-![GitHub deployments](https://img.shields.io/github/deployments/njzydark/PS4RPS/production?label=vercel&logo=vercel&logoColor=white)
+![Vercel Deployments](https://img.shields.io/github/deployments/njzydark/PS4RPS/production?label=vercel&logo=vercel&logoColor=white)
+![GitHubPages deployments](https://img.shields.io/github/deployments/njzydark/ps4rps/production?label=github-pages&logo=github-pages)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
 Yet another remote pkg sender for PS4
@@ -27,8 +28,6 @@ There are actually quite a lot of such tools, I tried one and felt that the UI w
 ## Usage
 
 ### Web
-
-[https://ps4rps.vercel.app](https://ps4rps.vercel.app)
 
 The Web version is mainly used to install files in WebDAV Server (NAS), and you must instal [this version of RPI](https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases) on your PS4
 
