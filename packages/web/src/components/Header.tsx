@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 // @ts-ignore
 import Icon from '@/assets/icon.png';
 
+import pkg from '../../package.json';
 import styles from './Header.module.less';
 import { ToggleDarkMode } from './ToggleDarkMode';
 
@@ -34,7 +35,7 @@ export const Header = () => {
     } else {
       setAppInfo({
         name: 'PS4RPS',
-        version: '1.0.0',
+        version: pkg.version,
         path: ''
       });
     }
