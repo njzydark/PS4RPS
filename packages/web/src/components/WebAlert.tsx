@@ -1,4 +1,4 @@
-import { Alert } from '@arco-design/web-react';
+import { Alert, Link } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
 const CacheKey = 'WebAlertV1';
@@ -29,15 +29,16 @@ export const WebAlert = () => {
       content={
         <>
           <span>
-            This Web version is mainly used to install files in WebDAV Server (NAS), and you must install&nbsp;
+            This Web version is mainly used to install files in WebDAV Server (NAS), and you must install this version
+            of&nbsp;
           </span>
-          <a
+          <Link
+            hoverable={false}
             href="https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases"
             target="_blank"
-            rel="noreferrer"
           >
-            this version of RPI
-          </a>
+            RPI
+          </Link>
           <span>&nbsp;on your PS4</span>
         </>
       }

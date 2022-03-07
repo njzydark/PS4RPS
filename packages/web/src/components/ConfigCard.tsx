@@ -1,7 +1,8 @@
 import cs from 'classnames';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import styles from './ConfigCard.module.less';
+import { Link } from './Link';
 
 type Props = {
   title: string;
@@ -10,8 +11,18 @@ type Props = {
   onClick?: () => void;
 };
 
-const ActionIcon = (props: { children: ReactNode }) => {
-  return <div className={styles['action-icon-wrapper']}>{props.children}</div>;
+const ActionIcon = (props: { children: ReactNode; onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void }) => {
+  return (
+    <Link
+      hoverable={false}
+      onClick={e => {
+        e.stopPropagation();
+        props.onClick?.(e);
+      }}
+    >
+      <div className={styles['action-icon-wrapper']}>{props.children}</div>
+    </Link>
+  );
 };
 
 export const ConfigCard = ({ title, action, isActive, onClick }: Props) => {
@@ -22,7 +33,11 @@ export const ConfigCard = ({ title, action, isActive, onClick }: Props) => {
         onClick?.();
       }}
     >
-      <div className={styles.content}>{title}</div>
+      <div className={styles.content}>
+        <Link canceldUnderline={true} hoverable={false}>
+          {title}
+        </Link>
+      </div>
       {action && <div className={styles.action}>{action}</div>}
     </div>
   );

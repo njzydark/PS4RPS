@@ -98,25 +98,19 @@ export const PS4Host = () => {
             }}
             action={
               <Space size={3}>
-                <ConfigCard.ActionIcon>
-                  <IconEdit
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleEdit(host);
-                    }}
-                  >
-                    Edit
-                  </IconEdit>
+                <ConfigCard.ActionIcon
+                  onClick={() => {
+                    handleEdit(host);
+                  }}
+                >
+                  <IconEdit>Edit</IconEdit>
                 </ConfigCard.ActionIcon>
-                <ConfigCard.ActionIcon>
-                  <IconDelete
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleDelete(host);
-                    }}
-                  >
-                    Delete
-                  </IconDelete>
+                <ConfigCard.ActionIcon
+                  onClick={() => {
+                    handleDelete(host);
+                  }}
+                >
+                  <IconDelete>Delete</IconDelete>
                 </ConfigCard.ActionIcon>
               </Space>
             }

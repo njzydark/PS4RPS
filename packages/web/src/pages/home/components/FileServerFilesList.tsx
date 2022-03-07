@@ -2,11 +2,11 @@ import { Table, TableColumnProps } from '@arco-design/web-react';
 import { IconFile, IconFolder } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 
+import { Link } from '@/components/Link';
 import { FileStat } from '@/types';
 import { formatFileSize } from '@/utils';
 
 import { useContainer } from '../container';
-import styles from './FileServerFilesList.module.less';
 
 export const FileServerFilesList = () => {
   const {
@@ -20,8 +20,8 @@ export const FileServerFilesList = () => {
       dataIndex: 'basename',
       ellipsis: true,
       render: (val, record) => (
-        <a
-          className={styles.link}
+        <Link
+          hoverable={false}
           onClick={() => {
             if (record.type === 'directory') {
               setPaths(record.filename.replace(/\\/g, '/').split('/'));
@@ -36,7 +36,7 @@ export const FileServerFilesList = () => {
             <IconFile style={{ marginRight: 6 }} />
           )}
           {val}
-        </a>
+        </Link>
       )
     },
     {

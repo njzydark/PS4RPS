@@ -3,6 +3,7 @@ import { IconDelete, IconEdit, IconHome, IconPlus, IconSearch, IconSync } from '
 import { useState } from 'react';
 
 import { ConfigCard } from '@/components/ConfigCard';
+import { Link } from '@/components/Link';
 import { FileServerHost as IFileServerHost, FileServerType } from '@/types';
 
 import { useContainer } from '../container';
@@ -148,25 +149,19 @@ export const FileServerHost = () => {
             onClick={() => handleChangeHost(host)}
             action={
               <Space size={3}>
-                <ConfigCard.ActionIcon>
-                  <IconEdit
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleEdit(host);
-                    }}
-                  >
-                    Edit
-                  </IconEdit>
+                <ConfigCard.ActionIcon
+                  onClick={() => {
+                    handleEdit(host);
+                  }}
+                >
+                  <IconEdit>Edit</IconEdit>
                 </ConfigCard.ActionIcon>
-                <ConfigCard.ActionIcon>
-                  <IconDelete
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleDelete(host);
-                    }}
-                  >
-                    Delete
-                  </IconDelete>
+                <ConfigCard.ActionIcon
+                  onClick={() => {
+                    handleDelete(host);
+                  }}
+                >
+                  <IconDelete>Delete</IconDelete>
                 </ConfigCard.ActionIcon>
               </Space>
             }
@@ -177,26 +172,25 @@ export const FileServerHost = () => {
         <div className={styles['breadcrumb-wrapper']}>
           <Breadcrumb>
             {paths.length === 0 ? (
-              <Breadcrumb.Item>
-                <IconHome />
-              </Breadcrumb.Item>
+              <Link>
+                <Breadcrumb.Item>
+                  <IconHome />
+                </Breadcrumb.Item>
+              </Link>
             ) : (
               paths.map((path, index) => (
-                <Breadcrumb.Item key={path || '/'}>
-                  {index !== paths.length - 1 ? (
-                    <a
-                      onClick={() => {
-                        setPaths(paths.slice(0, index + 1));
-                      }}
-                    >
-                      {index === 0 ? <IconHome /> : path}
-                    </a>
-                  ) : index === 0 ? (
-                    <IconHome />
-                  ) : (
-                    path
-                  )}
-                </Breadcrumb.Item>
+                <Link
+                  key={path || '/'}
+                  onClick={() => {
+                    if (index !== paths.length - 1) {
+                      setPaths(paths.slice(0, index + 1));
+                    }
+                  }}
+                >
+                  <Breadcrumb.Item key={path || '/'}>
+                    {index !== paths.length - 1 ? index === 0 ? <IconHome /> : path : index === 0 ? <IconHome /> : path}
+                  </Breadcrumb.Item>
+                </Link>
               ))
             )}
           </Breadcrumb>
