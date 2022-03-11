@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@arco-design/webpack-plugin": "^1.7.0",
+    "@njzy/mini-react-refresh-webpack-plugin": "^0.2.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "react-refresh": "^0.11.0"
   }
