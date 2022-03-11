@@ -14,7 +14,13 @@ const config = merge(baseConfig, {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: path.resolve(__dirname, '../public'), to: path.resolve(__dirname, '../dist/public') }]
+      patterns: [
+        {
+          context: path.resolve(__dirname, '../public'),
+          from: '**/*',
+          to: path.resolve(__dirname, '../dist')
+        }
+      ]
     })
   ]
 });
