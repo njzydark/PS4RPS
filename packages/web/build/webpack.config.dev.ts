@@ -1,11 +1,15 @@
 import { MiniReactRefreshWebpackPlugin } from '@njzy/mini-react-refresh-webpack-plugin';
-// import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 
 const config = merge(baseConfig, {
   mode: 'development',
+  devtool: 'source-map',
+  watchOptions: {
+    aggregateTimeout: 600
+  },
   // module: {
   //   rules: [
   //     {
@@ -15,6 +19,7 @@ const config = merge(baseConfig, {
   //         {
   //           loader: require.resolve('babel-loader'),
   //           options: {
+  //             rootMode: 'upward',
   //             plugins: [require.resolve('react-refresh/babel')]
   //           }
   //         }
@@ -34,6 +39,7 @@ const config = merge(baseConfig, {
         rootMode: 'upward'
       }
     })
+    // new ReactRefreshWebpackPlugin()
   ]
 });
 
