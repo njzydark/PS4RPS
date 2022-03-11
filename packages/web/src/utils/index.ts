@@ -36,3 +36,5 @@ export const updateConfigStore = <T extends keyof ConfigStore>(key: T, value: Co
     console.log(`update config error: ${(err as Error).message}`);
   }
 };
+
+export const isInPS4Browser = window.navigator.userAgent.includes('PlayStation 4');
