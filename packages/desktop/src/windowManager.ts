@@ -18,6 +18,8 @@ export class WindowManager {
   mainWindow?: BrowserWindow;
   isQuitting?: boolean;
 
+  private constructor() { }
+
   createWindow(): BrowserWindow {
     const window = new BrowserWindow({
       width: 950,
