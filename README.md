@@ -2,7 +2,6 @@
 
 [![GitHub release (latest by date including pre-releases](https://img.shields.io/github/v/release/njzydark/PS4RPS?include_prereleases)](https://github.com/njzydark/PS4RPS/releases/latest)
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
-![Vercel Deployments](https://img.shields.io/github/deployments/njzydark/PS4RPS/production?label=vercel&logo=vercel&logoColor=white)
 ![GitHubPages deployments](https://img.shields.io/github/deployments/njzydark/ps4rps/production?label=github-pages&logo=github-pages)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
