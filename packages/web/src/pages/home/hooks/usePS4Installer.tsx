@@ -1,6 +1,7 @@
 import { Button, Notification } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
+import { RPILink } from '@/components/WebAlert';
 import {
   cancelApi,
   changeBaseUrl,
@@ -58,7 +59,12 @@ export const usePS4Installer = (fileServerHostId?: string) => {
       };
       const { data } = await installApi(params);
       if (data.status === 'fail') {
-        throw new Error(data.error_code || 'Install failed');
+        // @ts-ignore
+        const errorCode = data?.error_code?.toString(16);
+        const errorMessage = errorCode?.startsWith('809900')
+          ? `Please check if it is installed`
+          : `Install failed ${errorCode ? ': 0x' + errorCode : ''}`;
+        throw new Error(errorMessage);
       }
       if (data.task_id && !installTasks.find(item => item.taskId === data.task_id)) {
         installTasks.unshift({
@@ -89,10 +95,23 @@ export const usePS4Installer = (fileServerHostId?: string) => {
         });
       }
     } catch (err) {
+      // @ts-ignore
+      const errMessage = err?.response?.data?.error || err?.message;
+      const isErrorCausedByFilePathFormat = errMessage.includes('Unable to set up prerequisites for package');
       Notification.error({
         id: file.basename,
         title: `${file.basename} Install failed`,
-        content: (err as Error).message
+        content: errMessage ? (
+          <>
+            <span>{errMessage}</span>
+            {isErrorCausedByFilePathFormat && (
+              <p>
+                This may be caused by the presence of Chinese characters or spaces in the file path. You can try this
+                remote pkg installer on your PS4: <RPILink />
+              </p>
+            )}
+          </>
+        ) : null
       });
     }
   };

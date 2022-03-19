@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 
 const CacheKey = 'WebAlertV1';
 
+const LinkUrl = 'https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases';
+
 export const WebAlert = () => {
   const [visible, setVisible] = useState(false);
 
@@ -43,5 +45,20 @@ export const WebAlert = () => {
         </>
       }
     />
+  );
+};
+
+export const RPILink = () => {
+  const handleOpenLink = () => {
+    if (window.electron) {
+      window.electron.openExternal(LinkUrl);
+    } else {
+      window.open(LinkUrl);
+    }
+  };
+  return (
+    <Link hoverable={false} onClick={handleOpenLink}>
+      RPI
+    </Link>
   );
 };
