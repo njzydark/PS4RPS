@@ -44,7 +44,7 @@ export const useFileServer = () => {
         // @ts-ignore
         res = await webDavClient.current.getDirectoryContents(path);
       } else {
-        const { data } = await axios.get(`${curHost?.url}/api/files?path=${path}`);
+        const { data } = await axios.get(`${curHost?.url}/api/files?path=${encodeURI(path)}`);
         res = data;
       }
       if (didCancel) {
