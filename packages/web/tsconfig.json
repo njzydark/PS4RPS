@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "baseUrl": "./",
     "paths": {
       "@/*": [
@@ -11,5 +14,10 @@
   "include": [
     "**/*",
     "../common/**/*",
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
   ]
 }
