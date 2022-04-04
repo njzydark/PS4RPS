@@ -6,3 +6,4 @@ node_modules
 dist
 output
 tsconfig.tsbuildinfo
+packages/ps4-pkg-info/web
