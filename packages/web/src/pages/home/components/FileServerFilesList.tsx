@@ -3,10 +3,9 @@ import { IconFile, IconFolder } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 
 import { Link } from '@/components/Link';
+import { useContainer } from '@/store/container';
 import { FileStat } from '@/types';
 import { formatFileSize } from '@/utils';
-
-import { useContainer } from '../container';
 
 export const FileServerFilesList = () => {
   const {

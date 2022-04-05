@@ -1,12 +1,11 @@
-import { Button, Drawer, Space, Typography } from '@arco-design/web-react';
-import { IconDelete, IconEdit, IconPlus, IconUnorderedList } from '@arco-design/web-react/icon';
+import { Button, Space, Typography } from '@arco-design/web-react';
+import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { useState } from 'react';
 
 import { ConfigCard } from '@/components/ConfigCard';
+import { useContainer } from '@/store/container';
 import { PS4Host as PS4HostType } from '@/types';
 
-import { useContainer } from '../container';
-import { InstallTaskList } from './InstallTaskList';
 import { FormData, PS4HostFormModal } from './PS4HostFormModal';
 
 export const PS4Host = () => {
@@ -14,14 +13,7 @@ export const PS4Host = () => {
   const [formData, setFormData] = useState<FormData>();
 
   const { ps4Installer } = useContainer();
-  const {
-    ps4Hosts,
-    curSelectPs4HostId,
-    setCurSelectPs4HostId,
-    setPs4Hosts,
-    installTaskListVisible,
-    setInstallTaskListVisible
-  } = ps4Installer;
+  const { ps4Hosts, curSelectPs4HostId, setCurSelectPs4HostId, setPs4Hosts } = ps4Installer;
 
   const handleAdd = () => {
     setVisible(true);
@@ -71,19 +63,11 @@ export const PS4Host = () => {
 
   return (
     <div>
-      <Typography.Title heading={6}>
+      <Typography.Title heading={6} style={{ marginTop: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>PS4 Host</span>
           <Space>
-            <Button size="small" icon={<IconPlus />} onClick={handleAdd} />
-            <Button
-              size="small"
-              type="primary"
-              icon={<IconUnorderedList />}
-              onClick={() => {
-                setInstallTaskListVisible(true);
-              }}
-            />
+            <Button type="primary" size="small" icon={<IconPlus />} onClick={handleAdd} />
           </Space>
         </div>
       </Typography.Title>
@@ -117,17 +101,6 @@ export const PS4Host = () => {
           />
         ))}
       </Space>
-      <Drawer
-        width={600}
-        title={<span>PS4 Install Task List</span>}
-        visible={installTaskListVisible}
-        footer={null}
-        onCancel={() => {
-          setInstallTaskListVisible(false);
-        }}
-      >
-        <InstallTaskList />
-      </Drawer>
       <PS4HostFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>
   );

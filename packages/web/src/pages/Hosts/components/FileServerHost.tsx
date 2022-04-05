@@ -1,14 +1,12 @@
-import { Breadcrumb, Button, Input, Notification, Space, Typography } from '@arco-design/web-react';
-import { IconDelete, IconEdit, IconHome, IconPlus, IconSearch, IconSync } from '@arco-design/web-react/icon';
+import { Button, Notification, Space, Typography } from '@arco-design/web-react';
+import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { useState } from 'react';
 
 import { ConfigCard } from '@/components/ConfigCard';
-import { Link } from '@/components/Link';
+import { useContainer } from '@/store/container';
 import { FileServerHost as IFileServerHost, FileServerType } from '@/types';
 
-import { useContainer } from '../container';
 import { FileServerFormModal, FormData } from './FileServerFormModal';
-import styles from './FileServerHost.module.less';
 
 export const FileServerHost = () => {
   const [visible, setVisible] = useState(false);
@@ -21,11 +19,7 @@ export const FileServerHost = () => {
     curFileServerHostId,
     setCurFileServerHostId,
     setFileServerFiles,
-    getFileServerFiles,
-    paths,
     setPaths,
-    searchKeyWord,
-    setSearchKeyWord,
     setIsFileServerReady,
     loading,
     setLoading
@@ -134,10 +128,10 @@ export const FileServerHost = () => {
 
   return (
     <div>
-      <Typography.Title heading={6}>
+      <Typography.Title heading={6} style={{ marginTop: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>File Server Host</span>
-          <Button size="small" icon={<IconPlus />} onClick={handleAdd} />
+          <Button type="primary" size="small" icon={<IconPlus />} onClick={handleAdd} />
         </div>
       </Typography.Title>
       <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
@@ -168,44 +162,6 @@ export const FileServerHost = () => {
           />
         ))}
       </Space>
-      <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div className={styles['breadcrumb-wrapper']}>
-          <Breadcrumb>
-            {paths.length === 0 ? (
-              <Link>
-                <Breadcrumb.Item>
-                  <IconHome />
-                </Breadcrumb.Item>
-              </Link>
-            ) : (
-              paths.map((path, index) => (
-                <Link
-                  key={path || '/'}
-                  onClick={() => {
-                    if (index !== paths.length - 1) {
-                      setPaths(paths.slice(0, index + 1));
-                    }
-                  }}
-                >
-                  <Breadcrumb.Item key={path || '/'}>
-                    {index !== paths.length - 1 ? index === 0 ? <IconHome /> : path : index === 0 ? <IconHome /> : path}
-                  </Breadcrumb.Item>
-                </Link>
-              ))
-            )}
-          </Breadcrumb>
-        </div>
-        <Space>
-          <Input
-            prefix={<IconSearch />}
-            placeholder="Input file name"
-            allowClear
-            value={searchKeyWord}
-            onChange={setSearchKeyWord}
-          />
-          <Button icon={<IconSync />} type="primary" onClick={() => getFileServerFiles(paths.join('/'))} />
-        </Space>
-      </div>
       <FileServerFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>
   );

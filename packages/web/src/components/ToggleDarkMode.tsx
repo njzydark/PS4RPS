@@ -1,4 +1,5 @@
 import { Radio } from '@arco-design/web-react';
+import { IconMoon, IconSun } from '@arco-design/web-react/icon';
 import { useState } from 'react';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -24,9 +25,13 @@ export const ToggleDarkMode = () => {
 
   return (
     <Radio.Group type="button" value={checked} onChange={handleChange}>
-      <Radio value="light">Light</Radio>
+      <Radio value="light">
+        <IconSun />
+      </Radio>
       <Radio value="auto">Auto</Radio>
-      <Radio value="dark">Dark</Radio>
+      <Radio value="dark">
+        <IconMoon />
+      </Radio>
     </Radio.Group>
   );
 };

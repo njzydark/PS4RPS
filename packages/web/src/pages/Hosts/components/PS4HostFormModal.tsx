@@ -2,7 +2,7 @@ import { Form, Input, Message, Modal } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 
-import { useContainer } from '../container';
+import { useContainer } from '@/store/container';
 
 const FormItem = Form.Item;
 

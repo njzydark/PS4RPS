@@ -1,8 +1,7 @@
 import { createContainer } from '@/context/container';
+import { useFileServer } from '@/hooks/useFileServer';
+import { usePS4Installer } from '@/hooks/usePS4Installer';
 import { FileServerType, FileStat } from '@/types';
-
-import { useFileServer } from './hooks/useFileServer';
-import { usePS4Installer } from './hooks/usePS4Installer';
 
 const useHook = () => {
   const fileServer = useFileServer();

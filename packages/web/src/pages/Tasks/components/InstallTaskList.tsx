@@ -1,9 +1,8 @@
 import { Link, Progress, Radio, Space, Table, TableColumnProps } from '@arco-design/web-react';
 import { useState } from 'react';
 
+import { useContainer } from '@/store/container';
 import { InstallTask, TaskActionType, TaskStatus } from '@/types';
-
-import { useContainer } from '../container';
 
 export const InstallTaskList = () => {
   const {

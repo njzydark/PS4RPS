@@ -2,9 +2,8 @@ import { Button, Form, Input, InputNumber, Message, Modal, Notification, Radio }
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 
+import { useContainer } from '@/store/container';
 import { FileServerType } from '@/types';
-
-import { useContainer } from '../container';
 
 const FormItem = Form.Item;
 

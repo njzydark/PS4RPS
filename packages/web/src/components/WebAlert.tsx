@@ -1,4 +1,4 @@
-import { Alert, Link } from '@arco-design/web-react';
+import { Link, Notification } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 
 const CacheKey = 'WebAlertV1';
@@ -18,17 +18,13 @@ export const WebAlert = () => {
     setVisible(false);
   };
 
-  if (!visible) {
-    return null;
-  }
-
-  return (
-    <Alert
-      onClose={handleClose}
-      closable
-      style={{ marginBottom: 10 }}
-      type="info"
-      content={
+  useEffect(() => {
+    if (!visible || window.electron) {
+      return;
+    }
+    Notification.warning({
+      id: 'web-alert',
+      content: (
         <>
           <span>
             This Web version is mainly used to install files in WebDAV Server (NAS), and you must install this version
@@ -36,16 +32,23 @@ export const WebAlert = () => {
           </span>
           <Link
             hoverable={false}
-            href="https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases"
-            target="_blank"
+            onClick={() => {
+              window.open(LinkUrl);
+              handleClose();
+              Notification.remove('web-alert');
+            }}
           >
             RPI
           </Link>
           <span>&nbsp;on your PS4</span>
         </>
-      }
-    />
-  );
+      ),
+      duration: 0,
+      onClose: handleClose
+    });
+  }, [visible]);
+
+  return null;
 };
 
 export const RPILink = () => {

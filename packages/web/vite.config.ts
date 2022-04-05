@@ -4,11 +4,17 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 
+// @ts-ignore
+import { version } from './package.json';
+
 dotenvConfig({ path: '../../.env' });
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
   return {
+    define: {
+      _app_version: JSON.stringify(version)
+    },
     plugins: [
       react({
         babel: {
