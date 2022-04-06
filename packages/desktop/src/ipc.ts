@@ -90,6 +90,14 @@ export class Ipc {
         Ipc.win.close();
       }
     });
+
+    ipcMainHandle('openDevTools', async () => {
+      Ipc.win.webContents.openDevTools();
+    });
+
+    ipcMainHandle('openAppLog', async () => {
+      this.logger.open();
+    });
   }
 
   protected async initWebDavServer() {

@@ -3,16 +3,18 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import Logo from '@/assets/icon.png';
 import { getNavTitleByPath, routeNavs } from '@/routes';
+import { useContainer } from '@/store/container';
 
 import styles from './Layout.module.less';
 import { TitleBar } from './TitleBar';
 import { ToggleDarkMode } from './ToggleDarkMode';
 
 const SideBar = () => {
+  const { settings } = useContainer();
   return (
     <nav className={cs('side-nav-wrapper', styles['side-nav-wrapper'])}>
       <h2 className={styles.header}>
-        <img src={Logo} />
+        {settings.displayLogo && <img src={Logo} />}
         <span>RPS</span>
       </h2>
       <div className={styles.content}>

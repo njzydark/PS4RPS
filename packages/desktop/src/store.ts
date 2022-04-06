@@ -1,3 +1,4 @@
+import { defaultSettings } from 'common/constants/settings';
 import { ipcRendererInvoke } from 'common/typedIpc';
 import { ConfigStore } from 'common/types/configStore';
 import { app } from 'electron';
@@ -27,6 +28,7 @@ class StoreManager {
         name: 'config',
         cwd,
         defaults: {
+          settings: defaultSettings,
           ps4Hosts: [],
           webDavHosts: [],
           fileServerHosts: []

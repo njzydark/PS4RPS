@@ -15,7 +15,20 @@ export type PS4Host = {
   url: string;
 };
 
+export enum PkgListUIType {
+  table = 'table',
+  card = 'card'
+}
+
+export type Settings = {
+  pkgListUIType: PkgListUIType;
+  displayPkgRawTitle: boolean;
+  displayLogo: boolean;
+  forceWebDavDownloadLinkToHttp: boolean;
+};
+
 export type ConfigStore = {
+  settings: Settings;
   webDavHosts: WebDAVHost[];
   fileServerHosts: WebDAVHost[];
   curSelectWebDavHostId?: string;
