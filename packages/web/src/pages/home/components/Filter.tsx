@@ -1,23 +1,21 @@
-import { Breadcrumb, Button, Input, Space } from '@arco-design/web-react';
-import { IconHome, IconSearch, IconSync } from '@arco-design/web-react/icon';
+import { Breadcrumb, Button, Input, Radio, Space } from '@arco-design/web-react';
+import { IconApps, IconHome, IconList, IconSearch, IconSync } from '@arco-design/web-react/icon';
+import { PkgListUIType } from 'common/types/configStore';
 
+import { Divider } from '@/components/Divider';
 import { Link } from '@/components/Link';
 import { useContainer } from '@/store/container';
 
+import styles from './Filter.module.less';
+
 export const Filter = () => {
-  const { fileServer } = useContainer();
-  const { getFileServerFiles, paths, setPaths, searchKeyWord, setSearchKeyWord } = fileServer;
+  const { fileServer, settings, chnageSettings } = useContainer();
+  const { getServerFileListData, paths, setPaths, searchKeyWord, setSearchKeyWord } = fileServer;
 
   return (
-    <div style={{ marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          background: '#fff'
-        }}
-      >
-        <Breadcrumb>
+    <div className={styles.wrapper}>
+      <div className={styles.filter}>
+        <Breadcrumb style={{ display: 'flex', alignItems: 'center' }}>
           {paths.length === 0 ? (
             <Link>
               <Breadcrumb.Item>
@@ -41,17 +39,30 @@ export const Filter = () => {
             ))
           )}
         </Breadcrumb>
+        <Space>
+          <Input
+            prefix={<IconSearch />}
+            placeholder="Input pkg name"
+            allowClear
+            value={searchKeyWord}
+            onChange={setSearchKeyWord}
+          />
+          <Radio.Group
+            type="button"
+            value={settings.pkgListUIType}
+            onChange={value => chnageSettings({ pkgListUIType: value })}
+          >
+            <Radio value={PkgListUIType.card}>
+              <IconApps />
+            </Radio>
+            <Radio value={PkgListUIType.table}>
+              <IconList />
+            </Radio>
+          </Radio.Group>
+          <Button icon={<IconSync />} type="primary" onClick={() => getServerFileListData()} />
+        </Space>
       </div>
-      <Space>
-        <Input
-          prefix={<IconSearch />}
-          placeholder="Input file name"
-          allowClear
-          value={searchKeyWord}
-          onChange={setSearchKeyWord}
-        />
-        <Button icon={<IconSync />} type="primary" onClick={() => getFileServerFiles(paths.join('/'))} />
-      </Space>
+      {<Divider style={{ marginBottom: 0 }} />}
     </div>
   );
 };

@@ -21,7 +21,6 @@ export const FileServerHost = () => {
     setFileServerFiles,
     setPaths,
     setIsFileServerReady,
-    loading,
     setLoading
   } = fileServer;
 
@@ -56,18 +55,9 @@ export const FileServerHost = () => {
   const handleDelete = (host: IFileServerHost) => {
     const newHosts = fileServerHosts.filter(h => h.id !== host.id);
     setFileServerHosts(newHosts);
-    if (curFileServerHostId === host.id) {
-      setCurFileServerHostId(undefined);
-      setPaths([]);
-      setFileServerFiles([]);
-      setIsFileServerReady(false);
-    }
   };
 
   const handleChangeHost = async (host: IFileServerHost) => {
-    if (loading) {
-      return;
-    }
     try {
       setCurFileServerHostId(host.id);
       setPaths([]);
@@ -76,12 +66,8 @@ export const FileServerHost = () => {
       if (host.type === FileServerType.StaticFileServer && window.electron) {
         setLoading(true);
         await window.electron.createStaticFileServer({ directoryPath: host.directoryPath, port: host.port });
-        setIsFileServerReady(true);
-      } else {
-        setTimeout(() => {
-          setIsFileServerReady(true);
-        }, 0);
       }
+      setIsFileServerReady(true);
     } catch (err) {
       Notification.error({
         title: 'Change file server host error',

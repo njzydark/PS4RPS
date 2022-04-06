@@ -1,19 +1,22 @@
 import { createContainer } from '@/context/container';
 import { useFileServer } from '@/hooks/useFileServer';
 import { usePS4Installer } from '@/hooks/usePS4Installer';
+import { useSettings } from '@/hooks/useSettings';
 import { FileServerType, FileStat } from '@/types';
 
 const useHook = () => {
-  const fileServer = useFileServer();
-  const { fileServerHosts, curFileServerHostId, webDavClient } = fileServer;
+  const { settings, chnageSettings } = useSettings();
+
+  const fileServer = useFileServer({
+    forceWebDavDownloadLinkToHttp: settings.forceWebDavDownloadLinkToHttp
+  });
+  const { fileServerHosts, curFileServerHostId } = fileServer;
 
   const curFileServerHost = fileServerHosts.find(host => host.id === curFileServerHostId);
   const ps4Installer = usePS4Installer(curFileServerHost?.id);
 
   const handleInstall = async (file: FileStat) => {
-    if (curFileServerHost?.type === FileServerType.WebDAV && webDavClient.current) {
-      file.downloadUrl = webDavClient.current.getFileDownloadLink(file.filename);
-    } else if (curFileServerHost?.type === FileServerType.StaticFileServer) {
+    if (curFileServerHost?.type === FileServerType.StaticFileServer) {
       file.downloadUrl = curFileServerHost.url + encodeURI(file.filename.replace(/\\/g, '/'));
     }
     ps4Installer.handleInstall(file);
@@ -22,7 +25,9 @@ const useHook = () => {
   return {
     fileServer,
     ps4Installer,
-    handleInstall
+    handleInstall,
+    settings,
+    chnageSettings
   };
 };
 

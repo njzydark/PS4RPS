@@ -6,9 +6,9 @@ import { PS4Host } from './components/PS4Host';
 export const Hosts = () => {
   return (
     <>
-      <PS4Host />
-      <Divider />
       <FileServerHost />
+      <Divider />
+      <PS4Host />
     </>
   );
 };

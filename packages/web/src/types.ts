@@ -1,7 +1,10 @@
+import { Ps4PkgParamSfo } from '@njzy/ps4-pkg-info/web';
 import { FileStat as RawFileStat, WebDAVClientOptions } from 'webdav/web';
 
 export type FileStat = RawFileStat & {
   downloadUrl?: string;
+  icon0?: string;
+  paramSfo?: Ps4PkgParamSfo;
 };
 
 export enum FileServerType {

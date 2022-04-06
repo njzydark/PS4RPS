@@ -1,3 +1,4 @@
+import { getPs4PkgInfo, Ps4PkgParamSfo } from '@njzy/ps4-pkg-info';
 import contentDisposition from 'content-disposition';
 import fs from 'fs-extra';
 import getFolderSize from 'get-folder-size';
@@ -15,6 +16,8 @@ type FileItem = {
   size?: number;
   lastmod: Date;
   isSymbolicLink: boolean;
+  icon0?: string;
+  paramSfo?: Ps4PkgParamSfo;
 };
 
 class StaticServerManager {
@@ -156,6 +159,16 @@ class StaticServerManager {
             lastmod: fileInfo.mtime,
             isSymbolicLink: file.isSymbolicLink()
           };
+          if (fileType === 'file' && file.name.endsWith('.pkg')) {
+            try {
+              const res = await getPs4PkgInfo(filePath, { generateBase64Icon: true });
+              if (res) {
+                Object.assign<FileItem, Partial<FileItem>>(fileItem, { icon0: res.icon0, paramSfo: res.paramSfo });
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
           return fileItem;
         });
         const fileList = (await Promise.all(fileListPromises))?.filter(item => item.type) || [];

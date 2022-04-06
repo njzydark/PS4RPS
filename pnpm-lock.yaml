@@ -122,6 +122,7 @@ importers:
 
   packages/desktop:
     specifiers:
+      '@njzy/ps4-pkg-info': workspace:^0.0.0
       axios: ^0.25.0
       common: workspace:^1.0.0-beta.6
       content-disposition: ^0.5.4
@@ -138,6 +139,7 @@ importers:
       serve-static: ^1.14.2
       webdav-server: ^2.6.2
     devDependencies:
+      '@njzy/ps4-pkg-info': link:../ps4-pkg-info
       axios: 0.25.0
       common: link:../common
       content-disposition: 0.5.4

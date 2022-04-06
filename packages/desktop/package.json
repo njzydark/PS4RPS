@@ -32,6 +32,7 @@
     "prettier": "prettier --write src"
   },
   "devDependencies": {
+    "@njzy/ps4-pkg-info": "workspace:^0.0.0",
     "axios": "^0.25.0",
     "common": "workspace:^1.0.0-beta.6",
     "content-disposition": "^0.5.4",
