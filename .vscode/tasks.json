@@ -21,9 +21,8 @@
       "problemMatcher": []
     },
     {
-      "type": "npm",
-      "script": "dev",
-      "path": "packages/desktop/",
+      "type": "shell",
+      "command": "pnpm exec turbo run dev --filter=desktop",
       "label": "Desktop Dev",
       "isBackground": true,
       "problemMatcher": [
@@ -38,9 +37,8 @@
       ]
     },
     {
-      "type": "npm",
-      "script": "dev",
-      "path": "packages/web/",
+      "type": "shell",
+      "command": "pnpm exec turbo run dev --filter=web",
       "label": "Web Dev",
       "isBackground": true,
       "problemMatcher": [
@@ -55,9 +53,8 @@
       ]
     },
     {
-      "type": "npm",
-      "script": "start",
-      "path": "packages/desktop/",
+      "type": "shell",
+      "command": "pnpm run desktop:start",
       "label": "Desktop Start",
       "isBackground": true,
       "problemMatcher": [

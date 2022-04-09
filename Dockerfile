@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm i -g pnpm && ELECTRON_SKIP_BINARY_DOWNLOAD=true pnpm i --filter web --filter common
+RUN npm i -g pnpm && ELECTRON_SKIP_BINARY_DOWNLOAD=true pnpm i --filter web...
 RUN pnpm run web:build
 
 FROM nginx:1.21.0

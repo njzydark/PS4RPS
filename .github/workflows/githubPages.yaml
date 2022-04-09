@@ -31,7 +31,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Pnpm Install
-        run: pnpm install --frozen-lockfile false
+        run: ELECTRON_SKIP_BINARY_DOWNLOAD=true pnpm i --filter web... --frozen-lockfile false
 
       - name: Build
         run: pnpm run web:build

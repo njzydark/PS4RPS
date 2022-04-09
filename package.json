@@ -2,19 +2,17 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
-    "ci:build": "pnpm install && pnpm run all:build && pnpm run copyRenderer --filter desktop",
-    "all:dev": "pnpm run dev --parallel",
-    "all:build": "pnpm run build --parallel --filter ./packages",
-    "desktop:dev": "pnpm run dev --filter desktop",
-    "desktop:build": "pnpm run build --filter desktop",
+    "ci:build": "pnpm install && pnpm run desktop:build && pnpm run copyRenderer --filter desktop",
+    "desktop:dev": "turbo run dev --filter=desktop --filter=web",
+    "desktop:build": "turbo run build --filter=desktop --filter=web",
     "desktop:start": "pnpm run start --filter desktop",
     "desktop:pack": "pnpm run pack --filter desktop",
     "desktop:dist": "pnpm run dist --filter desktop",
-    "web:dev": "pnpm run dev --filter web",
-    "web:build": "pnpm run build --filter web",
+    "web:dev": "turbo run dev --filter=web",
+    "web:build": "turbo run build --filter=web",
     "preinstall": "npx only-allow pnpm"
   },
   "author": "njzy <njzydark@gmail.com>",
@@ -76,6 +74,7 @@
     "terser-webpack-plugin": "^5.2.5",
     "ts-node": "^10.7.0",
     "tsup": "^5.12.4",
+    "turbo": "^1.2.1",
     "typescript": "^4.6.2",
     "webpack": "^5.70.0",
     "webpack-bundle-analyzer": "^4.5.0",

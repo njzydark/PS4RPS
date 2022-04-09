@@ -8,8 +8,8 @@
       "name": "Desktop Debug",
       "preLaunchTask": "Desktp",
       "configurations": [
-        "Desktop",
-        "Web"
+        "Desktop Attach",
+        "Web Attach"
       ],
       "presentation": {
         "hidden": false,
@@ -20,7 +20,7 @@
   ],
   "configurations": [
     {
-      "name": "Desktop",
+      "name": "Desktop Attach",
       "port": 9224,
       "request": "attach",
       "cwd": "${workspaceFolder}/packages/desktop",
@@ -36,7 +36,7 @@
       }
     },
     {
-      "name": "Web",
+      "name": "Web Attach",
       "port": 9223,
       "request": "attach",
       "type": "pwa-chrome",
@@ -47,6 +47,14 @@
         "group": "",
         "order": 3
       }
+    },
+    {
+      "name": "Web Debug By Chrome",
+      "request": "launch",
+      "preLaunchTask": "Web Dev",
+      "type": "chrome",
+      "url": "http://localhost:8831",
+      "webRoot": "${workspaceFolder}/packages/web"
     },
   ]
 }
