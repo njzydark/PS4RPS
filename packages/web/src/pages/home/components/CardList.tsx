@@ -37,3 +37,5 @@ export const CardList = ({ data, handleNameClick, formatPkgName }: TableListProp
     </div>
   );
 };
+
+export default CardList;

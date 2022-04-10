@@ -49,11 +49,12 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
     try {
       const promises = data.map(async item => {
         try {
-          const res = await getPs4PkgInfo(item.downloadUrl!, { generateBase64Icon: true });
+          const res = await getPs4PkgInfo(item.downloadUrl!);
           if (res) {
+            const url = res.icon0Raw ? window.URL.createObjectURL(new Blob([res.icon0Raw])) : undefined;
             const newData = {
               name: item.basename,
-              icon0: res.icon0,
+              icon0: url,
               paramSfo: res.paramSfo
             };
             setCachePkgInfoData(pre => {

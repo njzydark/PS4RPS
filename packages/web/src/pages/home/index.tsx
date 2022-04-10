@@ -1,12 +1,14 @@
 import { PkgListUIType } from 'common/types/configStore';
+import { lazy, Suspense } from 'react';
 
 import { useContainer } from '@/store/container';
 import { FileStat } from '@/types';
 
-import { CardList } from './components/CardList';
 import { FileServerHostEmpty } from './components/FileServerHostEmpty';
 import { Filter } from './components/Filter';
 import { TableList, TableListProps } from './components/TableList';
+
+const CardList = lazy(() => import('./components/CardList'));
 
 export const Home = () => {
   const {
@@ -50,7 +52,13 @@ export const Home = () => {
   return (
     <>
       <Filter />
-      {settings?.pkgListUIType === PkgListUIType.table ? <TableList {...props} /> : <CardList {...props} />}
+      {settings?.pkgListUIType === PkgListUIType.table ? (
+        <TableList {...props} />
+      ) : (
+        <Suspense fallback={<div>loading...</div>}>
+          <CardList {...props} />
+        </Suspense>
+      )}
     </>
   );
 };

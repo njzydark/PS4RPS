@@ -1,5 +1,6 @@
 import { Breadcrumb, Button, Input, Radio, Space } from '@arco-design/web-react';
 import { IconApps, IconHome, IconList, IconSearch, IconSync } from '@arco-design/web-react/icon';
+import cs from 'classnames';
 import { PkgListUIType } from 'common/types/configStore';
 
 import { Divider } from '@/components/Divider';
@@ -11,7 +12,7 @@ import styles from './Filter.module.less';
 
 export const Filter = () => {
   const { fileServer, settings, chnageSettings } = useContainer();
-  const { getServerFileListData, paths, setPaths, searchKeyWord, setSearchKeyWord } = fileServer;
+  const { getServerFileListData, paths, setPaths, searchKeyWord, setSearchKeyWord, loading } = fileServer;
 
   return (
     <div className={styles.wrapper}>
@@ -72,7 +73,7 @@ export const Filter = () => {
           <Button icon={<IconSync />} type="primary" onClick={() => getServerFileListData()} />
         </Space>
       </div>
-      {<Divider style={{ marginBottom: 0 }} />}
+      {<Divider style={{ marginBottom: 0 }} className={cs(loading && styles['loading-line'])} />}
     </div>
   );
 };
