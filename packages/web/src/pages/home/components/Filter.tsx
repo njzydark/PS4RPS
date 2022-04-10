@@ -17,25 +17,24 @@ export const Filter = () => {
       <div className={styles.filter}>
         <Breadcrumb style={{ display: 'flex', alignItems: 'center' }}>
           {paths.length === 0 ? (
-            <Link>
-              <Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link>
                 <IconHome />
-              </Breadcrumb.Item>
-            </Link>
+              </Link>
+            </Breadcrumb.Item>
           ) : (
             paths.map((path, index) => (
-              <Link
-                key={path || '/'}
-                onClick={() => {
-                  if (index !== paths.length - 1) {
-                    setPaths(paths.slice(0, index + 1));
-                  }
-                }}
-              >
-                <Breadcrumb.Item key={path || '/'}>
+              <Breadcrumb.Item key={path || '/'}>
+                <Link
+                  onClick={() => {
+                    if (index !== paths.length - 1) {
+                      setPaths(paths.slice(0, index + 1));
+                    }
+                  }}
+                >
                   {index !== paths.length - 1 ? index === 0 ? <IconHome /> : path : index === 0 ? <IconHome /> : path}
-                </Breadcrumb.Item>
-              </Link>
+                </Link>
+              </Breadcrumb.Item>
             ))
           )}
         </Breadcrumb>

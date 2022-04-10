@@ -9,11 +9,7 @@ type LinkProps = ArcoLinkProps & {
 
 export const Link = (props: LinkProps) => {
   return (
-    <ArcoLink
-      {...props}
-      href="javascript:;"
-      className={cs(styles.link, props.canceldUnderline && styles.cancelUnderline, props.className)}
-    >
+    <ArcoLink {...props} className={cs(styles.link, props.canceldUnderline && styles.cancelUnderline, props.className)}>
       {props.children}
     </ArcoLink>
   );

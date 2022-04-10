@@ -135,7 +135,9 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
   useEffect(() => {
     if (!curHost) {
       setLoading(false);
-      setPaths([]);
+      if (paths.length) {
+        setPaths([]);
+      }
       setFileServerFiles([]);
       return;
     }
