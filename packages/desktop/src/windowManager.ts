@@ -20,8 +20,10 @@ export class WindowManager {
 
   createWindow(): BrowserWindow {
     const window = new BrowserWindow({
-      width: 950,
-      height: 700,
+      minWidth: 800,
+      minHeight: 600,
+      width: 800,
+      height: 600,
       titleBarStyle: 'default',
       autoHideMenuBar: true,
       frame: true,
