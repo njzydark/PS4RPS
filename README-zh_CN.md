@@ -4,7 +4,7 @@
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
 
-为PS4远程安装PKG
+为 PS4 远程安装 PKG
 
 ![PS4RPS.png](assets/PS4RPS.png)
 
@@ -14,32 +14,40 @@
 
 - 支持 MacOS, Windows 和 Linux
 - 支持暗黑模式
+- 支持显示 pkg 文件的 icon 和 paramSfo 数据
+- 支持直接使用 web 版本访问你 NAS 中的 pkg 文件发送安装任务
 - 支持暂停和恢复安装任务
-- 支持利用远程的WebDAV服务器进行安装
+- 支持利用远程的 WebDAV 服务器进行安装
 - 支持从本地文件夹创建静态文件服务器
-- 支持多个PS4 Host和文件服务器配置
+- 支持多个 PS4 Host 和文件服务器配置
 
 ## 动机
 
-此类工具其实挺多的，我试用了一款觉得UI比较粗糙且不能安装我NAS上的PKG文件，所以我就准备自己开发一款，也正好为这个社区贡献一份自己的力量，多一种选择也不算坏事。
+在发送安装任务之前，你必须在 PS4 安装 Remote Pkg Installer 并打开运行
 
-## 使用
+这里推荐使用[我修改的版本](https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases)，此版本修复了文件路径存在空格或者中文字符导致的安装失败问题，并添加了启动时的 ip 和 port 提示，注意此版本的默认端口为 12801
+
+此类工具其实挺多的，我试用了一款觉得 UI 比较粗糙且不能安装我 NAS 上的 PKG 文件，所以我就准备自己开发一款，也正好为这个社区贡献一份自己的力量，多一种选择也不算坏事。
+
+### Web
+
+如果你只需要访问你 NAS 中的 pkg 文件，你可以直接使用网页版，前提你要确保 NAS 的 webdav 支持 cors，并在 ps4 上安装[我修改的版本](https://github.com/njzydark/ps4_remote_pkg_installer-OOSDK/releases), 如果你 nas 上的 webdav 不支持 cors, 你可以安装此版本的[webdav server](https://github.com/hacdias/webdav)
+
+### Desktop
 
 1. 从此页面下载需要的安装程序 [release page](https://github.com/njzydark/PS4RPS/releases)
 2. 打开下载好的安装程序
-3. 添加PS4 Host配置，这里需要填写完整的url，例如: http://192.168.0.11:12800 端口一般为12800
+3. 添加 PS4 Host 配置，这里需要填写完整的 url，例如: http://192.168.0.11:12800 端口一般为 12800 或 12801
 4. 添加文件服务器配置，这里有两种方式
-   - WebDAV: 使用远程的服务器地址，这里需要填写完整的url 如果有用户密码也需要填写上
+   - WebDAV: 使用远程的服务器地址，这里需要填写完整的 url 如果有用户密码也需要填写上
    - StaticFileServer: 通过本地文件夹创建静态文件服务器
-5. 在文件列表里点击需要的安装的pkg名称即可向PS4发送安装任务，如果发送成功会有相应提示
-
-**注意** 在发送安装任务之前PS4必须安装此PKG [remote pkg installer](https://gist.github.com/flatz/60956f2bf1351a563f625357a45cd9c8) 并打开运行
+5. 在文件列表里点击需要的安装的 pkg 名称即可向 PS4 发送安装任务，如果发送成功会有相应提示
 
 ## 开发
 
 ```bash
 pnpm install
-pnpm run all:dev
+pnpm run desktop:dev
 pnpm run desktop:start
 ```
 
@@ -47,25 +55,21 @@ pnpm run desktop:start
 
 ```bash
 pnpm install
-pnpm run all:build
+pnpm run desktop:build
 pnpm run desktop:dist
 ```
 
 ## 常见问题
 
-1. 是否有Web版本?
+1. 传输速度如何?
 
-   当然有，如果你不需要从本地文件夹创建WebDAV Server而只使用远程的地址，例如NAS环境下，此时确实只需要Web版本即可 但是因为PS4的Remote Pkg Install程序存在CORS的bug [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10)，所以目前还不能使用
+   WebDAV 取决于你 WebDAV 服务器的速度，StaticFileServer 我这里测试基本可以跑满我本地的局域网带宽
 
-2. 传输速度如何?
+2. 为什么支持 WebDAV?
 
-   WebDAV取决于你WebDAV服务器的速度，StaticFileServer我这里测试基本可以跑满我本地的局域网带宽
+   因为可以很方便的安装 NAS 上的 PKG 文件
 
-3. 为什么支持WebDAV?
-
-   因为可以很方便的安装NAS上的PKG文件
-
-4. 为什么arm版本的mac安装程序打开失败?
+3. 为什么 arm 版本的 mac 安装程序打开失败?
 
    因为没有签名，你需要在终端执行一下此命令:
 
@@ -73,8 +77,16 @@ pnpm run desktop:dist
    sudo xattr -r -d com.apple.quarantine /Applications/PS4RPS.app
    ```
 
+## Thanks
+
+- [psdevwiki](https://www.psdevwiki.com/ps4/Package_Files)
+- [dexter85/ps4-pkg-info](https://github.com/dexter85/ps4-pkg-info)
+- [flatz/ps4_remote_pkg_installer](https://github.com/flatz/ps4_remote_pkg_installer)
+- [Backporter/ps4_remote_pkg_installer-OOSDK](https://github.com/Backporter/ps4_remote_pkg_installer-OOSDK)
+- [OpenOrbis/OpenOrbis-PS4-Toolchain](https://github.com/OpenOrbis/OpenOrbis-PS4-Toolchain)
+
 ## 后续计划
 
-- [ ] 自动发现PS4主机地址
-- [ ] 修复PS4 Remote Pkg Install的cors bug [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10) 并发布纯Web版本
-- [ ] 支持在文件列表显示更多的pkg文件信息，例如icon和titleID
+- [ ] 自动发现 PS4 主机地址
+- [x] 修复 PS4 Remote Pkg Install 的 cors bug [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10) 并发布纯 Web 版本
+- [x] 支持在文件列表显示更多的 pkg 文件信息，例如 icon 和 titleID
