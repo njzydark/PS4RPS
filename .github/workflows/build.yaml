@@ -42,7 +42,7 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          app_root: './packages/desktop'
+          app_root: './apps/desktop'
           build_script_name: 'ci:build'
           skip_package_manager_install: true
           package_manager: 'pnpm'
@@ -50,23 +50,23 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: PS4RPS-mac
-          path: packages/desktop/output/*.dmg
+          path: apps/desktop/output/*.dmg
           if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v2
         with:
           name: PS4RPS-win
-          path: packages/desktop/output/*.exe
+          path: apps/desktop/output/*.exe
           if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v2
         with:
           name: PS4RPS-linux-appImage
-          path: packages/desktop/output/*.AppImage
+          path: apps/desktop/output/*.AppImage
           if-no-files-found: ignore
       
       - uses: actions/upload-artifact@v2
         with:
           name: PS4RPS-linux-deb
-          path: packages/desktop/output/*.deb
+          path: apps/desktop/output/*.deb
           if-no-files-found: ignore

@@ -114,15 +114,7 @@ importers:
       webpack-dev-server: 4.7.4_webpack-cli@4.9.2+webpack@5.70.0
       webpack-merge: 5.8.0
 
-  packages/common:
-    specifiers:
-      electron: 16.0.8
-      electron-store: ^8.0.1
-    devDependencies:
-      electron: 16.0.8
-      electron-store: 8.0.1
-
-  packages/desktop:
+  apps/desktop:
     specifiers:
       '@njzy/ps4-pkg-info': workspace:^0.0.0
       axios: ^0.25.0
@@ -141,9 +133,9 @@ importers:
       serve-static: ^1.14.2
       webdav-server: ^2.6.2
     devDependencies:
-      '@njzy/ps4-pkg-info': link:../ps4-pkg-info
+      '@njzy/ps4-pkg-info': link:../../packages/ps4-pkg-info
       axios: 0.25.0
-      common: link:../common
+      common: link:../../packages/common
       content-disposition: 0.5.4
       cross-env: 7.0.3
       dotenv: 14.3.2
@@ -158,18 +150,7 @@ importers:
       serve-static: 1.14.2
       webdav-server: 2.6.2
 
-  packages/ps4-pkg-info:
-    specifiers:
-      '@types/python-struct': ^1.0.0
-      buffer: ^6.0.3
-      python-struct: ^1.1.3
-    dependencies:
-      buffer: 6.0.3
-      python-struct: 1.1.3
-    devDependencies:
-      '@types/python-struct': 1.0.0
-
-  packages/web:
+  apps/web:
     specifiers:
       '@arco-design/web-react': ^2.31.1
       '@njzy/ps4-pkg-info': workspace:^0.0.0
@@ -190,13 +171,13 @@ importers:
       webdav: ^4.8.0
     dependencies:
       '@arco-design/web-react': 2.31.1_b3482aaf5744fc7c2aeb7941b0e0a78f
-      '@njzy/ps4-pkg-info': link:../ps4-pkg-info
+      '@njzy/ps4-pkg-info': link:../../packages/ps4-pkg-info
       axios: 0.25.0
       classnames: 2.3.1
-      common: link:../common
+      common: link:../../packages/common
       dayjs: 1.10.7
       json5: 2.2.0
-      nanoid: 3.2.0
+      nanoid: 3.3.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-feather: 2.0.9_react@17.0.2
@@ -207,6 +188,25 @@ importers:
       babel-plugin-import: 1.13.3
       vite: 2.9.0_less@4.1.2
       vite-plugin-checker: 0.4.4_vite@2.9.0
+
+  packages/common:
+    specifiers:
+      electron: 16.0.8
+      electron-store: ^8.0.1
+    devDependencies:
+      electron: 16.0.8
+      electron-store: 8.0.1
+
+  packages/ps4-pkg-info:
+    specifiers:
+      '@types/python-struct': ^1.0.0
+      buffer: ^6.0.3
+      python-struct: ^1.1.3
+    dependencies:
+      buffer: 6.0.3
+      python-struct: 1.1.3
+    devDependencies:
+      '@types/python-struct': 1.0.0
 
 packages:
 
@@ -6698,12 +6698,12 @@ packages:
     resolution: {integrity: sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: true
 
   /nanoid/3.3.2:
     resolution: {integrity: sha512-CuHBogktKwpm5g2sRgv83jEy2ijFzBwMoYA60orPDR7ynsLijJDqgsi4RDGj3OJpy3Ieb+LYwiRmIOGyytgITA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-    dev: true
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}

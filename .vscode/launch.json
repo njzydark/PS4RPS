@@ -23,7 +23,7 @@
       "name": "Desktop Attach",
       "port": 9224,
       "request": "attach",
-      "cwd": "${workspaceFolder}/packages/desktop",
+      "cwd": "${workspaceFolder}/apps/desktop",
       "restart": true,
       "skipFiles": [
         "<node_internals>/**"
@@ -40,7 +40,7 @@
       "port": 9223,
       "request": "attach",
       "type": "pwa-chrome",
-      "webRoot": "${workspaceFolder}/packages/web",
+      "webRoot": "${workspaceFolder}/apps/web",
       "restart": true,
       "presentation": {
         "hidden": false,
@@ -54,7 +54,7 @@
       "preLaunchTask": "Web Dev",
       "type": "chrome",
       "url": "http://localhost:8831",
-      "webRoot": "${workspaceFolder}/packages/web"
+      "webRoot": "${workspaceFolder}/apps/web"
     },
   ]
 }

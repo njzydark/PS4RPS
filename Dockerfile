@@ -12,7 +12,7 @@ FROM nginx:1.21.0
 
 WORKDIR /usr/share/nginx/html
 
-COPY --from=build /app/packages/web/dist /usr/share/nginx/html
+COPY --from=build /app/apps/web/dist /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -1,4 +1,4 @@
 # Change Log
 
-- [Desktop](packages/desktop/CHANGELOG.md)
-- [Web](packages/web/CHANGELOG.md)
+- [Desktop](apps/desktop/CHANGELOG.md)
+- [Web](apps/web/CHANGELOG.md)
