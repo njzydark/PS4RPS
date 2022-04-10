@@ -31,6 +31,7 @@ export type Settings = {
   displayPkgRawTitle: boolean;
   displayLogo: boolean;
   forceWebDavDownloadLinkToHttp: boolean;
+  useBetaVersion?: boolean;
 };
 
 export type ConfigStore = {

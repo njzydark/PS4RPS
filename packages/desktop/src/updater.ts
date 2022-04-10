@@ -3,6 +3,7 @@ import { app, Notification, shell } from 'electron';
 import { lt } from 'semver';
 
 import { Ipc } from './ipc';
+import { storeManager } from './store';
 
 export interface UpdaterChannelData {
   message: string;
@@ -39,7 +40,7 @@ class Updater {
 
   protected async checkUpdateFromGithub(manul: boolean, useSystemNotification: boolean) {
     try {
-      const useBetaVersion = true;
+      const { useBetaVersion } = storeManager.configStore.get('settings');
       const res = await axios.get<{ prerelease: boolean; draft: boolean; tag_name: string; html_url: string }[]>(
         GithubReleaseApi
       );

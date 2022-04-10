@@ -6,6 +6,7 @@ import reloader from 'electron-reloader';
 
 import { Ipc } from './ipc';
 import { Logger } from './logger';
+import { updater } from './updater';
 import { WindowManager } from './windowManager';
 
 try {
@@ -30,6 +31,7 @@ if (gotTheLock) {
     console.log('app ready');
     Ipc.getInstance();
     windowManager.showWindow();
+    updater.checkUpdate(false, true);
   });
   app.on('before-quit', () => {
     windowManager.isQuitting = true;

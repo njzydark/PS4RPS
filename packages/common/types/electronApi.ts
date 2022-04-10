@@ -25,6 +25,7 @@ export interface IElectronIpcMainHandles {
   >;
   openDevTools: () => void;
   openAppLog: () => void;
+  checkUpdate: () => void;
 }
 
 export interface IElectronAPI extends IElectronIpcMainHandles {

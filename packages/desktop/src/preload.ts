@@ -26,7 +26,8 @@ export const preload = () => {
     createStaticFileServer: ({ directoryPath, port }) =>
       ipcRendererInvoke('createStaticFileServer', { directoryPath, port }),
     openDevTools: () => ipcRendererInvoke('openDevTools'),
-    openAppLog: () => ipcRendererInvoke('openAppLog')
+    openAppLog: () => ipcRendererInvoke('openAppLog'),
+    checkUpdate: () => ipcRendererInvoke('checkUpdate')
   };
 
   contextBridge.exposeInMainWorld('electron', electronApi);

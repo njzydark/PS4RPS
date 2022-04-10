@@ -34,13 +34,18 @@ export const Settings = () => {
       </SettingItem>
       <SettingItem
         title="Pkg list click action"
-        desc="Control the default behavior when clicking on a pkg file in the list"
+        desc="Control the default behavior when clicking on a pkg file in the list."
       >
         <Select value={settings.pkgListClickAction} onChange={value => chnageSettings({ pkgListClickAction: value })}>
           <Select.Option value={PkgListClickAction.install}>Install</Select.Option>
           <Select.Option value={PkgListClickAction.detail}>Detail</Select.Option>
         </Select>
       </SettingItem>
+      {window.electron && (
+        <SettingItem title="Use beta version" desc="Whether get beta version update.">
+          <Switch checked={settings.useBetaVersion} onChange={value => chnageSettings({ useBetaVersion: value })} />
+        </SettingItem>
+      )}
       {window.electron && (
         <SettingItem
           title="Dev tools"

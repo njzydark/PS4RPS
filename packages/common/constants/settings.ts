@@ -5,5 +5,6 @@ export const defaultSettings: Settings = {
   displayPkgRawTitle: false,
   displayLogo: true,
   pkgListClickAction: PkgListClickAction.detail,
-  forceWebDavDownloadLinkToHttp: true
+  forceWebDavDownloadLinkToHttp: true,
+  useBetaVersion: true
 };

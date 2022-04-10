@@ -5,6 +5,7 @@ import fs from 'fs';
 import { Logger } from './logger';
 import { staticServerManager } from './staticServerManager';
 import { storeManager } from './store';
+import { updater } from './updater';
 import { getIp } from './utils';
 
 export class Ipc {
@@ -97,6 +98,10 @@ export class Ipc {
 
     ipcMainHandle('openAppLog', async () => {
       this.logger.open();
+    });
+
+    ipcMainHandle('checkUpdate', async () => {
+      await updater.checkUpdate(true, true);
     });
   }
 
