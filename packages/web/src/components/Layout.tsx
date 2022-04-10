@@ -1,4 +1,5 @@
 import cs from 'classnames';
+import { useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import Logo from '@/assets/icon.png';
@@ -46,6 +47,16 @@ const TitleHeader = () => {
 export const Layout = () => {
   const showCuatomScrollBar = window.electron && window.electron.platform !== 'darwin';
   const showCustomTitleBar = false;
+
+  const scrollEl = useRef<HTMLDivElement>(null);
+
+  const location = useLocation();
+  useEffect(() => {
+    if (scrollEl.current) {
+      scrollEl.current.scrollTop = 0;
+    }
+  }, [location]);
+
   return (
     <div
       className={cs(
@@ -59,7 +70,7 @@ export const Layout = () => {
         <SideBar />
         <main className={styles['main-content-wrapper']}>
           <TitleHeader />
-          <div className={styles['content-wrapper']}>
+          <div className={styles['content-wrapper']} ref={scrollEl}>
             <Outlet />
           </div>
         </main>
