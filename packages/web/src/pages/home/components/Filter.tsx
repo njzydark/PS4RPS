@@ -3,6 +3,7 @@ import { IconApps, IconHome, IconList, IconSearch, IconSync } from '@arco-design
 import { PkgListUIType } from 'common/types/configStore';
 
 import { Divider } from '@/components/Divider';
+import { EllipsisText } from '@/components/EllipsisText';
 import { Link } from '@/components/Link';
 import { useContainer } from '@/store/container';
 
@@ -32,13 +33,23 @@ export const Filter = () => {
                     }
                   }}
                 >
-                  {index !== paths.length - 1 ? index === 0 ? <IconHome /> : path : index === 0 ? <IconHome /> : path}
+                  {index !== paths.length - 1 ? (
+                    index === 0 ? (
+                      <IconHome />
+                    ) : (
+                      <EllipsisText text={path} />
+                    )
+                  ) : index === 0 ? (
+                    <IconHome />
+                  ) : (
+                    <EllipsisText text={path} />
+                  )}
                 </Link>
               </Breadcrumb.Item>
             ))
           )}
         </Breadcrumb>
-        <Space>
+        <Space style={{ flexShrink: 0 }}>
           <Input
             prefix={<IconSearch />}
             placeholder="Input pkg name"

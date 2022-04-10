@@ -50,7 +50,7 @@ export const Home = () => {
   return (
     <>
       <Filter />
-      {settings?.pkgListUIType === PkgListUIType.card ? <CardList {...props} /> : <TableList {...props} />}
+      {settings?.pkgListUIType === PkgListUIType.table ? <TableList {...props} /> : <CardList {...props} />}
     </>
   );
 };
