@@ -53,18 +53,21 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         if (isTest) {
           setTestLoading(true);
           try {
-            const res = await axios.get(value.url + '/static', { timeout: 3000 });
-            if (res.status === 200) {
+            await axios.get(value.url + '/api', { timeout: 3000 });
+            throw new Error('failed');
+          } catch (err) {
+            // @ts-ignore
+            if (err?.response?.status === 400 || err?.response?.data?.status === 'fail') {
               Notification.success({
                 title: 'Connect to PS4 host success',
                 content: ''
               });
+            } else {
+              Notification.error({
+                title: 'Connect to PS4 host failed',
+                content: 'Please check if the ip and port are correct or rempte pkg installer is running on your ps4'
+              });
             }
-          } catch (err) {
-            Notification.error({
-              title: 'Connect to PS4 host failed',
-              content: 'Please check if the ip and port are correct or rempte pkg installer is running on your ps4'
-            });
           }
           return;
         }
