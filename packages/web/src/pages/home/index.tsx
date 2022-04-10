@@ -4,12 +4,13 @@ import { useContainer } from '@/store/container';
 import { FileStat } from '@/types';
 
 import { CardList } from './components/CardList';
+import { FileServerHostEmpty } from './components/FileServerHostEmpty';
 import { Filter } from './components/Filter';
 import { TableList, TableListProps } from './components/TableList';
 
 export const Home = () => {
   const {
-    fileServer: { fileServerFiles, loading, setPaths, searchKeyWord },
+    fileServer: { fileServerFiles, loading, setPaths, searchKeyWord, fileServerHosts },
     handleInstall,
     settings
   } = useContainer();
@@ -42,6 +43,10 @@ export const Home = () => {
     loading
   };
 
+  if (!fileServerHosts?.length) {
+    return <FileServerHostEmpty />;
+  }
+
   return (
     <>
       <Filter />
@@ -49,3 +54,5 @@ export const Home = () => {
     </>
   );
 };
+
+export default Home;

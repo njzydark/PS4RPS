@@ -1,5 +1,6 @@
-import { Button, Notification } from '@arco-design/web-react';
+import { Link, Notification } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { RPILink } from '@/components/WebAlert';
 import {
@@ -35,12 +36,30 @@ export const usePS4Installer = (fileServerHostId?: string) => {
     updateConfigStore('curSelectPs4HostId', curSelectPs4HostId);
   }, [curSelectPs4HostId, ps4Hosts]);
 
-  const [installTaskListVisible, setInstallTaskListVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleInstall = async (file: FileStat) => {
     try {
-      if (!curPs4Host?.url) {
-        throw new Error(`PS4 host url not found`);
+      if (!curPs4Host) {
+        return Notification.error({
+          id: 'ps4-installer-no-host',
+          title: 'Send install task failed',
+          content: (
+            <>
+              Please
+              <Link
+                onClick={() => {
+                  Notification.remove('ps4-installer-no-host');
+                  navigate('/hosts?openPs4Host=true');
+                }}
+              >
+                add ps4 host
+              </Link>
+              first
+            </>
+          ),
+          duration: 0
+        });
       }
       if (!fileServerHostId) {
         throw new Error(`File server host not found`);
@@ -51,7 +70,7 @@ export const usePS4Installer = (fileServerHostId?: string) => {
       Notification.info({
         id: file.basename,
         title: file.basename,
-        content: `Start send to PS4 to install`
+        content: `Start send install task to PS4`
       });
       const params: InstallParams<InstallType.DIRECT> = {
         type: InstallType.DIRECT,
@@ -79,18 +98,18 @@ export const usePS4Installer = (fileServerHostId?: string) => {
         Notification.success({
           id: file.basename,
           title: data.title || file.basename,
-          content: `Start install`,
-          btn: (
-            <Button
-              size="small"
-              type="primary"
-              onClick={() => {
-                Notification.remove(file.basename);
-                setInstallTaskListVisible(true);
-              }}
-            >
-              Progress
-            </Button>
+          content: (
+            <>
+              Start install, you can
+              <Link
+                onClick={() => {
+                  Notification.remove(file.basename);
+                  navigate(`/tasks`);
+                }}
+              >
+                view progress
+              </Link>
+            </>
           )
         });
       }
@@ -101,6 +120,7 @@ export const usePS4Installer = (fileServerHostId?: string) => {
       Notification.error({
         id: file.basename,
         title: `${file.basename} Install failed`,
+        duration: 0,
         content: errMessage ? (
           <>
             <span>{errMessage}</span>
@@ -237,8 +257,6 @@ export const usePS4Installer = (fileServerHostId?: string) => {
     curSelectPs4HostId,
     setPs4Hosts,
     setCurSelectPs4HostId,
-    handleChangeInstallTaskStatus,
-    installTaskListVisible,
-    setInstallTaskListVisible
+    handleChangeInstallTaskStatus
   };
 };

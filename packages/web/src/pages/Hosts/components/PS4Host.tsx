@@ -1,6 +1,7 @@
-import { Button, Space, Typography } from '@arco-design/web-react';
+import { Button, Empty, Space, Typography } from '@arco-design/web-react';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { ConfigCard } from '@/components/ConfigCard';
 import { useContainer } from '@/store/container';
@@ -9,7 +10,11 @@ import { PS4Host as PS4HostType } from '@/types';
 import { FormData, PS4HostFormModal } from './PS4HostFormModal';
 
 export const PS4Host = () => {
-  const [visible, setVisible] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const [visible, setVisible] = useState(() => {
+    return searchParams.get('openPs4Host') === 'true';
+  });
   const [formData, setFormData] = useState<FormData>();
 
   const { ps4Installer } = useContainer();
@@ -71,36 +76,40 @@ export const PS4Host = () => {
           </Space>
         </div>
       </Typography.Title>
-      <Space wrap style={{ display: ps4Hosts.length ? 'inline-flex' : 'none' }}>
-        {ps4Hosts.map(host => (
-          <ConfigCard
-            key={host.id}
-            title={host.alias || host.url}
-            isActive={host.id === curSelectPs4HostId}
-            onClick={() => {
-              handleChangeHost(host);
-            }}
-            action={
-              <Space size={3}>
-                <ConfigCard.ActionIcon
-                  onClick={() => {
-                    handleEdit(host);
-                  }}
-                >
-                  <IconEdit>Edit</IconEdit>
-                </ConfigCard.ActionIcon>
-                <ConfigCard.ActionIcon
-                  onClick={() => {
-                    handleDelete(host);
-                  }}
-                >
-                  <IconDelete>Delete</IconDelete>
-                </ConfigCard.ActionIcon>
-              </Space>
-            }
-          />
-        ))}
-      </Space>
+      {!ps4Hosts.length ? (
+        <Empty description="Without ps4 host, you can't send install task to ps4" />
+      ) : (
+        <Space wrap style={{ display: ps4Hosts.length ? 'inline-flex' : 'none' }}>
+          {ps4Hosts.map(host => (
+            <ConfigCard
+              key={host.id}
+              title={host.alias || host.url}
+              isActive={host.id === curSelectPs4HostId}
+              onClick={() => {
+                handleChangeHost(host);
+              }}
+              action={
+                <Space size={3}>
+                  <ConfigCard.ActionIcon
+                    onClick={() => {
+                      handleEdit(host);
+                    }}
+                  >
+                    <IconEdit>Edit</IconEdit>
+                  </ConfigCard.ActionIcon>
+                  <ConfigCard.ActionIcon
+                    onClick={() => {
+                      handleDelete(host);
+                    }}
+                  >
+                    <IconDelete>Delete</IconDelete>
+                  </ConfigCard.ActionIcon>
+                </Space>
+              }
+            />
+          ))}
+        </Space>
+      )}
       <PS4HostFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>
   );

@@ -1,6 +1,7 @@
-import { Button, Notification, Space, Typography } from '@arco-design/web-react';
+import { Button, Empty, Notification, Space, Typography } from '@arco-design/web-react';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { ConfigCard } from '@/components/ConfigCard';
 import { useContainer } from '@/store/container';
@@ -9,7 +10,11 @@ import { FileServerHost as IFileServerHost, FileServerType } from '@/types';
 import { FileServerFormModal, FormData } from './FileServerFormModal';
 
 export const FileServerHost = () => {
-  const [visible, setVisible] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const [visible, setVisible] = useState(() => {
+    return searchParams.get('openFileServerHost') === 'true';
+  });
   const [formData, setFormData] = useState<FormData>();
 
   const { fileServer } = useContainer();
@@ -120,34 +125,38 @@ export const FileServerHost = () => {
           <Button type="primary" size="small" icon={<IconPlus />} onClick={handleAdd} />
         </div>
       </Typography.Title>
-      <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
-        {fileServerHosts.map(host => (
-          <ConfigCard
-            key={host.id}
-            title={host.alias || host.url}
-            isActive={host.id === curFileServerHostId}
-            onClick={() => handleChangeHost(host)}
-            action={
-              <Space size={3}>
-                <ConfigCard.ActionIcon
-                  onClick={() => {
-                    handleEdit(host);
-                  }}
-                >
-                  <IconEdit>Edit</IconEdit>
-                </ConfigCard.ActionIcon>
-                <ConfigCard.ActionIcon
-                  onClick={() => {
-                    handleDelete(host);
-                  }}
-                >
-                  <IconDelete>Delete</IconDelete>
-                </ConfigCard.ActionIcon>
-              </Space>
-            }
-          />
-        ))}
-      </Space>
+      {!fileServerHosts.length ? (
+        <Empty description="Without file server host, you can't visit ps4 pkg file" />
+      ) : (
+        <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
+          {fileServerHosts.map(host => (
+            <ConfigCard
+              key={host.id}
+              title={host.alias || host.url}
+              isActive={host.id === curFileServerHostId}
+              onClick={() => handleChangeHost(host)}
+              action={
+                <Space size={3}>
+                  <ConfigCard.ActionIcon
+                    onClick={() => {
+                      handleEdit(host);
+                    }}
+                  >
+                    <IconEdit>Edit</IconEdit>
+                  </ConfigCard.ActionIcon>
+                  <ConfigCard.ActionIcon
+                    onClick={() => {
+                      handleDelete(host);
+                    }}
+                  >
+                    <IconDelete>Delete</IconDelete>
+                  </ConfigCard.ActionIcon>
+                </Space>
+              }
+            />
+          ))}
+        </Space>
+      )}
       <FileServerFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>
   );
