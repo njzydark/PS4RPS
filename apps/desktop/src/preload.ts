@@ -22,10 +22,11 @@ export const preload = () => {
     openExternal: url => shell.openExternal(url),
     getPath: path => ipcRendererInvoke('getPath', path),
     getAppInfo: () => ipcRendererInvoke('getAppInfo'),
-    openDirectoryDialog: () => ipcRendererSendSync('openDirectoryDialog'),
-    createStaticFileServer: ({ directoryPath, port }) =>
-      ipcRendererInvoke('createStaticFileServer', { directoryPath, port }),
     openDevTools: () => ipcRendererInvoke('openDevTools'),
+    createStaticFileServer: ({ directoryPath, port, preferredInterface }) =>
+      ipcRendererInvoke('createStaticFileServer', { directoryPath, port, preferredInterface }),
+    openDirectoryDialog: () => ipcRendererSendSync('openDirectoryDialog'),
+    getAvailableInterfaces: () => ipcRendererInvoke('getAvailableInterfaces'),
     openAppLog: () => ipcRendererInvoke('openAppLog'),
     checkUpdate: () => ipcRendererInvoke('checkUpdate')
   };

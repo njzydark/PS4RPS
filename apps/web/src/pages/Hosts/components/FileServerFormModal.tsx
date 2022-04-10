@@ -16,6 +16,8 @@ export type FormData = {
   password?: string;
   directoryPath?: string;
   port?: number;
+
+  iface?: string;
 };
 
 type Props = {
@@ -30,8 +32,6 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV
   );
 
-  const [protocol, setProtocol] = useState<'http://' | 'https://'>('http://');
-
   const [form] = Form.useForm<FormData>();
 
   const {
@@ -41,8 +41,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
   const handleCancel = () => {
     onCancel();
     setCreateType(window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV);
-    form.resetFields(undefined);
-    setProtocol('http://');
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -52,10 +51,32 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     if (data?.id && data?.type) {
       setCreateType(data.type);
     }
-    setProtocol(data.url.startsWith('https://') ? 'https://' : 'http://');
-    data.url = data.url.replace(/^https?:\/\//g, '');
+    console.log(data);
     form.setFieldsValue(data);
   }, [data]);
+
+  const [loading, setLoading] = useState(() => {
+    return Boolean(window.electron);
+  });
+
+  const [ifaces, setIfaces] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (window.electron && visible) {
+      window.electron
+        .getAvailableInterfaces()
+        .then(ifaces => {
+          if (Array.isArray(ifaces) && ifaces.length) {
+            setIfaces(ifaces.map(i => i.ipv4));
+          } else {
+            setIfaces([]);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [visible]);
 
   const handleOk = async () => {
     const value = await form.validate();
@@ -63,9 +84,6 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       return;
     }
     try {
-      if (value.url) {
-        value.url = protocol + value.url.trim().replace(/\/$/, '');
-      }
       if (createType === FileServerType.StaticFileServer) {
         if (value.url) {
           try {
@@ -101,7 +119,8 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       if (value.type === FileServerType.StaticFileServer && value.directoryPath && window.electron) {
         const res = await window.electron.createStaticFileServer({
           directoryPath: value.directoryPath as string,
-          port: value.port as number
+          port: value.port as number,
+          preferredInterface: value.iface
         });
         if (res?.url) {
           Notification.success({
@@ -159,20 +178,18 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
             rules={[{ required: true, message: 'Please input url' }]}
             extra="For example: http://example.com"
           >
-            <Input
-              autoFocus
-              addBefore={
-                <Select value={protocol} style={{ width: 100 }} onChange={setProtocol}>
-                  <Select.Option value="http://">http://</Select.Option>
-                  <Select.Option value="https://">https://</Select.Option>
-                </Select>
-              }
-            />
+            <Input />
           </FormItem>
         )}
         {createType === FileServerType.StaticFileServer ? (
           window.electron ? (
             <>
+              <FormItem label="Network Interface" field="iface">
+                {(value: FormData) => {
+                  console.log(value.iface, ifaces, loading);
+                  return <Select options={ifaces} allowClear loading={loading} defaultValue={value.iface} />;
+                }}
+              </FormItem>
               <FormItem label="Directory Path" field="directoryPath" shouldUpdate>
                 {(values: FormData) => (
                   <>
@@ -202,3 +219,4 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     </Modal>
   );
 };
+
