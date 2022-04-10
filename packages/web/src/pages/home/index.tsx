@@ -1,9 +1,10 @@
-import { PkgListUIType } from 'common/types/configStore';
-import { lazy, Suspense } from 'react';
+import { PkgListClickAction, PkgListUIType } from 'common/types/configStore';
+import { lazy, Suspense, useState } from 'react';
 
 import { useContainer } from '@/store/container';
 import { FileStat } from '@/types';
 
+import { DetailDrawer } from './components/DetailDrawer';
 import { FileServerHostEmpty } from './components/FileServerHostEmpty';
 import { Filter } from './components/Filter';
 import { TableList, TableListProps } from './components/TableList';
@@ -17,11 +18,28 @@ export const Home = () => {
     settings
   } = useContainer();
 
-  const handleNameClick = (record: FileStat) => {
+  const [detailDrawserData, setDetailDrawerData] = useState<{
+    visible: boolean;
+    data?: FileStat;
+  }>({
+    visible: false
+  });
+
+  const handleNameClick = (record: FileStat, clickAction = 'auto') => {
     if (record.type === 'directory') {
       setPaths(record.filename.replace(/\\/g, '/').split('/'));
     } else {
-      handleInstall(record);
+      if (
+        (clickAction === 'auto' && settings.pkgListClickAction === PkgListClickAction.install) ||
+        clickAction === PkgListClickAction.install
+      ) {
+        handleInstall(record);
+      } else {
+        setDetailDrawerData({
+          visible: true,
+          data: record
+        });
+      }
     }
   };
 
@@ -59,6 +77,16 @@ export const Home = () => {
           <CardList {...props} />
         </Suspense>
       )}
+      <DetailDrawer
+        {...detailDrawserData}
+        handleCancel={() => {
+          setDetailDrawerData({
+            visible: false,
+            data: undefined
+          });
+        }}
+        handleInstall={handleInstall}
+      />
     </>
   );
 };

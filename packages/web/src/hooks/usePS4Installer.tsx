@@ -43,9 +43,10 @@ export const usePS4Installer = (fileServerHostId?: string) => {
       if (!curPs4Host) {
         return Notification.error({
           id: 'ps4-installer-no-host',
-          title: 'Send install task failed',
+          title: `Send install task failed`,
           content: (
             <>
+              <p>{file.basename}</p>
               Please
               <Link
                 onClick={() => {

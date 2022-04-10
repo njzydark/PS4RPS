@@ -1,4 +1,5 @@
-import { Button, Switch } from '@arco-design/web-react';
+import { Button, Select, Switch } from '@arco-design/web-react';
+import { PkgListClickAction } from 'common/types/configStore';
 
 import { Divider } from '@/components/Divider';
 import { useContainer } from '@/store/container';
@@ -25,11 +26,20 @@ export const Settings = () => {
           onChange={value => chnageSettings({ forceWebDavDownloadLinkToHttp: value })}
         />
       </SettingItem>
-      <SettingItem title="Display pkg raw title" desc="Whether show pkg raw title, default is file path base name">
+      <SettingItem title="Display pkg raw title" desc="Whether show pkg raw title, default is file path base name.">
         <Switch
           checked={settings.displayPkgRawTitle}
           onChange={value => chnageSettings({ displayPkgRawTitle: value })}
         />
+      </SettingItem>
+      <SettingItem
+        title="Pkg list click action"
+        desc="Control the default behavior when clicking on a pkg file in the list"
+      >
+        <Select value={settings.pkgListClickAction} onChange={value => chnageSettings({ pkgListClickAction: value })}>
+          <Select.Option value={PkgListClickAction.install}>Install</Select.Option>
+          <Select.Option value={PkgListClickAction.detail}>Detail</Select.Option>
+        </Select>
       </SettingItem>
       {window.electron && (
         <SettingItem

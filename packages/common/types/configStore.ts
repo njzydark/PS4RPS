@@ -20,8 +20,14 @@ export enum PkgListUIType {
   card = 'card'
 }
 
+export enum PkgListClickAction {
+  install = 'install',
+  detail = 'detail'
+}
+
 export type Settings = {
   pkgListUIType: PkgListUIType;
+  pkgListClickAction: PkgListClickAction;
   displayPkgRawTitle: boolean;
   displayLogo: boolean;
   forceWebDavDownloadLinkToHttp: boolean;
