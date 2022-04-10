@@ -15,6 +15,7 @@ export default defineConfig(() => {
     define: {
       _app_version: JSON.stringify(version)
     },
+    base: './',
     plugins: [
       react({
         babel: {
