@@ -4,13 +4,15 @@
   "initialVersions": {
     "common": "1.0.0",
     "desktop": "1.0.0",
-    "web": "1.0.0"
+    "web": "1.0.0",
+    "@njzy/ps4-pkg-info": "0.0.0"
   },
   "changesets": [
     "afraid-comics-smell",
     "angry-days-smell",
     "fifty-keys-rule",
     "pretty-coats-tie",
+    "shy-months-punch",
     "shy-timers-fly",
     "ten-garlics-cry"
   ]

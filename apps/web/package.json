@@ -1,7 +1,7 @@
 {
   "name": "web",
   "private": true,
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "engines": {
     "node": ">=14"
   },
@@ -20,7 +20,7 @@
     "@njzy/ps4-pkg-info": "workspace:^0.0.0",
     "axios": "^0.25.0",
     "classnames": "^2.3.1",
-    "common": "workspace:^1.0.0-beta.6",
+    "common": "workspace:^1.0.0-beta.7",
     "dayjs": "^1.10.7",
     "json5": "^2.2.0",
     "nanoid": "^3.2.0",
