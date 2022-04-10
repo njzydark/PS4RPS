@@ -1,7 +1,9 @@
-import { Form, Input, Message, Modal } from '@arco-design/web-react';
+import { Alert, Button, Form, Input, Message, Modal, Notification, Space } from '@arco-design/web-react';
+import axios from 'axios';
 import { nanoid } from 'nanoid';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { RPILink } from '@/components/WebAlert';
 import { useContainer } from '@/store/container';
 
 const FormItem = Form.Item;
@@ -18,6 +20,8 @@ type Props = {
 export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   const [form] = Form.useForm<FormData>();
 
+  const [testLoading, setTestLoading] = useState(false);
+
   const {
     ps4Installer: { ps4Hosts }
   } = useContainer();
@@ -25,27 +29,59 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   const handleCancel = () => {
     onCancel();
     form.resetFields(undefined);
+    setTestLoading(false);
   };
 
   useEffect(() => {
     if (!data) {
       return;
     }
+    data.url = data.url.replace(/^https?:\/\//g, '');
     form.setFieldsValue(data);
   }, [data]);
 
-  const handleOk = async () => {
-    const value = await form.validate();
-    if (value) {
-      if (!value.id) {
-        value.id = nanoid();
-        if (ps4Hosts.find(item => item.url === value.url)) {
-          Message.error(`The ${value.url} already exists`);
+  const handleOk = async (isTest = false) => {
+    try {
+      const value = await form.validate();
+      if (value) {
+        value.url =
+          'http://' +
+          value.url
+            .trim()
+            .replace(/^https?:\/\//g, '')
+            .replace(/\/$/, '');
+        if (isTest) {
+          setTestLoading(true);
+          try {
+            const res = await axios.get(value.url + '/static', { timeout: 3000 });
+            if (res.status === 200) {
+              Notification.success({
+                title: 'Connect to PS4 host success',
+                content: ''
+              });
+            }
+          } catch (err) {
+            Notification.error({
+              title: 'Connect to PS4 host failed',
+              content: 'Please check if the ip and port are correct or rempte pkg installer is running on your ps4'
+            });
+          }
           return;
         }
+        if (!value.id) {
+          value.id = nanoid();
+          if (ps4Hosts.find(item => item.url === value.url)) {
+            Message.error(`The ${value.url} already exists`);
+            return;
+          }
+        }
+        onOk(value);
+        handleCancel();
       }
-      onOk(value);
-      handleCancel();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTestLoading(false);
     }
   };
 
@@ -54,7 +90,22 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
       visible={visible}
       title={!data?.id ? 'Create PS4 Host Config' : 'Edit PS4 Host Config'}
       onCancel={handleCancel}
-      onOk={handleOk}
+      footer={
+        <Space>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleOk(true);
+            }}
+            loading={testLoading}
+          >
+            Connect Test
+          </Button>
+          <Button type="primary" onClick={() => handleOk()}>
+            Confirm
+          </Button>
+        </Space>
+      }
     >
       <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
@@ -66,11 +117,23 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
         <FormItem
           label="URL"
           field="url"
-          rules={[{ required: true, message: 'Please input url' }]}
-          extra="For example: http://192.168.0.2:12800, port required, usually 12800"
+          rules={[{ required: true, message: 'Please input ps4 ip and port' }]}
+          extra="For example: 192.168.0.2:12800, port is required, usually is 12800 or 12801"
         >
-          <Input />
+          <Input addBefore="http://" autoFocus />
         </FormItem>
+        {!data?.id && (
+          <Alert
+            type="info"
+            content={
+              <>
+                I recommend using my modified Remote Pkg Installer on your ps4. This version fixes the problem that the
+                path with spaces or Chinese characters cannot be installed, and adds ip and port tips at startup:{' '}
+                <RPILink /> (default port is 12801)
+              </>
+            }
+          />
+        )}
       </Form>
     </Modal>
   );
