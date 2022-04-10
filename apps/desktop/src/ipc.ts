@@ -6,7 +6,7 @@ import { Logger } from './logger';
 import { staticServerManager } from './staticServerManager';
 import { storeManager } from './store';
 import { updater } from './updater';
-import { getIp } from './utils';
+import { getAvailableInterfaces, getIp } from './utils';
 
 export class Ipc {
   static win: BrowserWindow;
@@ -56,13 +56,13 @@ export class Ipc {
       event.returnValue = filePaths[0];
     });
 
-    ipcMainHandle('createStaticFileServer', async (_, { directoryPath, port }) => {
+    ipcMainHandle('createStaticFileServer', async (_, { directoryPath, port, preferredInterface }) => {
       try {
         const res = await staticServerManager.createServer({ directoryPath, port });
-        const ip = getIp();
+        const ip = preferredInterface ?? getIp();
         if (res && ip) {
           return {
-            url: `http://${getIp()}:${port}`
+            url: `http://${ip}:${port}`
           };
         }
       } catch (err) {
@@ -70,6 +70,22 @@ export class Ipc {
           errorMessage: `Create WebDAV server failed: ${(err as Error).message}`
         };
       }
+    });
+
+    ipcMainHandle('getAvailableInterfaces', async () => {
+      try {
+        const ifaces = getAvailableInterfaces();
+        if (ifaces) {
+          return ifaces.map(ifc => {
+            return { ipv4: ifc?.address || '' };
+          });
+        }
+      } catch (err) {
+        return {
+          errorMessage: `Get AvailableInterfaces failed: ${(err as Error).message}`
+        };
+      }
+      return [];
     });
 
     ipcMainHandle('getPath', async (_, path) => {

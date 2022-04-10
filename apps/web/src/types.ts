@@ -27,6 +27,8 @@ export type StaticFileServerHost = {
   directoryPath: string;
   port: number;
   url: string;
+
+  preferredInterface?: string;
 };
 
 export type FileServerHost = WebDAVHost | StaticFileServerHost;

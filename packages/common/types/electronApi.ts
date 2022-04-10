@@ -16,13 +16,14 @@ export interface IElectronIpcMainHandles {
     path: string;
   }>;
   openDirectoryDialog: () => Promise<string | undefined>;
-  createStaticFileServer: (params: { directoryPath: string; port: number }) => Promise<
+  createStaticFileServer: (params: { directoryPath: string; port: number; preferredInterface?: string }) => Promise<
     | {
         url?: string;
         errorMessage?: string;
       }
     | undefined
   >;
+  getAvailableInterfaces: () => Promise<{ ipv4: string }[] | { errorMessage?: string } | null>;
   openDevTools: () => void;
   openAppLog: () => void;
   checkUpdate: () => void;

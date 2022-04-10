@@ -1,3 +1,4 @@
+import { Typography } from '@arco-design/web-react';
 import cs from 'classnames';
 import React, { ReactNode } from 'react';
 
@@ -9,6 +10,7 @@ type Props = {
   isActive?: boolean;
   action?: ReactNode;
   onClick?: () => void;
+  subTitle?: string;
 };
 
 const ActionIcon = (props: { children: ReactNode; onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void }) => {
@@ -25,7 +27,7 @@ const ActionIcon = (props: { children: ReactNode; onClick?: (event: React.MouseE
   );
 };
 
-export const ConfigCard = ({ title, action, isActive, onClick }: Props) => {
+export const ConfigCard = ({ title, action, isActive, onClick, subTitle }: Props) => {
   return (
     <div
       className={cs(styles.wrapper, isActive && styles.active)}
@@ -37,6 +39,15 @@ export const ConfigCard = ({ title, action, isActive, onClick }: Props) => {
         <Link canceldUnderline={true} hoverable={false}>
           {title}
         </Link>
+        {subTitle ? (
+          <Typography.Paragraph
+            ellipsis={{ rows: 1 }}
+            style={{ marginTop: 1, marginBottom: 0 }}
+            className={styles.subTitle}
+          >
+            {subTitle}
+          </Typography.Paragraph>
+        ) : null}
       </div>
       {action && <div className={styles.action}>{action}</div>}
     </div>

@@ -52,7 +52,8 @@ export const FileServerHost = () => {
       setFormData({
         ...commonData,
         directoryPath: host?.directoryPath,
-        port: host.port
+        port: host.port,
+        iface: host.preferredInterface
       });
     }
   };
@@ -70,7 +71,11 @@ export const FileServerHost = () => {
       setIsFileServerReady(false);
       if (host.type === FileServerType.StaticFileServer && window.electron) {
         setLoading(true);
-        await window.electron.createStaticFileServer({ directoryPath: host.directoryPath, port: host.port });
+        await window.electron.createStaticFileServer({
+          directoryPath: host.directoryPath,
+          port: host.port,
+          preferredInterface: host.preferredInterface
+        });
       }
       setIsFileServerReady(true);
     } catch (err) {
@@ -102,7 +107,8 @@ export const FileServerHost = () => {
         ...commonData,
         type: value.type,
         directoryPath: value.directoryPath as string,
-        port: value.port as number
+        port: value.port as number,
+        preferredInterface: value.iface
       };
     }
     const cur = fileServerHosts.find(item => item.id === value.id);
@@ -134,6 +140,7 @@ export const FileServerHost = () => {
               key={host.id}
               title={host.alias || host.url}
               isActive={host.id === curFileServerHostId}
+              subTitle={'preferredInterface' in host ? host.preferredInterface : ''}
               onClick={() => handleChangeHost(host)}
               action={
                 <Space size={3}>
