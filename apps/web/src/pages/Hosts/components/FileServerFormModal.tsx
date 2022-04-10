@@ -32,6 +32,8 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV
   );
 
+  const [protocol, setProtocol] = useState<'http://' | 'https://'>('http://');
+
   const [form] = Form.useForm<FormData>();
 
   const {
@@ -41,6 +43,8 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
   const handleCancel = () => {
     onCancel();
     setCreateType(window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV);
+    form.resetFields(undefined);
+    setProtocol('http://');
     form.resetFields();
   };
 
@@ -51,7 +55,8 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     if (data?.id && data?.type) {
       setCreateType(data.type);
     }
-    console.log(data);
+    setProtocol(data.url.startsWith('https://') ? 'https://' : 'http://');
+    data.url = data.url.replace(/^https?:\/\//g, '');
     form.setFieldsValue(data);
   }, [data]);
 
@@ -84,6 +89,9 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       return;
     }
     try {
+      if (value.url) {
+        value.url = protocol + value.url.trim().replace(/\/$/, '');
+      }
       if (createType === FileServerType.StaticFileServer) {
         if (value.url) {
           try {
@@ -178,7 +186,15 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
             rules={[{ required: true, message: 'Please input url' }]}
             extra="For example: http://example.com"
           >
-            <Input />
+            <Input
+              autoFocus
+              addBefore={
+                <Select value={protocol} style={{ width: 100 }} onChange={setProtocol}>
+                  <Select.Option value="http://">http://</Select.Option>
+                  <Select.Option value="https://">https://</Select.Option>
+                </Select>
+              }
+            />
           </FormItem>
         )}
         {createType === FileServerType.StaticFileServer ? (
@@ -219,4 +235,3 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
     </Modal>
   );
 };
-

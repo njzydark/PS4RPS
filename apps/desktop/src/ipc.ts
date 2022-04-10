@@ -5,6 +5,7 @@ import fs from 'fs';
 import { Logger } from './logger';
 import { staticServerManager } from './staticServerManager';
 import { storeManager } from './store';
+import { updater } from './updater';
 import { getAvailableInterfaces, getIp } from './utils';
 
 export class Ipc {
