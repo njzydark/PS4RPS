@@ -51,6 +51,9 @@
     "webdav-server": "^2.6.2"
   },
   "build": {
+    "extraMetadata": {
+      "name": "PS4RPS"
+    },
     "appId": "com.njzydark.ps4RPS",
     "productName": "PS4RPS",
     "directories": {
@@ -98,6 +101,8 @@
       ]
     },
     "linux": {
+      "icon": "assets/icon.icns",
+      "category": "Utility",
       "artifactName": "${productName}-${os}-${version}-${arch}.${ext}",
       "target": [
         {
