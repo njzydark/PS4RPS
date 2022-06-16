@@ -4,8 +4,8 @@ Get information (paramSfo and icon0) from a PlayStation 4 PKG file
 
 ## Features
 
-- support generate paramSfo and icon0 data
-- support nodejs and browser
+- Support generate paramSfo and icon0 data
+- Support Nodejs and Browser
 - Full type definition
 
 ## Install
