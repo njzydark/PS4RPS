@@ -8,7 +8,8 @@
   "license": "MIT",
   "homepage": "https://github.com/njzydark/PS4RPS#readme",
   "engines": {
-    "node": ">=12"
+    "node": ">=14",
+    "pnpm": "6"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,7 @@
     "prettier": "prettier --write src"
   },
   "devDependencies": {
-    "@njzy/ps4-pkg-info": "workspace:^0.0.0",
+    "@njzy/ps4-pkg-info": "workspace:^0.1.0",
     "axios": "^0.25.0",
     "common": "workspace:^1.0.0-beta.7",
     "content-disposition": "^0.5.4",

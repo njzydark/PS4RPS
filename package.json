@@ -2,7 +2,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": ">=14"
+    "node": ">=14",
+    "pnpm": "6"
   },
   "scripts": {
     "ci:build": "pnpm install && pnpm run desktop:build && pnpm run copyRenderer --filter desktop",
