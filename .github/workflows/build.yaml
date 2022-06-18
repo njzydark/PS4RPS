@@ -7,6 +7,15 @@ on:
       - dev
     tags:
       - v*
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  pull_request_review:
+    types:
+      - edited
+      - submitted
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -47,26 +56,52 @@ jobs:
           skip_package_manager_install: true
           package_manager: 'pnpm'
 
-      - uses: actions/upload-artifact@v2
+      - name: upload-artifact-mac-x86
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'macos-latest'
         with:
-          name: PS4RPS-mac
-          path: apps/desktop/output/*.dmg
+          name: PS4RPS-mac-x86
+          path: |
+            apps/desktop/output/*.dmg
+            !apps/desktop/output/*arm64.dmg
           if-no-files-found: ignore
 
-      - uses: actions/upload-artifact@v2
+      - name: upload-artifact-mac-arm64
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'macos-latest'
+        with:
+          name: PS4RPS-mac-arm64
+          path: apps/desktop/output/*arm64.dmg
+          if-no-files-found: ignore
+
+      - name: upload-artifact-win
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'windows-latest'
         with:
           name: PS4RPS-win
-          path: apps/desktop/output/*.exe
+          path: apps/desktop/output/*Setup*.exe
           if-no-files-found: ignore
 
-      - uses: actions/upload-artifact@v2
+      - name: upload-artifact-linux-appImage
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'ubuntu-latest'
         with:
           name: PS4RPS-linux-appImage
           path: apps/desktop/output/*.AppImage
           if-no-files-found: ignore
-      
-      - uses: actions/upload-artifact@v2
+
+      - name: upload-artifact-linux-deb-amd64
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'ubuntu-latest'
         with:
-          name: PS4RPS-linux-deb
-          path: apps/desktop/output/*.deb
+          name: PS4RPS-linux-deb-amd64
+          path: apps/desktop/output/*amd64.deb
+          if-no-files-found: ignore
+      
+      - name: upload-artifact-linux-deb-arm64
+        uses: actions/upload-artifact@v3
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: PS4RPS-linux-deb-arm64
+          path: apps/desktop/output/*arm64.deb
           if-no-files-found: ignore
