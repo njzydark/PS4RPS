@@ -1,3 +1,4 @@
+import { Spin } from '@arco-design/web-react';
 import { PkgListClickAction, PkgListUIType } from 'common/types/configStore';
 import { lazy, Suspense, useState } from 'react';
 
@@ -73,7 +74,7 @@ export const Home = () => {
       {settings?.pkgListUIType === PkgListUIType.table ? (
         <TableList {...props} />
       ) : (
-        <Suspense fallback={<div>loading...</div>}>
+        <Suspense fallback={<Spin />}>
           <CardList {...props} />
         </Suspense>
       )}

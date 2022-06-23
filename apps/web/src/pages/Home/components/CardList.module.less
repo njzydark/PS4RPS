@@ -1,16 +1,36 @@
 @space-2: 4px;
 @space-3: 7px;
 
+.absolute-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
 .card-list-wrapper {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
+  display: flex;
+  flex-flow: row wrap;
   .item-wrapper {
-    .icon {
-      min-height: 87px;
+    width: calc(100% / 6);
+    padding: 8px;
+    .img-wrapper {
       position: relative;
+      width: 100%;
+      padding-bottom: 100%;
       transition: box-shadow 0.2s ease-in-out 0s, transform 0.2s ease-in-out 0s;
       border-radius: 6px;
+      img {
+        .absolute-full();
+        border-radius: inherit;
+      }
+      .loading-wrapper {
+        .absolute-full();
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
     .title {
       margin-top: 10px;
@@ -21,7 +41,7 @@
     }
     &:hover {
       cursor: default;
-      .icon {
+      .img-wrapper {
         box-shadow: 0 @space-2 @space-3 0 rgba(0, 0, 0, 0.8);
       }
     }
@@ -32,7 +52,7 @@ body[arco-theme='dark'] .card-list-wrapper {
   .item-wrapper {
     &:hover {
       cursor: default;
-      .icon {
+      .img-wrapper {
         box-shadow: 0 @space-2 @space-3 0 rgba(255, 255, 255, 0.8);
       }
     }
@@ -41,35 +61,48 @@ body[arco-theme='dark'] .card-list-wrapper {
 
 @media (min-width: 600px) {
   .card-list-wrapper {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
+    .item-wrapper {
+      width: calc(100% / 5);
+    }
   }
 }
 
 @media (min-width: 728px) {
   .card-list-wrapper {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
+    .item-wrapper {
+      width: calc(100% / 6);
+    }
   }
 }
 
 @media (min-width: 1024px) {
   .card-list-wrapper {
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1rem;
+    .item-wrapper {
+      width: calc(100% / 8);
+    }
   }
 }
 
 @media (min-width: 1200px) {
   .card-list-wrapper {
-    grid-template-columns: repeat(8, 1fr);
-    gap: 1rem;
+    .item-wrapper {
+      width: calc(100% / 10);
+    }
   }
 }
 
 @media (min-width: 1400px) {
   .card-list-wrapper {
-    grid-template-columns: repeat(10, 1fr);
-    gap: 1rem;
+    .item-wrapper {
+      width: calc(100% / 12);
+    }
+  }
+}
+
+@media (min-width: 1600px) {
+  .card-list-wrapper {
+    .item-wrapper {
+      width: calc(100% / 14);
+    }
   }
 }
