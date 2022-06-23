@@ -45,7 +45,6 @@ const TitleHeader = () => {
 };
 
 export const Layout = () => {
-  const showCuatomScrollBar = window.electron && window.electron.platform !== 'darwin';
   const showCustomTitleBar = false;
 
   const scrollEl = useRef<HTMLDivElement>(null);
@@ -57,12 +56,20 @@ export const Layout = () => {
     }
   }, [location]);
 
+  useEffect(() => {
+    const isApplePlatform =
+      window.electron?.platform === 'darwin' || window.navigator.userAgent.match(/(iPad|iPhone|iPod|Macintosh)/gi);
+    if (!isApplePlatform) {
+      document.body.classList.add('global-scroll-bar');
+    }
+  }, []);
+
   return (
     <div
       className={cs(
         'global-app-wrapper',
-        showCuatomScrollBar && 'global-scroll-bar',
-        showCustomTitleBar && 'global-title-bar'
+        showCustomTitleBar && 'global-title-bar',
+        window.electron?.platform === 'win32' && 'title-bar-divider'
       )}
     >
       {showCustomTitleBar && <TitleBar />}
