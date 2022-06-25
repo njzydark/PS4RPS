@@ -10,8 +10,7 @@
     width: 170px;
     height: 100%;
     flex-shrink: 0;
-    // background: var(--color-bg-1);
-    background: rgb(var(--gray-2));
+    background: var(--rps-bg-secondary);
     display: flex;
     flex-direction: column;
     .header {
@@ -31,14 +30,15 @@
       .nav-link {
         display: block;
         text-decoration: none;
-        color: var(--color-text-1);
+        color: var(--rps-text-primary);
         padding: 6px 10px;
         svg {
           margin-right: 6px;
         }
         &.active {
-          background: rgba(var(--primary-6), 0.1);
-          color: rgb(var(--primary-6));
+          background: rgba(var(--rps-primary), 0.1);
+          color: rgb(var(--rps-primary));
+          border-radius: var(--rps-border-radius);
         }
       }
     }
@@ -50,8 +50,7 @@
   .main-content-wrapper {
     flex: 1;
     height: 100%;
-    // background: rgb(var(--gray-2));
-    background: var(--color-bg-1);
+    background: var(--rps-bg-primary);
     display: flex;
     flex-direction: column;
     .title-header-wrapper {

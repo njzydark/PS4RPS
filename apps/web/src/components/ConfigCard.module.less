@@ -5,17 +5,15 @@
   width: 280px;
   height: 60px;
   padding: 16px;
-  color: var(--color-text-2);
-  border: 1px solid var(--color-neutral-3);
-  border-radius: var(--border-radius-small);
-  background: var(--color-bg-2);
+  border: 1px solid var(--rps-border-color);
+  border-radius: var(--rps-border-radius);
   transition: box-shadow 0.2s linear;
   &:hover {
-    box-shadow: 0 4px 10px rgb(var(--gray-2));
+    box-shadow: 0 4px 10px var(--rps-bg-secondary);
   }
   &.active {
-    border: 1px solid rgb(var(--primary-6));
-    background-color: rgba(var(--primary-6), 0.1);
+    border: 1px solid rgb(var(--rps-primary));
+    background-color: rgba(var(--rps-primary), 0.1);
   }
   .content {
     flex: 1;
@@ -26,7 +24,7 @@
     margin-left: 10px;
   }
   .subTitle {
-    color: var(--gray-3);
+    color: var(--rps-text-secondary);
     font-size: smaller;
   }
 }
@@ -40,6 +38,6 @@
   border-radius: 50%;
   transition: all 0.1s;
   &:hover {
-    background-color: rgb(var(--gray-2));
+    background-color: var(--rps-bg-secondary);
   }
 }
