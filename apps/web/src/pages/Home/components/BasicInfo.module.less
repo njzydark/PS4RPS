@@ -1,0 +1,33 @@
+.ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.base-info-wrapper {
+  display: flex;
+  img {
+    border-radius: var(--rps-img-border-radius);
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    .item {
+      display: flex;
+      align-items: center;
+      & > div:first-child {
+        font-weight: 500;
+        min-width: 120px;
+        color: var(--rps-text-third);
+      }
+      & > div:last-child {
+        .ellipsis();
+      }
+      &:not(:last-child) {
+        margin-bottom: 6px;
+      }
+    }
+  }
+}

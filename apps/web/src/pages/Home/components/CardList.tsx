@@ -1,35 +1,13 @@
-import { Dropdown, Empty, Menu, Spin, Typography } from '@arco-design/web-react';
+import { Dropdown, Empty, Menu, Typography } from '@arco-design/web-react';
 import { PkgListClickAction } from 'common/types/configStore';
-import { useState } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 
-import FolderIcon from '@/assets/folder.png';
-import Ps4Icon from '@/assets/ps4-icon.png';
-import { FileStat } from '@/types';
+import { formatPkgName } from '@/utils';
 
 import styles from './CardList.module.less';
+import { CustomLazyLoadImage } from './CustomLazyLoadImage';
 import { TableListProps } from './TableList';
 
-const CustomImage = ({ data }: { data: FileStat }) => {
-  const [loading, setLoading] = useState(true);
-  return (
-    <div className={styles['img-wrapper']}>
-      <LazyLoadImage
-        src={data.type === 'directory' ? FolderIcon : data.icon0 || Ps4Icon}
-        afterLoad={() => {
-          setLoading(false);
-        }}
-      />
-      {loading && (
-        <div className={styles['loading-wrapper']}>
-          <Spin />
-        </div>
-      )}
-    </div>
-  );
-};
-
-export const CardList = ({ data, handleNameClick, formatPkgName }: TableListProps) => {
+export const CardList = ({ data, handleInstallByActionType, displayPkgRawTitle }: TableListProps) => {
   if (data.length === 0) {
     return <Empty />;
   }
@@ -47,7 +25,7 @@ export const CardList = ({ data, handleNameClick, formatPkgName }: TableListProp
               <Menu.Item
                 key="1"
                 onClick={() => {
-                  handleNameClick(item, PkgListClickAction.install);
+                  handleInstallByActionType(item, PkgListClickAction.install);
                 }}
               >
                 Install
@@ -55,7 +33,7 @@ export const CardList = ({ data, handleNameClick, formatPkgName }: TableListProp
               <Menu.Item
                 key="2"
                 onClick={() => {
-                  handleNameClick(item, PkgListClickAction.detail);
+                  handleInstallByActionType(item, PkgListClickAction.detail);
                 }}
               >
                 Detail
@@ -66,12 +44,12 @@ export const CardList = ({ data, handleNameClick, formatPkgName }: TableListProp
           <div
             className={styles['item-wrapper']}
             onClick={() => {
-              handleNameClick(item);
+              handleInstallByActionType(item, PkgListClickAction.auto);
             }}
           >
-            <CustomImage key={item.filename} data={item} />
+            <CustomLazyLoadImage key={item.filename} data={item} />
             <Typography.Text ellipsis={{ rows: 2 }} style={{ marginTop: 10, marginBottom: 0 }}>
-              {formatPkgName(item)}
+              {formatPkgName(item, displayPkgRawTitle)}
             </Typography.Text>
           </div>
         </Dropdown>

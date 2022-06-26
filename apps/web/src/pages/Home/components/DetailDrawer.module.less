@@ -1,36 +1,18 @@
+.ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .wrapper {
   :global {
     .arco-drawer-header-title {
-      overflow: hidden;
+      .ellipsis();
       width: 100%;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       margin-right: 30px;
     }
-  }
-  .base-info-wrapper {
-    display: flex;
-    .info {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      overflow: hidden;
-      .item {
-        display: flex;
-        align-items: center;
-        & > div:first-child {
-          font-weight: 500;
-          min-width: 120px;
-        }
-        & > div:last-child {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-        &:not(:last-child) {
-          margin-bottom: 6px;
-        }
-      }
+    .arco-tabs-content {
+      padding-top: 12px;
     }
   }
 }

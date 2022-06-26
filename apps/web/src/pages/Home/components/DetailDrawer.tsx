@@ -1,19 +1,31 @@
-import { Button, Drawer, Image, Table } from '@arco-design/web-react';
+import { Button, Drawer, Table, Tabs } from '@arco-design/web-react';
 import { IconSend } from '@arco-design/web-react/icon';
+import { PkgListClickAction } from 'common/types/configStore';
+import { useState } from 'react';
 
-import Ps4Icon from '@/assets/ps4-icon.png';
 import { FileStat } from '@/types';
 
+import { BasicInfo } from './BasicInfo';
 import styles from './DetailDrawer.module.less';
+import { SimpleList } from './SimpleList';
 
 type Props = {
   visible: boolean;
-  handleCancel: () => void;
-  handleInstall: (fileStat: FileStat) => Promise<void>;
   data?: FileStat;
+  displayPkgRawTitle?: boolean;
+  handleCancel: () => void;
+  handleInstallByActionType: (data: FileStat, clickAction: PkgListClickAction) => void;
 };
 
-export const DetailDrawer = ({ visible, data, handleCancel, handleInstall }: Props) => {
+const { TabPane } = Tabs;
+
+enum ActiveTabKey {
+  INFO = 'INFO',
+  PATCH = 'PATCH',
+  ADDON = 'ADDON'
+}
+
+export const DetailDrawer = ({ visible, data, handleCancel, handleInstallByActionType }: Props) => {
   const columns = [
     {
       title: 'Key',
@@ -32,11 +44,16 @@ export const DetailDrawer = ({ visible, data, handleCancel, handleInstall }: Pro
     value: val[1]
   }));
 
+  const [activeTabKey, setActiveTabKey] = useState<ActiveTabKey>(ActiveTabKey.INFO);
+
   return (
     <Drawer
       className={styles.wrapper}
       visible={visible}
-      onCancel={handleCancel}
+      onCancel={() => {
+        setActiveTabKey(ActiveTabKey.INFO);
+        handleCancel();
+      }}
       title={data?.basename?.replace(/\.pkg$/g, '')}
       width={500}
       footer={
@@ -44,46 +61,51 @@ export const DetailDrawer = ({ visible, data, handleCancel, handleInstall }: Pro
           icon={<IconSend />}
           type="primary"
           onClick={() => {
-            data && handleInstall(data);
+            data && handleInstallByActionType(data, PkgListClickAction.install);
           }}
         >
           Send install task
         </Button>
       }
     >
-      <div className={styles['base-info-wrapper']}>
-        <Image style={{ marginRight: 12 }} src={data?.icon0 || Ps4Icon} width={128} />
-        <div className={styles.info}>
-          <div className={styles.item}>
-            <div>Title</div>
-            <div>{data?.paramSfo?.TITLE || '-'}</div>
-          </div>
-          <div className={styles.item}>
-            <div>Version</div>
-            <div>{data?.paramSfo?.APP_VER || '-'}</div>
-          </div>
-          <div className={styles.item}>
-            <div>Category</div>
-            <div>{data?.paramSfo?.CATEGORY || '-'}</div>
-          </div>
-          <div className={styles.item}>
-            <div>TitleID</div>
-            <div>{data?.paramSfo?.TITLE_ID || '-'}</div>
-          </div>
-          <div className={styles.item}>
-            <div>ContentID</div>
-            <div>{data?.paramSfo?.CONTENT_ID || '-'}</div>
-          </div>
-        </div>
-      </div>
-      <Table
-        style={{ marginTop: 8 }}
+      <BasicInfo data={data} />
+      <Tabs
         size="small"
-        border={{ wrapper: true, cell: true }}
-        columns={columns}
-        data={tableData}
-        pagination={false}
-      />
+        activeTab={activeTabKey}
+        onChange={key => setActiveTabKey(key as ActiveTabKey)}
+        style={{
+          marginTop: 20
+        }}
+        type="line"
+      >
+        <TabPane key={ActiveTabKey.INFO} title={ActiveTabKey.INFO}>
+          <Table size="small" border={false} columns={columns} data={tableData} pagination={false} />
+        </TabPane>
+        {data?.patchs?.length && (
+          <TabPane
+            key={ActiveTabKey.PATCH}
+            title={
+              <span>
+                {ActiveTabKey.PATCH} ({data.patchs.length})
+              </span>
+            }
+          >
+            <SimpleList data={data?.patchs} handleInstallByActionType={handleInstallByActionType} />
+          </TabPane>
+        )}
+        {data?.addons?.length && (
+          <TabPane
+            key={ActiveTabKey.ADDON}
+            title={
+              <span>
+                {ActiveTabKey.ADDON} ({data.addons.length})
+              </span>
+            }
+          >
+            <SimpleList data={data?.addons} handleInstallByActionType={handleInstallByActionType} />
+          </TabPane>
+        )}
+      </Tabs>
     </Drawer>
   );
 };

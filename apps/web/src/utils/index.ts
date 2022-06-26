@@ -83,3 +83,10 @@ export const sortServerFiles = (files: FileStat[]): FileStat[] => {
       }) || []
   );
 };
+
+export const formatPkgName = (record: FileStat, displayPkgRawTitle = false) => {
+  if (displayPkgRawTitle) {
+    return record.paramSfo?.TITLE || record.basename;
+  }
+  return record.basename.replace(/\.pkg$/i, '');
+};

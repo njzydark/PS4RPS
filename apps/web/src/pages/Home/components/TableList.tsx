@@ -6,16 +6,16 @@ import dayjs from 'dayjs';
 
 import { Link } from '@/components/Link';
 import { FileStat } from '@/types';
-import { formatFileSize } from '@/utils';
+import { formatFileSize, formatPkgName } from '@/utils';
 
 export type TableListProps = {
-  handleNameClick: (record: FileStat, clickAction?: PkgListClickAction | 'auto') => void;
-  formatPkgName: (record: FileStat) => string;
+  handleInstallByActionType: (data: FileStat, clickAction: PkgListClickAction) => void;
+  displayPkgRawTitle?: boolean;
   loading?: boolean;
   data: FileStat[];
 };
 
-export const TableList = ({ handleNameClick, formatPkgName, loading, data }: TableListProps) => {
+export const TableList = ({ handleInstallByActionType, displayPkgRawTitle, loading, data }: TableListProps) => {
   const columns: TableColumnProps<FileStat>[] = [
     {
       title: 'FileName',
@@ -32,7 +32,7 @@ export const TableList = ({ handleNameClick, formatPkgName, loading, data }: Tab
               <Menu.Item
                 key="1"
                 onClick={() => {
-                  handleNameClick(record, PkgListClickAction.install);
+                  handleInstallByActionType(record, PkgListClickAction.install);
                 }}
               >
                 Install
@@ -40,7 +40,7 @@ export const TableList = ({ handleNameClick, formatPkgName, loading, data }: Tab
               <Menu.Item
                 key="2"
                 onClick={() => {
-                  handleNameClick(record, PkgListClickAction.detail);
+                  handleInstallByActionType(record, PkgListClickAction.detail);
                 }}
               >
                 Detail
@@ -49,13 +49,13 @@ export const TableList = ({ handleNameClick, formatPkgName, loading, data }: Tab
           }
         >
           <div>
-            <Link hoverable={false} onClick={() => handleNameClick(record)}>
+            <Link hoverable={false} onClick={() => handleInstallByActionType(record, PkgListClickAction.auto)}>
               {record.type === 'directory' ? (
                 <IconFolder style={{ marginRight: 6 }} />
               ) : (
                 <IconFile style={{ marginRight: 6 }} />
               )}
-              {formatPkgName(record)}
+              {formatPkgName(record, displayPkgRawTitle)}
             </Link>
           </div>
         </Dropdown>

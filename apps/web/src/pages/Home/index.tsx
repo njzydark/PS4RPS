@@ -26,12 +26,12 @@ export const Home = () => {
     visible: false
   });
 
-  const handleNameClick = (record: FileStat, clickAction = 'auto') => {
+  const handleInstallByActionType = (record: FileStat, clickAction: PkgListClickAction) => {
     if (record.type === 'directory') {
       setPaths(record.filename.replace(/\\/g, '/').split('/'));
     } else {
       if (
-        (clickAction === 'auto' && settings.pkgListClickAction === PkgListClickAction.install) ||
+        (clickAction === PkgListClickAction.auto && settings.pkgListClickAction === PkgListClickAction.install) ||
         clickAction === PkgListClickAction.install
       ) {
         handleInstall(record);
@@ -44,13 +44,6 @@ export const Home = () => {
     }
   };
 
-  const formatPkgName = (record: FileStat) => {
-    if (settings.displayPkgRawTitle) {
-      return record.paramSfo?.TITLE || record.basename;
-    }
-    return record.basename.replace(/\.pkg$/i, '');
-  };
-
   const data = fileServerFiles.filter(
     item =>
       item.basename.toLowerCase().includes(searchKeyWord.toLowerCase()) ||
@@ -59,8 +52,7 @@ export const Home = () => {
 
   const props: TableListProps = {
     data,
-    handleNameClick,
-    formatPkgName,
+    handleInstallByActionType,
     loading
   };
 
@@ -86,7 +78,8 @@ export const Home = () => {
             data: undefined
           });
         }}
-        handleInstall={handleInstall}
+        displayPkgRawTitle={settings.displayPkgRawTitle}
+        handleInstallByActionType={handleInstallByActionType}
       />
     </>
   );
