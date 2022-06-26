@@ -18,18 +18,24 @@ export const Settings = () => {
         <Switch checked={settings.displayLogo} onChange={value => chnageSettings({ displayLogo: value })} />
       </SettingItem>
       <SettingItem
+        title="Use aggregation mode"
+        desc="When aggregation mode is enabled, the patch and addon files are automatically associated and not displayed in the list page, you can view them in the detail page. It is better to use with file server's recursive query mode."
+      >
+        <Switch checked={settings.aggregationMode} onChange={value => chnageSettings({ aggregationMode: value })} />
+      </SettingItem>
+      <SettingItem title="Display pkg raw title" desc="Whether show pkg raw title, default is file path base name.">
+        <Switch
+          checked={settings.displayPkgRawTitle}
+          onChange={value => chnageSettings({ displayPkgRawTitle: value })}
+        />
+      </SettingItem>
+      <SettingItem
         title="Force WebDAV download link to http"
         desc="Before sending the installation task to PS4 force the WebDAV download link to http."
       >
         <Switch
           checked={settings.forceWebDavDownloadLinkToHttp}
           onChange={value => chnageSettings({ forceWebDavDownloadLinkToHttp: value })}
-        />
-      </SettingItem>
-      <SettingItem title="Display pkg raw title" desc="Whether show pkg raw title, default is file path base name.">
-        <Switch
-          checked={settings.displayPkgRawTitle}
-          onChange={value => chnageSettings({ displayPkgRawTitle: value })}
         />
       </SettingItem>
       <SettingItem

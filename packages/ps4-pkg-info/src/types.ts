@@ -31,10 +31,11 @@ e.g. A non-upgradable demo application, a free full application without an AC, a
 }
 
 export enum Ps4PkgCategory {
+  GameDigital = 'gd',
+  GameApplicationPatch = 'gp',
   AdditionalContent = 'ac',
   BluRayDisc = 'bd',
   GameContent = 'gc',
-  GameDigital = 'gd',
   SystemApp = 'gda',
   BigApp = 'gdc',
   BGApp = 'gdd',
@@ -42,7 +43,6 @@ export enum Ps4PkgCategory {
   VideoServiceWebApp = 'gdk',
   PSCloudBetaApp = 'gdl',
   PS2 = 'gdO',
-  GameApplicationPatch = 'gp',
   BigAppPatch = 'gpc',
   BGAppPatch = 'gpd',
   MiniAppPatch = 'gpe',

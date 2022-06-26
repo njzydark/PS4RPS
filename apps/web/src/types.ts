@@ -1,10 +1,15 @@
 import { Ps4PkgParamSfo } from '@njzy/ps4-pkg-info/web';
 import { FileStat as RawFileStat, WebDAVClientOptions } from 'webdav/web';
 
-export type FileStat = RawFileStat & {
+type BaseFileStat = RawFileStat & {
   downloadUrl?: string;
   icon0?: string;
   paramSfo?: Ps4PkgParamSfo;
+};
+
+export type FileStat = BaseFileStat & {
+  addons?: BaseFileStat[];
+  patchs?: BaseFileStat[];
 };
 
 export enum FileServerType {
@@ -16,6 +21,7 @@ export type WebDAVHost = {
   id: string;
   type: FileServerType.WebDAV;
   alias?: string;
+  recursiveQuery?: boolean;
   url: string;
   options?: WebDAVClientOptions;
 };
@@ -27,8 +33,8 @@ export type StaticFileServerHost = {
   directoryPath: string;
   port: number;
   url: string;
-
   preferredInterface?: string;
+  recursiveQuery?: boolean;
 };
 
 export type FileServerHost = WebDAVHost | StaticFileServerHost;

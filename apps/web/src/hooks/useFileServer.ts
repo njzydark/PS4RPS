@@ -1,5 +1,5 @@
 import { Notification } from '@arco-design/web-react';
-import { getPs4PkgInfo, Ps4PkgParamSfo } from '@njzy/ps4-pkg-info/web';
+import { Ps4PkgCategory } from '@njzy/ps4-pkg-info';
 import axios from 'axios';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createClient, WebDAVClient } from 'webdav/web';
@@ -7,15 +7,21 @@ import { createClient, WebDAVClient } from 'webdav/web';
 import { FileServerHost, FileServerType, FileStat } from '@/types';
 import { getInitConfigFromStore, sortServerFiles, updateConfigStore } from '@/utils';
 
-export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDownloadLinkToHttp?: boolean }) => {
-  const [isFileServerReady, setIsFileServerReady] = useState(true);
+import { useWebDavPkgInfo } from './useWebDavPkgInfo';
 
+export const useFileServer = ({
+  forceWebDavDownloadLinkToHttp,
+  aggregationMode
+}: {
+  forceWebDavDownloadLinkToHttp?: boolean;
+  aggregationMode?: boolean;
+}) => {
   const webDavClient = useRef<WebDAVClient>();
 
+  const [isFileServerReady, setIsFileServerReady] = useState(true);
   const [fileServerHosts, setFileServerHosts] = useState<FileServerHost[]>(() =>
     getInitConfigFromStore('fileServerHosts', [])
   );
-
   const [curFileServerHostId, setCurFileServerHostId] = useState<string | undefined>(() =>
     getInitConfigFromStore('curFileServerHostId', undefined)
   );
@@ -33,50 +39,13 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
     updateConfigStore('curFileServerHostId', curFileServerHostId);
   }, [curFileServerHostId, fileServerHosts]);
 
-  const [searchKeyWord, setSearchKeyWord] = useState('');
-
-  const [cachePkgInfoData, setCachePkgInfoData] = useState<
-    { name: string; icon0?: string; paramSfo?: Ps4PkgParamSfo }[]
-  >([]);
-
   const [fileServerFiles, setFileServerFiles] = useState<FileStat[]>([]);
-
-  const [paths, setPaths] = useState<string[]>([]);
-
   const [loading, setLoading] = useState(false);
 
-  const getWebDavPkgFileInfo = async (data: FileStat[]) => {
-    try {
-      const promises = data.map(async item => {
-        try {
-          const res = await getPs4PkgInfo(item.downloadUrl!);
-          if (res) {
-            const url = res.icon0Raw ? window.URL.createObjectURL(new Blob([res.icon0Raw])) : undefined;
-            const newData = {
-              name: item.basename,
-              icon0: url,
-              paramSfo: res.paramSfo
-            };
-            setCachePkgInfoData(pre => {
-              const curCache = cachePkgInfoData.find(cache => cache.name === item.basename);
-              if (curCache) {
-                Object.assign(curCache, newData);
-                return [...pre];
-              } else {
-                pre.push(newData);
-              }
-              return [...pre];
-            });
-          }
-        } catch (err) {
-          return;
-        }
-      });
-      await Promise.all(promises);
-    } catch (err) {
-      console.error('getWebDavPkgFileInfo', err);
-    }
-  };
+  const [searchKeyWord, setSearchKeyWord] = useState('');
+  const [paths, setPaths] = useState<string[]>([]);
+
+  const { pkgInfoData, pkgInfoDataLoading, getWebDavPkgFileInfo } = useWebDavPkgInfo({ setFileServerFiles });
 
   const getFilesApi = async (curHost: FileServerHost, webDavClient?: WebDAVClient, path = '/') => {
     let res: FileStat[] = [];
@@ -84,10 +53,10 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
       res = (await webDavClient.getDirectoryContents(path)) as FileStat[];
       if (res.length) {
         res.map(item => {
-          const curCache = cachePkgInfoData.find(cache => cache.name === item.basename);
-          if (curCache) {
-            item.icon0 = curCache.icon0;
-            item.paramSfo = curCache.paramSfo;
+          const curPkgData = pkgInfoData.find(cache => cache.name === item.basename);
+          if (curPkgData) {
+            item.icon0 = curPkgData.icon0;
+            item.paramSfo = curPkgData.paramSfo;
           }
           item.downloadUrl = item.type === 'file' ? webDavClient.getFileDownloadLink(item.filename) : '';
           if (forceWebDavDownloadLinkToHttp && item.downloadUrl.startsWith('https://')) {
@@ -143,27 +112,68 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
       return;
     }
 
+    if (!isFileServerReady || !curHost.url) {
+      return;
+    }
+
     getServerFileListData();
 
     return () => {
       didCancel = true;
     };
-  }, [paths, curHost]);
+  }, [paths, curHost, isFileServerReady]);
 
-  useEffect(() => {
-    if (cachePkgInfoData.length) {
-      setFileServerFiles(pre => {
-        return pre.map(item => {
-          const curCache = cachePkgInfoData.find(cache => cache.name === item.basename);
-          if (curCache) {
-            item.icon0 = curCache.icon0;
-            item.paramSfo = curCache.paramSfo;
-          }
-          return item;
-        });
-      });
+  const finalFileServerFiles = useMemo(() => {
+    if (!aggregationMode) {
+      return fileServerFiles;
     }
-  }, [cachePkgInfoData]);
+
+    const { titleIds, data, addon, patch } = fileServerFiles.reduce<{
+      titleIds: string[];
+      data: FileStat[];
+      patch: { [titleId: string]: FileStat[] };
+      addon: { [titleId: string]: FileStat[] };
+    }>(
+      (acc, cur) => {
+        if (cur.paramSfo?.CATEGORY === Ps4PkgCategory.AdditionalContent) {
+          acc.addon[cur.paramSfo.TITLE_ID] = [...(acc.addon[cur.paramSfo.TITLE_ID] || []), cur];
+        } else if (cur.paramSfo?.CATEGORY === Ps4PkgCategory.GameApplicationPatch) {
+          acc.patch[cur.paramSfo.TITLE_ID] = [...(acc.patch[cur.paramSfo.TITLE_ID] || []), cur];
+        } else {
+          const isExist = acc.titleIds.includes(cur.paramSfo?.TITLE_ID || '');
+          if (!isExist && cur.paramSfo?.TITLE_ID) {
+            acc.titleIds.push(cur.paramSfo?.TITLE_ID);
+          }
+          acc.data.push(cur);
+        }
+        return acc;
+      },
+      {
+        titleIds: [],
+        data: [],
+        patch: {},
+        addon: {}
+      }
+    );
+    const newData = data.map(item => {
+      if (item.paramSfo?.CATEGORY === Ps4PkgCategory.GameDigital) {
+        item.addons = addon[item.paramSfo.TITLE_ID];
+        item.patchs = patch[item.paramSfo.TITLE_ID];
+      }
+      return item;
+    });
+    Object.keys(patch).forEach(titleId => {
+      if (!titleIds.includes(titleId)) {
+        newData.push(...patch[titleId]);
+      }
+    });
+    Object.keys(addon).forEach(titleId => {
+      if (!titleIds.includes(titleId)) {
+        newData.push(...addon[titleId]);
+      }
+    });
+    return sortServerFiles(newData);
+  }, [fileServerFiles, aggregationMode]);
 
   return {
     webDavClient,
@@ -171,14 +181,16 @@ export const useFileServer = ({ forceWebDavDownloadLinkToHttp }: { forceWebDavDo
     setFileServerHosts,
     curFileServerHostId,
     setCurFileServerHostId,
+    curHost,
     searchKeyWord,
     setSearchKeyWord,
     isFileServerReady,
     setIsFileServerReady,
-    fileServerFiles,
+    fileServerFiles: finalFileServerFiles,
     setFileServerFiles,
     loading,
     setLoading,
+    pkgInfoDataLoading,
     paths,
     setPaths,
     getServerFileListData

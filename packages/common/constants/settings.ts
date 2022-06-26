@@ -5,6 +5,7 @@ export const defaultSettings: Settings = {
   displayPkgRawTitle: false,
   displayLogo: true,
   pkgListClickAction: PkgListClickAction.detail,
+  aggregationMode: true,
   forceWebDavDownloadLinkToHttp: true,
   useBetaVersion: true
 };

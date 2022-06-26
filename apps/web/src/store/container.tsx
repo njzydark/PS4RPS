@@ -8,11 +8,11 @@ const useHook = () => {
   const { settings, chnageSettings } = useSettings();
 
   const fileServer = useFileServer({
-    forceWebDavDownloadLinkToHttp: settings.forceWebDavDownloadLinkToHttp
+    forceWebDavDownloadLinkToHttp: settings.forceWebDavDownloadLinkToHttp,
+    aggregationMode: settings.aggregationMode
   });
-  const { fileServerHosts, curFileServerHostId } = fileServer;
+  const { curHost: curFileServerHost } = fileServer;
 
-  const curFileServerHost = fileServerHosts.find(host => host.id === curFileServerHostId);
   const ps4Installer = usePS4Installer(curFileServerHost?.id);
 
   const handleInstall = async (file: FileStat) => {

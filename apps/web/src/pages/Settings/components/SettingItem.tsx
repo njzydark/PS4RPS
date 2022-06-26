@@ -16,7 +16,15 @@ export const SettingItem = ({ title, desc, children }: Props) => {
     <>
       <div>
         <Title heading={6}>{title}</Title>
-        {desc && <Text>{desc}</Text>}
+        {desc && (
+          <Text
+            style={{
+              wordBreak: 'break-word'
+            }}
+          >
+            {desc}
+          </Text>
+        )}
         <div style={{ marginTop: 8, maxWidth: 120 }}>{children}</div>
       </div>
       <Divider />

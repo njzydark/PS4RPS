@@ -21,6 +21,7 @@ export enum PkgListUIType {
 }
 
 export enum PkgListClickAction {
+  auto = 'auto',
   install = 'install',
   detail = 'detail'
 }
@@ -28,6 +29,7 @@ export enum PkgListClickAction {
 export type Settings = {
   pkgListUIType: PkgListUIType;
   pkgListClickAction: PkgListClickAction;
+  aggregationMode: boolean;
   displayPkgRawTitle: boolean;
   displayLogo: boolean;
   forceWebDavDownloadLinkToHttp: boolean;
