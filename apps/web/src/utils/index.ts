@@ -84,7 +84,10 @@ export const sortServerFiles = (files: FileStat[]): FileStat[] => {
   );
 };
 
-export const formatPkgName = (record: FileStat, displayPkgRawTitle = false) => {
+export const formatPkgName = (record?: FileStat, displayPkgRawTitle = false) => {
+  if (!record) {
+    return '-';
+  }
   const formattedName =
     record.basename
       .split('/')

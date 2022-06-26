@@ -4,6 +4,7 @@ import { PkgListClickAction } from 'common/types/configStore';
 import { useState } from 'react';
 
 import { FileStat } from '@/types';
+import { formatPkgName } from '@/utils';
 
 import { BasicInfo } from './BasicInfo';
 import styles from './DetailDrawer.module.less';
@@ -25,7 +26,7 @@ enum ActiveTabKey {
   ADDON = 'ADDON'
 }
 
-export const DetailDrawer = ({ visible, data, handleCancel, handleInstallByActionType }: Props) => {
+export const DetailDrawer = ({ visible, data, displayPkgRawTitle, handleCancel, handleInstallByActionType }: Props) => {
   const columns = [
     {
       title: 'Key',
@@ -54,7 +55,7 @@ export const DetailDrawer = ({ visible, data, handleCancel, handleInstallByActio
         setActiveTabKey(ActiveTabKey.INFO);
         handleCancel();
       }}
-      title={data?.basename?.replace(/\.pkg$/g, '')}
+      title={formatPkgName(data, displayPkgRawTitle)}
       width={500}
       footer={
         <Button

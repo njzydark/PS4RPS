@@ -53,7 +53,8 @@ export const Home = () => {
   const props: TableListProps = {
     data,
     handleInstallByActionType,
-    loading
+    loading,
+    displayPkgRawTitle: settings.displayPkgRawTitle
   };
 
   if (!fileServerHosts?.length) {
