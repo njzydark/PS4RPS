@@ -36,7 +36,17 @@ export const ConfigCard = ({ title, action, isActive, onClick, subTitle }: Props
       }}
     >
       <div className={styles.content}>
-        <Link canceldUnderline={true} hoverable={false}>
+        <Link
+          canceldUnderline={true}
+          hoverable={false}
+          style={{
+            width: '100%',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis'
+          }}
+          title={title}
+        >
           {title}
         </Link>
         {subTitle ? (
