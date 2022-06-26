@@ -1,4 +1,4 @@
-import { Button, Empty, Notification, Space, Typography } from '@arco-design/web-react';
+import { Button, Empty, Message, Notification, Space, Typography } from '@arco-design/web-react';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -25,8 +25,7 @@ export const FileServerHost = () => {
     setCurFileServerHostId,
     setFileServerFiles,
     setPaths,
-    setIsFileServerReady,
-    setLoading
+    setIsFileServerReady
   } = fileServer;
 
   const handleAdd = () => {
@@ -36,23 +35,15 @@ export const FileServerHost = () => {
 
   const handleEdit = (host: IFileServerHost) => {
     setVisible(true);
-    const commonData = {
-      id: host.id,
-      type: host.type,
-      alias: host.alias,
-      url: host.url
-    };
     if (host.type === FileServerType.WebDAV) {
       setFormData({
-        ...commonData,
+        ...host,
         password: host.options?.password,
         username: host.options?.username
       });
     } else {
       setFormData({
-        ...commonData,
-        directoryPath: host?.directoryPath,
-        port: host.port,
+        ...host,
         iface: host.preferredInterface
       });
     }
@@ -63,19 +54,34 @@ export const FileServerHost = () => {
     setFileServerHosts(newHosts);
   };
 
-  const handleChangeHost = async (host: IFileServerHost) => {
+  const handleChangeHost = async (host: IFileServerHost, action: 'Create' | 'Update') => {
     try {
       setCurFileServerHostId(host.id);
       setPaths([]);
       setFileServerFiles([]);
       setIsFileServerReady(false);
       if (host.type === FileServerType.StaticFileServer && window.electron) {
-        setLoading(true);
-        await window.electron.createStaticFileServer({
+        const res = await window.electron.createStaticFileServer({
           directoryPath: host.directoryPath,
           port: host.port,
           preferredInterface: host.preferredInterface
         });
+        if (res?.url) {
+          Notification.success({
+            title: `${action} File Server Success`,
+            content: `The server url is ${res.url}`
+          });
+          setFileServerHosts(pre => {
+            const cur = pre.find(item => item.id === host.id);
+            if (cur) {
+              cur.url = res.url as string;
+            }
+            return [...pre];
+          });
+        } else {
+          Message.error(res?.errorMessage || `${action} file server failed`);
+          return;
+        }
       }
       setIsFileServerReady(true);
     } catch (err) {
@@ -97,6 +103,7 @@ export const FileServerHost = () => {
       newData = {
         ...commonData,
         type: value.type,
+        recursiveQuery: value.recursiveQuery,
         options: {
           username: value.username,
           password: value.password
@@ -106,6 +113,7 @@ export const FileServerHost = () => {
       newData = {
         ...commonData,
         type: value.type,
+        recursiveQuery: value.recursiveQuery,
         directoryPath: value.directoryPath as string,
         port: value.port as number,
         preferredInterface: value.iface
@@ -118,8 +126,10 @@ export const FileServerHost = () => {
       Object.assign(cur, newData);
     }
     setFileServerHosts([...fileServerHosts]);
-    if (curFileServerHostId === value.id || !cur) {
-      handleChangeHost(newData);
+    if (!cur) {
+      handleChangeHost(newData, 'Create');
+    } else if (curFileServerHostId === value.id) {
+      handleChangeHost(newData, 'Update');
     }
   };
 
@@ -138,10 +148,9 @@ export const FileServerHost = () => {
           {fileServerHosts.map(host => (
             <ConfigCard
               key={host.id}
-              title={host.alias || host.url}
+              title={host.alias || host.url || ('directoryPath' in host ? host.directoryPath : '')}
               isActive={host.id === curFileServerHostId}
-              subTitle={'preferredInterface' in host ? host.preferredInterface : ''}
-              onClick={() => handleChangeHost(host)}
+              onClick={() => handleChangeHost(host, 'Update')}
               action={
                 <Space size={3}>
                   <ConfigCard.ActionIcon

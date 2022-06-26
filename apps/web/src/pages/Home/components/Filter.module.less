@@ -12,7 +12,8 @@
   justify-content: space-between;
 }
 
-.loading-line {
+.loading-line,
+.loading-line-purple {
   position: relative;
   overflow: hidden;
   &::before {
@@ -25,6 +26,12 @@
     width: 50%;
     background-color: rgb(var(--rps-primary));
     animation: loadingAnimation 1s linear infinite;
+  }
+}
+
+.loading-line-purple {
+  &::before {
+    background-color: rgb(var(--purple-4));
   }
 }
 

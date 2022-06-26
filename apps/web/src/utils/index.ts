@@ -85,8 +85,13 @@ export const sortServerFiles = (files: FileStat[]): FileStat[] => {
 };
 
 export const formatPkgName = (record: FileStat, displayPkgRawTitle = false) => {
+  const formattedName =
+    record.basename
+      .split('/')
+      .pop()
+      ?.replace(/\.pkg$/i, '') || record.basename.replace(/\.pkg$/i, '');
   if (displayPkgRawTitle) {
-    return record.paramSfo?.TITLE || record.basename;
+    return record.paramSfo?.TITLE || formattedName;
   }
-  return record.basename.replace(/\.pkg$/i, '');
+  return formattedName;
 };

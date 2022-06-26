@@ -12,7 +12,8 @@ import styles from './Filter.module.less';
 
 export const Filter = () => {
   const { fileServer, settings, chnageSettings } = useContainer();
-  const { getServerFileListData, paths, setPaths, searchKeyWord, setSearchKeyWord, loading } = fileServer;
+  const { getServerFileListData, paths, setPaths, searchKeyWord, setSearchKeyWord, loading, pkgInfoDataLoading } =
+    fileServer;
 
   return (
     <div className={styles.wrapper}>
@@ -73,7 +74,15 @@ export const Filter = () => {
           <Button icon={<IconSync />} type="primary" onClick={() => getServerFileListData()} />
         </Space>
       </div>
-      {<Divider style={{ marginBottom: 0 }} className={cs(loading && styles['loading-line'])} />}
+      {
+        <Divider
+          style={{ marginBottom: 0 }}
+          className={cs(
+            loading && styles['loading-line'],
+            !loading && pkgInfoDataLoading && styles['loading-line-purple']
+          )}
+        />
+      }
     </div>
   );
 };

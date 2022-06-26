@@ -2,6 +2,7 @@ import { getPs4PkgInfo, Ps4PkgParamSfo } from '@njzy/ps4-pkg-info';
 import contentDisposition from 'content-disposition';
 import fs from 'fs-extra';
 import getFolderSize from 'get-folder-size';
+import glob from 'glob';
 import http from 'http';
 import path from 'path';
 import serveStatic from 'serve-static';
@@ -132,6 +133,7 @@ class StaticServerManager {
       if (url?.startsWith('/api/files')) {
         const { searchParams } = new URL(url, `http://${headers.host}`);
         const paramsPath = path.join('/', searchParams?.get('path') || '/', '/');
+        const recursiveQuery = searchParams?.get('recursiveQuery') === 'true';
 
         if (!this.directoryPath) {
           res.statusCode = 200;
@@ -144,22 +146,32 @@ class StaticServerManager {
         }
 
         const fileBasePath = path.join(this.directoryPath, paramsPath);
-        const files = await fs.readdir(fileBasePath, { withFileTypes: true });
+        const files = recursiveQuery
+          ? glob.sync('**/*.pkg', { cwd: fileBasePath, stat: true })
+          : await fs.readdir(fileBasePath, { withFileTypes: true });
         const fileListPromises = files.map(async file => {
-          const filePath = path.join(fileBasePath, file.name);
-          const fileInfo = await fs.statSync(fileBasePath + file.name);
-          const fileType = file.isDirectory() ? 'directory' : file.isFile() ? 'file' : undefined;
+          const fileName = recursiveQuery ? file : file.name;
+          const fileType = recursiveQuery
+            ? 'file'
+            : file.isDirectory()
+            ? 'directory'
+            : file.isFile()
+            ? 'file'
+            : undefined;
+          const isSymbolicLink = recursiveQuery ? false : file.isSymbolicLink();
+          const filePath = path.join(fileBasePath, fileName);
+          const fileInfo = await fs.statSync(fileBasePath + fileName);
           const fileSize = fileType === 'directory' ? (await getFolderSize(filePath, { fs }))?.size : fileInfo.size;
           const fileItem: FileItem = {
-            filename: path.join(paramsPath, file.name),
-            basename: file.name,
+            filename: path.join(paramsPath, fileName),
+            basename: fileName,
             path: filePath,
             type: fileType,
             size: fileSize,
             lastmod: fileInfo.mtime,
-            isSymbolicLink: file.isSymbolicLink()
+            isSymbolicLink
           };
-          if (fileType === 'file' && file.name.endsWith('.pkg')) {
+          if (fileType === 'file' && fileName.endsWith('.pkg')) {
             try {
               const res = await getPs4PkgInfo(filePath, { generateBase64Icon: true });
               if (res) {

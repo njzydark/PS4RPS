@@ -19,7 +19,7 @@ export const Settings = () => {
       </SettingItem>
       <SettingItem
         title="Use aggregation mode"
-        desc="When aggregation mode is enabled, the patch and addon files are automatically associated and not displayed in the list page, you can view them in the detail page. It is better to use with file server's recursive query mode."
+        desc="When aggregation mode is enabled, the patch and addon files are automatically associated with base file and not displayed in the list, you can view them in the detail page. It is better to use with file server's recursive query mode."
       >
         <Switch checked={settings.aggregationMode} onChange={value => chnageSettings({ aggregationMode: value })} />
       </SettingItem>

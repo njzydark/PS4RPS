@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Message, Modal, Notification, Radio, Select } from '@arco-design/web-react';
+import { Button, Drawer, Form, Input, InputNumber, Message, Radio, Select, Switch } from '@arco-design/web-react';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 
@@ -16,8 +16,8 @@ export type FormData = {
   password?: string;
   directoryPath?: string;
   port?: number;
-
   iface?: string;
+  recursiveQuery?: boolean;
 };
 
 type Props = {
@@ -28,43 +28,38 @@ type Props = {
 };
 
 export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) => {
-  const [createType, setCreateType] = useState<FileServerType>(
+  const {
+    fileServer: { fileServerHosts }
+  } = useContainer();
+
+  const [form] = Form.useForm<FormData>();
+
+  const [fileServerType, setFileServerType] = useState<FileServerType>(
     window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV
   );
 
   const [protocol, setProtocol] = useState<'http://' | 'https://'>('http://');
 
-  const [form] = Form.useForm<FormData>();
-
-  const {
-    fileServer: { fileServerHosts }
-  } = useContainer();
-
-  const handleCancel = () => {
-    onCancel();
-    setCreateType(window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV);
-    form.resetFields(undefined);
-    setProtocol('http://');
-    form.resetFields();
-  };
-
   useEffect(() => {
-    if (!data) {
+    if (!visible) {
       return;
     }
-    if (data?.id && data?.type) {
-      setCreateType(data.type);
+    if (data?.id) {
+      setFileServerType(data.type);
+      setProtocol(data.url.startsWith('https://') ? 'https://' : 'http://');
+      data.url = data.url.replace(/^https?:\/\//g, '');
+      form.setFieldsValue(data);
+    } else {
+      form.setFieldsValue({
+        recursiveQuery: fileServerType === FileServerType.WebDAV ? false : true
+      });
     }
-    setProtocol(data.url.startsWith('https://') ? 'https://' : 'http://');
-    data.url = data.url.replace(/^https?:\/\//g, '');
-    form.setFieldsValue(data);
-  }, [data]);
-
-  const [loading, setLoading] = useState(() => {
-    return Boolean(window.electron);
-  });
+  }, [data, visible, fileServerType]);
 
   const [ifaces, setIfaces] = useState<string[]>([]);
+  const [interfacesLoading, setInterfacesLoading] = useState(() => {
+    return Boolean(window.electron);
+  });
 
   useEffect(() => {
     if (window.electron && visible) {
@@ -73,15 +68,25 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
         .then(ifaces => {
           if (Array.isArray(ifaces) && ifaces.length) {
             setIfaces(ifaces.map(i => i.ipv4));
+            if (!data?.id) {
+              form.setFieldValue('iface', ifaces[0].ipv4);
+            }
           } else {
             setIfaces([]);
           }
         })
         .finally(() => {
-          setLoading(false);
+          setInterfacesLoading(false);
         });
     }
-  }, [visible]);
+  }, [visible, data]);
+
+  const handleCancel = () => {
+    setFileServerType(window.electron ? FileServerType.StaticFileServer : FileServerType.WebDAV);
+    setProtocol('http://');
+    form.resetFields();
+    onCancel();
+  };
 
   const handleOk = async () => {
     const value = await form.validate();
@@ -92,7 +97,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       if (value.url) {
         value.url = protocol + value.url.trim().replace(/\/$/, '');
       }
-      if (createType === FileServerType.StaticFileServer) {
+      if (fileServerType === FileServerType.StaticFileServer) {
         if (value.url) {
           try {
             const { port, protocol } = new URL(value.url);
@@ -102,7 +107,6 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
           }
         }
       }
-      const actionName = value.id ? 'Update' : 'Create';
       if (!value.id) {
         value.id = nanoid();
         if (fileServerHosts.find(item => item.url === value.url)) {
@@ -122,24 +126,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
         }
       }
       if (!value.type) {
-        value.type = createType;
-      }
-      if (value.type === FileServerType.StaticFileServer && value.directoryPath && window.electron) {
-        const res = await window.electron.createStaticFileServer({
-          directoryPath: value.directoryPath as string,
-          port: value.port as number,
-          preferredInterface: value.iface
-        });
-        if (res?.url) {
-          Notification.success({
-            title: `${actionName} File Server Success`,
-            content: `The server url is ${res.url}`
-          });
-          value.url = res.url;
-        } else {
-          Message.error(res?.errorMessage || `${actionName} file server failed`);
-          return;
-        }
+        value.type = fileServerType;
       }
       onOk(value);
       handleCancel();
@@ -153,33 +140,33 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       return;
     }
     const res = await window.electron.openDirectoryDialog();
-    console.log(res);
     if (res) {
       form.setFieldValue('directoryPath', res);
     }
   };
 
   return (
-    <Modal
+    <Drawer
       visible={visible}
       title={!data?.id ? 'Create File Server Host Config' : 'Edit File Server Host Config'}
       onCancel={handleCancel}
       onOk={handleOk}
+      width="50%"
     >
       {!data?.id && (
-        <Radio.Group type="button" value={createType} onChange={setCreateType} style={{ marginBottom: 12 }}>
+        <Radio.Group type="button" value={fileServerType} onChange={setFileServerType} style={{ marginBottom: 12 }}>
           <Radio value={FileServerType.StaticFileServer}>Static File Server</Radio>
           <Radio value={FileServerType.WebDAV}>WebDAV</Radio>
         </Radio.Group>
       )}
-      <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
+      <Form form={form} layout="vertical" requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
           <Input />
         </FormItem>
         <FormItem label="Alias" field="alias">
           <Input />
         </FormItem>
-        {(createType === FileServerType.WebDAV || !window.electron) && (
+        {(fileServerType === FileServerType.WebDAV || !window.electron) && (
           <FormItem
             label="URL"
             field="url"
@@ -197,16 +184,20 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
             />
           </FormItem>
         )}
-        {createType === FileServerType.StaticFileServer ? (
+        {fileServerType === FileServerType.StaticFileServer ? (
           window.electron ? (
             <>
               <FormItem label="Network Interface" field="iface">
                 {(value: FormData) => {
-                  console.log(value.iface, ifaces, loading);
-                  return <Select options={ifaces} allowClear loading={loading} defaultValue={value.iface} />;
+                  return <Select options={ifaces} allowClear loading={interfacesLoading} defaultValue={value.iface} />;
                 }}
               </FormItem>
-              <FormItem label="Directory Path" field="directoryPath" shouldUpdate>
+              <FormItem
+                label="Directory Path"
+                field="directoryPath"
+                shouldUpdate
+                rules={[{ required: true, message: 'Please select directory' }]}
+              >
                 {(values: FormData) => (
                   <>
                     <Button type="primary" onClick={handleSelectDirectory}>
@@ -231,7 +222,19 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
             </FormItem>
           </>
         )}
+        <FormItem
+          label="Recursive Query"
+          field="recursiveQuery"
+          triggerPropName="checked"
+          extra={
+            fileServerType === FileServerType.WebDAV
+              ? 'Enable recursive query need your webdav server enable DavDepthInfinity'
+              : ''
+          }
+        >
+          <Switch />
+        </FormItem>
       </Form>
-    </Modal>
+    </Drawer>
   );
 };

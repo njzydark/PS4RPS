@@ -50,7 +50,10 @@ export const useFileServer = ({
   const getFilesApi = async (curHost: FileServerHost, webDavClient?: WebDAVClient, path = '/') => {
     let res: FileStat[] = [];
     if (curHost.type === FileServerType.WebDAV && webDavClient) {
-      res = (await webDavClient.getDirectoryContents(path)) as FileStat[];
+      res = (await webDavClient.getDirectoryContents(
+        path,
+        curHost.recursiveQuery ? { deep: true, glob: '**/*.pkg' } : undefined
+      )) as FileStat[];
       if (res.length) {
         res.map(item => {
           const curPkgData = pkgInfoData.find(cache => cache.name === item.basename);
@@ -65,7 +68,9 @@ export const useFileServer = ({
         });
       }
     } else {
-      const { data } = await axios.get(`${curHost?.url}/api/files?path=${encodeURI(path)}`);
+      const { data } = await axios.get(
+        `${curHost?.url}/api/files?path=${encodeURI(path)}&recursiveQuery=${curHost.recursiveQuery}`
+      );
       res = data || [];
     }
     return sortServerFiles(res);
