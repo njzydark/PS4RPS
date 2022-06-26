@@ -1,4 +1,4 @@
-import { Alert, Button, Form, Input, Message, Modal, Notification, Space } from '@arco-design/web-react';
+import { Alert, Button, Drawer, Form, Input, Message, Notification, Space } from '@arco-design/web-react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
@@ -89,7 +89,7 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
   };
 
   return (
-    <Modal
+    <Drawer
       visible={visible}
       title={!data?.id ? 'Create PS4 Host Config' : 'Edit PS4 Host Config'}
       onCancel={handleCancel}
@@ -109,6 +109,7 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           </Button>
         </Space>
       }
+      width="50%"
     >
       <Form form={form} layout="vertical" initialValues={undefined} requiredSymbol={{ position: 'end' }}>
         <FormItem label="Id" field="id" style={{ display: 'none' }}>
@@ -138,6 +139,6 @@ export const PS4HostFormModal = ({ data, visible, onCancel, onOk }: Props) => {
           />
         )}
       </Form>
-    </Modal>
+    </Drawer>
   );
 };
