@@ -13,7 +13,10 @@ const createSeek = (url: string): CustomSeek => {
     headers.append('Range', `bytes=${offset}-${whence || offset + 64 * 1024}`);
     username &&
       password &&
-      headers.append('Authorization', 'Basic ' + Buffer.from(username + ':' + password).toString('base64'));
+      headers.append(
+        'Authorization',
+        'Basic ' + Buffer.from(decodeURIComponent(username) + ':' + decodeURIComponent(password)).toString('base64')
+      );
     const res = await window.fetch(origin + pathname, {
       headers
     });
