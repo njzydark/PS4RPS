@@ -144,34 +144,37 @@ export const FileServerHost = () => {
       {!fileServerHosts.length ? (
         <Empty description="Without file server host, you can't visit ps4 pkg file" />
       ) : (
-        <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
-          {fileServerHosts.map(host => (
-            <ConfigCard
-              key={host.id}
-              title={host.alias || host.url || ('directoryPath' in host ? host.directoryPath : '')}
-              isActive={host.id === curFileServerHostId}
-              onClick={() => handleChangeHost(host, 'Update')}
-              action={
-                <Space size={3}>
-                  <ConfigCard.ActionIcon
-                    onClick={() => {
-                      handleEdit(host);
-                    }}
-                  >
-                    <IconEdit>Edit</IconEdit>
-                  </ConfigCard.ActionIcon>
-                  <ConfigCard.ActionIcon
-                    onClick={() => {
-                      handleDelete(host);
-                    }}
-                  >
-                    <IconDelete>Delete</IconDelete>
-                  </ConfigCard.ActionIcon>
-                </Space>
-              }
-            />
-          ))}
-        </Space>
+        <>
+          <Space wrap style={{ display: fileServerHosts.length ? 'inline-flex' : 'none' }}>
+            {fileServerHosts.map(host => (
+              <ConfigCard
+                key={host.id}
+                title={host.alias || host.url || ('directoryPath' in host ? host.directoryPath : '')}
+                subTitle={host.type === FileServerType.WebDAV ? 'WebDAV' : 'Static File Server'}
+                isActive={host.id === curFileServerHostId}
+                onClick={() => handleChangeHost(host, 'Update')}
+                action={
+                  <Space size={3}>
+                    <ConfigCard.ActionIcon
+                      onClick={() => {
+                        handleEdit(host);
+                      }}
+                    >
+                      <IconEdit>Edit</IconEdit>
+                    </ConfigCard.ActionIcon>
+                    <ConfigCard.ActionIcon
+                      onClick={() => {
+                        handleDelete(host);
+                      }}
+                    >
+                      <IconDelete>Delete</IconDelete>
+                    </ConfigCard.ActionIcon>
+                  </Space>
+                }
+              />
+            ))}
+          </Space>
+        </>
       )}
       <FileServerFormModal visible={visible} data={formData} onOk={handleFormOk} onCancel={() => setVisible(false)} />
     </div>

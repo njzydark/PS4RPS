@@ -218,7 +218,7 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
               <Input />
             </FormItem>
             <FormItem label="Password" field="password">
-              <Input />
+              <Input.Password />
             </FormItem>
           </>
         )}
