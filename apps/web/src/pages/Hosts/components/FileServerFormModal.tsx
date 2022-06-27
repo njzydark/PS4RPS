@@ -45,10 +45,11 @@ export const FileServerFormModal = ({ data, visible, onCancel, onOk }: Props) =>
       return;
     }
     if (data?.id) {
-      setFileServerType(data.type);
-      setProtocol(data.url.startsWith('https://') ? 'https://' : 'http://');
-      data.url = data.url.replace(/^https?:\/\//g, '');
-      form.setFieldsValue(data);
+      const newData = { ...data };
+      setFileServerType(newData.type);
+      setProtocol(newData.url.startsWith('https://') ? 'https://' : 'http://');
+      newData.url = newData.url.replace(/^https?:\/\//g, '');
+      form.setFieldsValue(newData);
     } else {
       form.setFieldsValue({
         recursiveQuery: fileServerType === FileServerType.WebDAV ? false : true
