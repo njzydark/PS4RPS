@@ -36,7 +36,12 @@ export const SimpleList = ({ data = [], handleInstallByActionType }: TableListPr
             </Menu>
           }
         >
-          <div className={styles['item-wrapper']}>
+          <div
+            className={styles['item-wrapper']}
+            onClick={() => {
+              handleInstallByActionType(item, PkgListClickAction.install);
+            }}
+          >
             <CustomLazyLoadImage data={item} className={styles['img-wrapper']} />
             <div className={styles['info-wrapper']}>
               <span title={item.paramSfo?.TITLE} className={styles.title}>
