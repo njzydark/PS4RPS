@@ -62,6 +62,12 @@ export const useFileServer = ({
             item.paramSfo = curPkgData.paramSfo;
           }
           item.downloadUrl = item.type === 'file' ? webDavClient.getFileDownloadLink(item.filename) : '';
+          if (curHost.options?.username && curHost.options?.password) {
+            item.downloadUrl = item.downloadUrl.replace(
+              /\/\/(.*)@/,
+              `//${encodeURIComponent(curHost.options.username)}:${encodeURIComponent(curHost.options.password)}@`
+            );
+          }
           if (forceWebDavDownloadLinkToHttp && item.downloadUrl.startsWith('https://')) {
             item.downloadUrl = item.downloadUrl.replace('https://', 'http://');
           }
