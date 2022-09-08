@@ -1,9 +1,9 @@
 import './index.less';
 
 import { render } from 'react-dom';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
-const Router = window.electron ? HashRouter : BrowserRouter;
+const Router = HashRouter;
 
 import { App } from './app';
 
