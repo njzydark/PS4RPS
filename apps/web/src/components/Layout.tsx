@@ -21,6 +21,7 @@ const SideBar = () => {
       <div className={styles.content}>
         {routeNavs.map(route => (
           <NavLink
+            end
             key={route.title}
             className={({ isActive }) => cs(styles['nav-link'], isActive && styles.active)}
             to={route.path}

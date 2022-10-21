@@ -4,7 +4,7 @@ const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
 
 const getMatches = (query: string): boolean => {
   if (typeof window !== 'undefined') {
-    return window.matchMedia(query).matches;
+    return window?.matchMedia?.(query)?.matches;
   }
   return false;
 };
@@ -52,10 +52,10 @@ export const useDarkMode = () => {
     } else {
       setIsDarkMode(false);
     }
-    const wm = window.matchMedia('(prefers-color-scheme: dark)');
-    wm.addEventListener('change', handler);
+    const wm = window?.matchMedia?.('(prefers-color-scheme: dark)');
+    wm?.addEventListener?.('change', handler);
     return () => {
-      wm.removeEventListener('change', handler);
+      wm?.removeEventListener?.('change', handler);
     };
   }, [auto]);
 

@@ -1,3 +1,4 @@
+import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
@@ -22,7 +23,10 @@ export default defineConfig(() => {
           babelrc: true
         }
       }),
-      checker({ typescript: true })
+      checker({ typescript: true }),
+      legacy({
+        targets: ['defaults', 'IE 11']
+      })
     ],
     resolve: {
       alias: [

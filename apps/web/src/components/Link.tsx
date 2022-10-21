@@ -7,9 +7,9 @@ type LinkProps = ArcoLinkProps & {
   canceldUnderline?: boolean;
 };
 
-export const Link = (props: LinkProps) => {
+export const Link = ({ canceldUnderline, ...props }: LinkProps) => {
   return (
-    <ArcoLink {...props} className={cs(styles.link, props.canceldUnderline && styles.cancelUnderline, props.className)}>
+    <ArcoLink {...props} className={cs(styles.link, canceldUnderline && styles.cancelUnderline, props.className)}>
       {props.children}
     </ArcoLink>
   );
