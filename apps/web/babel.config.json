@@ -1,5 +1,24 @@
 {
+  "sourceType": "unambiguous",
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": "ie>=11",
+        "useBuiltIns": "entry",
+        "corejs": 3
+      }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
+    ],
+    "@babel/preset-typescript"
+  ],
   "plugins": [
+    "@babel/plugin-proposal-export-default-from",
     [
       "babel-plugin-import",
       {
@@ -18,6 +37,12 @@
         "camel2DashComponentName": false
       },
       "@arco-design/web-react/icon"
+    ],
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": 3
+      }
     ]
   ]
 }

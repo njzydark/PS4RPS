@@ -29,8 +29,8 @@
   "scripts": {
     "dev": "pnpm run dev:node & pnpm run dev:web",
     "build": "pnpm run build:node & pnpm run build:web",
-    "build:node": "tsup src/node -d dist --format cjs,esm --dts --clean",
-    "build:web": "tsup src/web -d web --format cjs,esm --dts --clean",
+    "build:node": "tsup src/node -d dist --target es5 --format cjs,esm --dts --clean",
+    "build:web": "tsup src/web -d web --target es5 --format cjs,esm --dts --clean",
     "dev:node": "pnpm run build:node -- --sourcemap --watch src",
     "dev:web": "pnpm run build:web -- --sourcemap --watch src",
     "prepublishOnly": "pnpm run build"

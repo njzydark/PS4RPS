@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import {Buffer} from 'buffer';
 
 import type { CustomSeek, ExtractOptions, Ps4PkgInfo } from '../core';
 import { extract } from '../core';

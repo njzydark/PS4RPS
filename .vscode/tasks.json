@@ -47,9 +47,17 @@
           "background": {
             "activeOnStart": true,
             "beginsPattern": ".",
-            "endsPattern": "Found 0 errors"
+            "endsPattern": "No errors found"
           }
         },
+        // {
+        //   "base": "$tsc-watch",
+        //   "background": {
+        //     "activeOnStart": true,
+        //     "beginsPattern": ".",
+        //     "endsPattern": "Found 0 errors"
+        //   }
+        // },
       ]
     },
     {

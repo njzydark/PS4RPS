@@ -1,4 +1,5 @@
 import './index.less';
+import 'core-js';
 
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
