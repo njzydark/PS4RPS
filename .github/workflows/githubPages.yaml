@@ -36,6 +36,11 @@ jobs:
       - name: Build
         run: pnpm run web:build
 
+      - name: Upload Sourcemap
+        env: 
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: pnpm run upload:sourcemap --filter web
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}

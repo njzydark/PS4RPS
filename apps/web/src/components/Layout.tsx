@@ -6,6 +6,7 @@ import Logo from '@/assets/icon.png';
 import { getNavTitleByPath, routeNavs } from '@/routes';
 import { useContainer } from '@/store/container';
 
+import { CustomErrorBoundary } from './CustomErrorBoundary';
 import styles from './Layout.module.less';
 import { TitleBar } from './TitleBar';
 import { ToggleDarkMode } from './ToggleDarkMode';
@@ -77,10 +78,12 @@ export const Layout = () => {
       <div className={cs('global-content-wrapper', styles.wrapper)}>
         <SideBar />
         <main className={styles['main-content-wrapper']}>
-          <TitleHeader />
-          <div className={styles['content-wrapper']} ref={scrollEl}>
-            <Outlet />
-          </div>
+          <CustomErrorBoundary>
+            <TitleHeader />
+            <div className={styles['content-wrapper']} ref={scrollEl}>
+              <Outlet />
+            </div>
+          </CustomErrorBoundary>
         </main>
       </div>
     </div>

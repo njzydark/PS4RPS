@@ -25,7 +25,8 @@ export default defineConfig(() => {
       }),
       checker({ typescript: true }),
       legacy({
-        targets: ['defaults', 'IE 11']
+        targets: ['ie >= 11'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime', 'core-js/proposals/global-this']
       })
     ],
     resolve: {
@@ -33,6 +34,9 @@ export default defineConfig(() => {
         { find: /^~@arco-design/, replacement: resolve(__dirname, './node_modules/@arco-design/') },
         { find: /^@\//, replacement: resolve(__dirname, './src') + '/' }
       ]
+    },
+    build: {
+      sourcemap: true
     },
     server: {
       port: Number(process.env.RENDERER_DEV_PORT)
