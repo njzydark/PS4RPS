@@ -1,3 +1,4 @@
+import vitePluginForArco from '@arco-plugins/vite-react';
 import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import { config as dotenvConfig } from 'dotenv';
@@ -18,11 +19,8 @@ export default defineConfig(() => {
     },
     base: './',
     plugins: [
-      react({
-        babel: {
-          babelrc: true
-        }
-      }),
+      vitePluginForArco(),
+      react(),
       checker({ typescript: true }),
       legacy({
         targets: ['ie >= 11'],
