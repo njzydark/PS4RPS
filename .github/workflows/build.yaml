@@ -18,6 +18,9 @@ on:
       - submitted
 jobs:
   release:
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     runs-on: ${{ matrix.os }}
 
     strategy:
