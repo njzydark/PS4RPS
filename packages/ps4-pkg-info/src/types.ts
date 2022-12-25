@@ -32,7 +32,9 @@ e.g. A non-upgradable demo application, a free full application without an AC, a
 
 export enum Ps4PkgCategory {
   GameDigital = 'gd',
+  Digital = 'gdn',
   GameApplicationPatch = 'gp',
+  ApplicationPatch = 'gpn',
   AdditionalContent = 'ac',
   BluRayDisc = 'bd',
   GameContent = 'gc',

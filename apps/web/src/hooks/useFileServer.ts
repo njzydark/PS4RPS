@@ -148,7 +148,10 @@ export const useFileServer = ({
       (acc, cur) => {
         if (cur.paramSfo?.CATEGORY === Ps4PkgCategory.AdditionalContent) {
           acc.addon[cur.paramSfo.TITLE_ID] = [...(acc.addon[cur.paramSfo.TITLE_ID] || []), cur];
-        } else if (cur.paramSfo?.CATEGORY === Ps4PkgCategory.GameApplicationPatch) {
+        } else if (
+          cur.paramSfo?.CATEGORY === Ps4PkgCategory.GameApplicationPatch ||
+          cur.paramSfo?.CATEGORY === Ps4PkgCategory.ApplicationPatch
+        ) {
           acc.patch[cur.paramSfo.TITLE_ID] = [...(acc.patch[cur.paramSfo.TITLE_ID] || []), cur];
         } else {
           const isExist = acc.titleIds.includes(cur.paramSfo?.TITLE_ID || '');
@@ -167,7 +170,10 @@ export const useFileServer = ({
       }
     );
     const newData = data.map(item => {
-      if (item.paramSfo?.CATEGORY === Ps4PkgCategory.GameDigital) {
+      if (
+        item.paramSfo?.CATEGORY === Ps4PkgCategory.GameDigital ||
+        item.paramSfo?.CATEGORY === Ps4PkgCategory.Digital
+      ) {
         item.addons = addon[item.paramSfo.TITLE_ID];
         item.patchs = patch[item.paramSfo.TITLE_ID];
       }
