@@ -122,7 +122,7 @@ importers:
     specifiers:
       '@njzy/ps4-pkg-info': workspace:^0.1.0
       axios: ^1.2.1
-      common: workspace:^1.0.0-beta.7
+      common: workspace:^1.0.0-beta.8
       content-disposition: ^0.5.4
       cross-env: ^7.0.3
       dotenv: ^16.0.3
@@ -169,7 +169,7 @@ importers:
       axios: ^1.2.1
       babel-plugin-import: ^1.13.5
       classnames: ^2.3.2
-      common: workspace:^1.0.0-beta.7
+      common: workspace:^1.0.0-beta.8
       dayjs: ^1.11.7
       json5: ^2.2.1
       nanoid: ^4.0.0
