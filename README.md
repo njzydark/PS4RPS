@@ -4,7 +4,6 @@
 [![Build/release](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml/badge.svg)](https://github.com/njzydark/PS4RPS/actions/workflows/build.yaml)
 ![GitHubPages deployments](https://img.shields.io/github/deployments/njzydark/ps4rps/production?label=github-pages&logo=github-pages)
 [![GitHub](https://img.shields.io/github/license/njzydark/PS4RPS)](https://github.com/njzydark/PS4RPS/blob/master/LICENSE)
-[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 
 Yet another remote pkg sender for PS4
 
@@ -95,3 +94,7 @@ pnpm run desktop:dist
 - [ ] Auto find PS4 host
 - [x] Fix the [cors bug](https://github.com/flatz/ps4_remote_pkg_installer/issues/10) and release the web version
 - [x] Show more pkg file info, such as icon and titleID
+
+---
+
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
